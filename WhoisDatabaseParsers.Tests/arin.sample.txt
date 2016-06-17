@@ -1,0 +1,115 @@
+ASHandle:       AS89
+OrgID:          NNICN-1
+ASName:         DNIC-AS-00089
+ASNumber:       89
+RegDate:        1986-11-12
+Updated:        2011-07-05
+Source:         ARIN
+
+
+
+ASHandle:       AS90
+OrgID:          ORACLE-4
+ASName:         SUN-AS
+ASNumber:       90
+RegDate:        1986-11-07
+Updated:        2015-08-13
+Source:         ARIN
+
+
+
+NetHandle:      NET-192-33-2-0-1
+OrgID:          MRSTEC
+Parent:         NET-192-0-0-0-0
+NetName:        MRST-NET
+NetRange:       192.33.2.0 - 192.33.2.255
+NetType:        assignment
+RegDate:        1987-10-09
+Updated:        1991-01-03
+Source:         ARIN
+
+
+    
+NetHandle:      NET-192-33-190-0-1
+OrgID:          TCP
+Parent:         NET-192-0-0-0-0
+NetName:        TCP-SECURE
+NetRange:       192.33.190.0 - 192.33.190.255
+NetType:        assignment
+RegDate:        1988-01-21
+Updated:        1991-01-03
+Source:         ARIN
+
+
+
+OrgID:          KTIL
+OrgName:        KMC Telecom, Inc. (LNG0)
+CanAllocate:    
+Street:         1755 North Brown Road
+City:           Lawrenceville
+State/Prov:     GA
+Country:        US
+PostalCode:     30043
+RegDate:        2002-12-24
+Updated:        2002-12-24
+OrgAdminHandle: ZK60-ARIN
+OrgAbuseHandle: ABUSE154-ARIN
+OrgTechHandle:  ZK60-ARIN
+OrgNOCHandle:   NOC269-ARIN
+Source:         ARIN
+
+
+
+OrgID:          KTIM-1
+OrgName:        KMC Telecom, Inc. (MNT0)
+CanAllocate:    
+Street:         1755 North Brown Road
+City:           Lawrenceville
+State/Prov:     GA
+Country:        US
+PostalCode:     30043
+RegDate:        2002-12-24
+Updated:        2002-12-24
+OrgNOCHandle:   NOC269-ARIN
+OrgAbuseHandle: ABUSE154-ARIN
+OrgAdminHandle: ZK60-ARIN
+OrgTechHandle:  ZK60-ARIN
+Source:         ARIN
+
+
+
+POCHandle:      BS4-ARIN
+IsRole:         N
+LastName:       Schmalhofer
+FirstName:      Beverly
+Street:         Computer Center
+Street:         Elizabethtown College
+Street:         One Alpha Drive
+City:           Elizabethtown
+State/Prov:     PA
+Country:        US
+PostalCode:     17022-2298
+RegDate:        1993-03-19
+Updated:        1993-03-19
+OfficePhone:    +1-171-361-1434
+Mailbox:        schmalhoferb@vax.etown.edu
+Source:         ARIN
+
+
+
+POCHandle:      SM4-ARIN
+IsRole:         N
+LastName:       McKenna
+FirstName:      Stuart
+Street:         Shawmut National Bank
+Street:         150 Windsor Street
+City:           Hartford
+State/Prov:     CT
+Country:        US
+PostalCode:     06120
+RegDate:        1993-03-23
+Updated:        1993-03-23
+OfficePhone:    +1-203-722-9306
+Source:         ARIN
+
+

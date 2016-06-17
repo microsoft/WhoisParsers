@@ -1,0 +1,34 @@
+﻿network:Auth-Area:104.169.0.0/16
+network:ID:NET-104-169-61-0-24
+network:Network-Name:104-169-61-0-24
+network:IP-Network:104.169.61.0/24
+network:Org-Name;I:FIOS-D Frontier Communications Everett/Redmond WA
+network:Street-Address:426 E. Casino Rd
+network:City:Everett
+network:State:WA
+network:Postal-Code:98208
+network:Country-Code:US
+network:Tech-Contact;I:AM100-FRTR
+network:Admin-Contact;I:IPADMIN-FRTR
+network:Abuse-Contact;I:ABUSE-FRTR
+network:Updated:20141006
+network:Updated-By:ipeng@frontiernet.net
+network:Class-Name:network
+
+network:Auth-Area:104.169.0.0/16
+network:ID:NET-104-169-0-0-16
+network:Network-Name:104-169-0-0-16
+network:IP-Network:104.169.0.0/16
+network:Org-Name;I:Frontier Communications Solutions
+network:Street-Address:180 South Clinton Ave
+network:City:Rochester
+network:State:NY
+network:Postal-Code:14646
+network:Country-Code:US
+network:Tech-Contact;I:ABUSE-FRTR
+network:Admin-Contact;I:IPADMIN-FRTR
+network:Updated:20140813
+network:Updated-By:ipeng@frontiernet.net
+network:Class-Name:network
+
+%ok
