@@ -25,7 +25,9 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
     [TestClass]
     public class TestParsers
     {
+        #if !NUNIT
         [DeploymentItem("arin.sample.txt")]
+        #endif
         [TestMethod]
         public void TestArinColumnTypes()
         {
@@ -39,7 +41,9 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
             CollectionAssert.AreEquivalent(new List<string>() { "POCHandle", "IsRole", "LastName", "FirstName", "Street", "City", "State/Prov", "Country", "PostalCode", "RegDate", "Updated", "OfficePhone", "Mailbox", "Source" }, columns["POCHandle"], "Columns were not extracted correctly for the POCHandle type");
         }
 
+        #if !NUNIT
         [DeploymentItem("arin.sample.txt")]
+        #endif
         [TestMethod]
         public void TestArinRetrieveRecords()
         {
@@ -83,7 +87,9 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
             }
         }
 
+        #if !NUNIT
         [DeploymentItem("arin.sample.txt")]
+        #endif
         [TestMethod]
         public void TestArinRetrieveRecordOfType()
         {
@@ -135,7 +141,9 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
             Assert.AreEqual(1, i, "Only two sections should have been extracted");
         }
 
+        #if !NUNIT
         [DeploymentItem("afrinic.sample.txt")]
+        #endif
         [TestMethod]
         public void TestAfrinicSectionTokenizer()
         {
@@ -179,7 +187,9 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
             Assert.AreEqual(0, i, "Only one section should have been extracted");
         }
 
+        #if !NUNIT
         [DeploymentItem("rwhois.sample.txt")]
+        #endif
         [TestMethod]
         public void TestRWhoisRetrieveRecords()
         {
