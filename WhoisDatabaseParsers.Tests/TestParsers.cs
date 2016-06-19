@@ -181,16 +181,19 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
                     Assert.AreEqual("stephen.honlue@afrinic.net 20160301", records["changed"].ToString(), "The changed record had an incorrect value");
                     Assert.AreEqual("AFRINIC", records["source"].ToString(), "The source record had an incorrect value");
 
-                    Assert.IsTrue(records["certif"].ToString().StartsWith("-----BEGIN PGP PUBLIC KEY BLOCK-----", StringComparison.Ordinal), "The certif record does not start with the right value");
-                    Assert.IsTrue(records["certif"].ToString().EndsWith("-----END PGP PUBLIC KEY BLOCK-----", StringComparison.Ordinal), "The certif record does not end with the right value");
-                    Assert.IsTrue(records["certif"].ToString().Contains("7uGv6tGU4DDzK2D6fXdcfomgwQud6u5gW283N04VUcuzlCIdaCE/XTT1FQdD+Mlj"), "The certif record does not contain the right value");
+                    var certificate = records["certif"].ToString();
+                    var certificateLines = this.SplitTextToLines(certificate);
 
-                    foreach (var line in this.SplitTextToLines(records["certif"].ToString()))
+                    Assert.IsTrue(certificate.StartsWith("-----BEGIN PGP PUBLIC KEY BLOCK-----", StringComparison.Ordinal), "The certif record does not start with the right value");
+                    Assert.IsTrue(certificate.EndsWith("-----END PGP PUBLIC KEY BLOCK-----", StringComparison.Ordinal), "The certif record does not end with the right value");
+                    Assert.IsTrue(certificate.Contains("7uGv6tGU4DDzK2D6fXdcfomgwQud6u5gW283N04VUcuzlCIdaCE/XTT1FQdD+Mlj"), "The certif record does not contain the right value");
+
+                    foreach (var line in this.SplitTextToLines(certificate.ToString()))
                     {
                         Debug.Assert(false, line);
                     }
 
-                    Assert.AreEqual(51, this.SplitTextToLines(records["certif"].ToString()).Count, "The certif record should contain 51 lines");
+                    Assert.AreEqual(51, certificateLines.Count, "The certif record should contain 51 lines |" + certificateLines[51] + "|");
                 }
             }
 
