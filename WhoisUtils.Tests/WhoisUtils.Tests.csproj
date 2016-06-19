@@ -87,6 +87,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="IPUtilsTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WhoisUtils\WhoisUtils.csproj">

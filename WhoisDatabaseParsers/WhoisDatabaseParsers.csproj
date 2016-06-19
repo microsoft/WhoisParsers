@@ -76,6 +76,7 @@
     <Compile Include="Common\IWhoisParser.cs" />
     <Compile Include="Common\RawWhoisSection.cs" />
     <Compile Include="Common\SectionTokenizer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RWhois\RWhoisSectionParser.cs" />
   </ItemGroup>
   <ItemGroup>
