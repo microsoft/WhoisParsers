@@ -195,10 +195,10 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
                     foreach (var line in this.SplitTextToLines(certificate.ToString()))
                     {
                         j++;
-                        ret.AppendLine("|" + j + "|" + line + "|");
+                        Trace.WriteLine("|" + j + "|" + line + "|");
                     }
 
-                    Assert.AreEqual(51, certificateLines.Count, "The certif record should contain 51 lines: " + ret);
+                    Assert.AreEqual(51, certificateLines.Count, "The certif record should contain 51 lines");
                 }
             }
 
