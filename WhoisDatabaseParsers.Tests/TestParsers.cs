@@ -210,7 +210,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
                     foreach (var line in certificateLines)
                     {
                         j++;
-                        System.Diagnostics.Debug.WriteLine(j + "|" + line + "|");
+                        System.Diagnostics.Debug.WriteLine(j + "|" + line + "| ");
                     }
 
                     Assert.AreEqual(51, certificateLines.Count, "The certif record should contain 51 lines");
