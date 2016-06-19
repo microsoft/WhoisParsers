@@ -9,12 +9,12 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
 
-#if !NUNIT
+    #if !NUNIT
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Category = Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute;
-    using System.IO;
-#else
+    #else
     using NUnit.Framework;
     using TestInitialize = NUnit.Framework.SetUpAttribute;
     using TestContext = System.Object;
@@ -22,7 +22,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
     using TestClass = NUnit.Framework.TestFixtureAttribute;
     using TestMethod = NUnit.Framework.TestAttribute;
     using TestCleanup = NUnit.Framework.TearDownAttribute;
-#endif
+    #endif
 
     [TestClass]
     public class TestParsers
