@@ -8,6 +8,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
 
     #if !NUNIT
@@ -183,6 +184,12 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
                     Assert.IsTrue(records["certif"].ToString().StartsWith("-----BEGIN PGP PUBLIC KEY BLOCK-----", StringComparison.Ordinal), "The certif record does not start with the right value");
                     Assert.IsTrue(records["certif"].ToString().EndsWith("-----END PGP PUBLIC KEY BLOCK-----", StringComparison.Ordinal), "The certif record does not end with the right value");
                     Assert.IsTrue(records["certif"].ToString().Contains("7uGv6tGU4DDzK2D6fXdcfomgwQud6u5gW283N04VUcuzlCIdaCE/XTT1FQdD+Mlj"), "The certif record does not contain the right value");
+
+                    foreach (var line in this.SplitTextToLines(records["certif"].ToString()))
+                    {
+                        Debug.Assert(false, line);
+                    }
+
                     Assert.AreEqual(51, this.SplitTextToLines(records["certif"].ToString()).Count, "The certif record should contain 51 lines");
                 }
             }
