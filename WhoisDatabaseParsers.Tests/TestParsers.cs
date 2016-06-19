@@ -9,13 +9,12 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
-    using System.Text;
 
-    #if !NUNIT
+#if !NUNIT
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Category = Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute;
-    #else
+    using System.IO;
+#else
     using NUnit.Framework;
     using TestInitialize = NUnit.Framework.SetUpAttribute;
     using TestContext = System.Object;
@@ -23,7 +22,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
     using TestClass = NUnit.Framework.TestFixtureAttribute;
     using TestMethod = NUnit.Framework.TestAttribute;
     using TestCleanup = NUnit.Framework.TearDownAttribute;
-    #endif
+#endif
 
     [TestClass]
     public class TestParsers
@@ -149,7 +148,6 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
         #if !NUNIT
         [DeploymentItem("afrinic.sample.txt")]
         #endif
-        [TestMethod]
         public void TestAfrinicSectionTokenizer()
         {
             var parser = new WhoisParser(new AfrinicSectionTokenizer(), new SectionParser());
@@ -188,15 +186,6 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
                     Assert.IsTrue(certificate.StartsWith("-----BEGIN PGP PUBLIC KEY BLOCK-----", StringComparison.Ordinal), "The certif record does not start with the right value");
                     Assert.IsTrue(certificate.EndsWith("-----END PGP PUBLIC KEY BLOCK-----", StringComparison.Ordinal), "The certif record does not end with the right value");
                     Assert.IsTrue(certificate.Contains("7uGv6tGU4DDzK2D6fXdcfomgwQud6u5gW283N04VUcuzlCIdaCE/XTT1FQdD+Mlj"), "The certif record does not contain the right value");
-
-                    var ret = new StringBuilder();
-                    var j = -1;
-
-                    foreach (var line in this.SplitTextToLines(certificate.ToString()))
-                    {
-                        j++;
-                        Trace.WriteLine("|" + j + "|" + line + "|");
-                    }
 
                     Assert.AreEqual(51, certificateLines.Count, "The certif record should contain 51 lines");
                 }
