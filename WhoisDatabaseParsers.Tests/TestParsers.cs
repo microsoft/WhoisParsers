@@ -27,6 +27,23 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
     [TestClass]
     public class TestParsers
     {
+        private TestContext testContextInstance;
+        /// <summary>
+        ///Gets or sets the test context which provides
+        ///information about and functionality for the current test run.
+        ///</summary>
+        public TestContext TestContext
+        {
+            get
+            {
+                return testContextInstance;
+            }
+            set
+            {
+                testContextInstance = value;
+            }
+        }
+
         #if !NUNIT
         [DeploymentItem("arin.sample.txt")]
         #endif
@@ -148,6 +165,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
         #if !NUNIT
         [DeploymentItem("afrinic.sample.txt")]
         #endif
+        [TestMethod]
         public void TestAfrinicSectionTokenizer()
         {
             var parser = new WhoisParser(new AfrinicSectionTokenizer(), new SectionParser());
@@ -186,6 +204,14 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
                     Assert.IsTrue(certificate.StartsWith("-----BEGIN PGP PUBLIC KEY BLOCK-----", StringComparison.Ordinal), "The certif record does not start with the right value");
                     Assert.IsTrue(certificate.EndsWith("-----END PGP PUBLIC KEY BLOCK-----", StringComparison.Ordinal), "The certif record does not end with the right value");
                     Assert.IsTrue(certificate.Contains("7uGv6tGU4DDzK2D6fXdcfomgwQud6u5gW283N04VUcuzlCIdaCE/XTT1FQdD+Mlj"), "The certif record does not contain the right value");
+
+                    var j = -1;
+
+                    foreach (var line in certificateLines)
+                    {
+                        j++;
+                        TestContext.WriteLine(j + "|" + line + "|");
+                    }
 
                     Assert.AreEqual(51, certificateLines.Count, "The certif record should contain 51 lines");
                 }
