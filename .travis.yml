@@ -1,0 +1,11 @@
+language: csharp
+solution: WhoisParsers.sln
+install:
+  - nuget restore WhoisParsers.sln
+  - nuget install NUnit.Runners -Version 3.2.1 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Nunit-Net45 /p:TargetFrameworkVersion="v4.5" WhoisParsers.sln
+  - cd WhoisUtils.Tests
+  - mono ../testrunner/NUnit.Console.3.2.1/tools/nunit3-console.exe ./bin/Nunit/Microsoft.Geolocation.Whois.Utils.Tests.dll
+  - cd WhoisDatabaseParsers.Tests
+  - mono ../testrunner/NUnit.Console.3.2.1/tools/nunit3-console.exe ./bin/Nunit/Microsoft.Geolocation.Whois.Parsers.Tests.dll
