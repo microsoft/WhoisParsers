@@ -11,6 +11,7 @@ namespace Microsoft.Geolocation.Whois.Parsers
     using System.Globalization;
     using System.Text;
     using Utils;
+
     public class SectionParser : ISectionParser
     {
         public SectionParser()
@@ -59,8 +60,6 @@ namespace Microsoft.Geolocation.Whois.Parsers
                 // Afrinic contains an invalid line like: DUMMY for 5490
                 if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("dummy for ", StringComparison.OrdinalIgnoreCase) && !line.StartsWith("#") && !line.StartsWith("%"))
                 {
-                    var keyIsValid = this.TupleKeyIsValid(line, keyValueDelimitator);
-
                     var parts = line.Split(new string[] { keyValueDelimitator }, StringSplitOptions.RemoveEmptyEntries);
 
                     var key = string.Empty;
@@ -146,26 +145,6 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
                 currentValue.Append(newValueLine);
             }
-        }
-
-        private bool TupleKeyIsValid(string line, string keyValueDelimitator)
-        {
-            if (!string.IsNullOrEmpty(line) && line[0] != ' ' && line[0] != '\t' && line[0] != '+')
-            {
-                var parts = line.Split(new string[] { keyValueDelimitator }, StringSplitOptions.RemoveEmptyEntries);
-
-                if (parts.Length >= 1)
-                {
-                    var key = parts[0].Trim();
-
-                    if (key.Length > 0 && !key.Contains(" ") && key.Length < line.Length)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
         }
     }
 }

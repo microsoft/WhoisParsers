@@ -10,6 +10,7 @@ namespace Microsoft.Geolocation.Whois.Parsers
     using System.IO;
     using System.Text;
     using Utils;
+
     public class AfrinicSectionTokenizer : ISectionTokenizer
     {
         public string RetrieveRecord(StreamReader reader)

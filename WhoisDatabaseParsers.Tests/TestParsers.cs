@@ -28,23 +28,6 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
     [TestClass]
     public class TestParsers
     {
-        private TestContext testContextInstance;
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
         #if !NUNIT
         [DeploymentItem("arin.sample.txt")]
         #endif
@@ -103,7 +86,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
                     Assert.AreEqual("schmalhoferb@vax.etown.edu", records["Mailbox"].ToString(), "The Mailbox record had an incorrect value");
                     Assert.AreEqual("ARIN", records["Source"].ToString(), "The Source record had an incorrect value");
 
-                    CollectionAssert.AreEquivalent(TextUtils.SplitTextToLines(text:  "Computer Center\r\nElizabethtown College\r\nOne Alpha Drive", removeEmptyEntries: true), TextUtils.SplitTextToLines(text: records["Street"].ToString(), removeEmptyEntries: true), "The Street record had an incorrect value");
+                    CollectionAssert.AreEquivalent(TextUtils.SplitTextToLines(text: "Computer Center\r\nElizabethtown College\r\nOne Alpha Drive", removeEmptyEntries: true), TextUtils.SplitTextToLines(text: records["Street"].ToString(), removeEmptyEntries: true), "The Street record had an incorrect value");
                 }
             }
         }
@@ -150,7 +133,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
                     Assert.AreEqual("schmalhoferb@vax.etown.edu", records["Mailbox"].ToString(), "The Mailbox record had an incorrect value");
                     Assert.AreEqual("ARIN", records["Source"].ToString(), "The Source record had an incorrect value");
 
-                    CollectionAssert.AreEquivalent(TextUtils.SplitTextToLines(text:  "Computer Center\r\nElizabethtown College\r\nOne Alpha Drive", removeEmptyEntries: true), TextUtils.SplitTextToLines(text: records["Street"].ToString(), removeEmptyEntries: true), "The Street record had an incorrect value");
+                    CollectionAssert.AreEquivalent(TextUtils.SplitTextToLines(text: "Computer Center\r\nElizabethtown College\r\nOne Alpha Drive", removeEmptyEntries: true), TextUtils.SplitTextToLines(text: records["Street"].ToString(), removeEmptyEntries: true), "The Street record had an incorrect value");
                 }
                 else if (i == 1)
                 {

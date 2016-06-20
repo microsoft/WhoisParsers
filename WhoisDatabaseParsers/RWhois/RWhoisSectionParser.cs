@@ -11,6 +11,7 @@ namespace Microsoft.Geolocation.Whois.Parsers
     using System.Globalization;
     using System.Text;
     using Utils;
+
     public class RWhoisSectionParser : ISectionParser
     {
         public RWhoisSectionParser()
