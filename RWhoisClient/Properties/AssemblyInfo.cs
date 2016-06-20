@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Microsoft.Geolocation.Whois.Parsers")]
+[assembly: AssemblyTitle("Microsoft.Geolocation.RWhois.Client")]
 [assembly: AssemblyDescription("Parsers to read WHOIS and RWHOIS records from bulk whois database dumps of IANA organizations (ARIN, AFRINIC, APNIC, LACNIC, RIPE )")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Microsoft.Geolocation.Whois.Parsers")]
+[assembly: AssemblyProduct("Microsoft.Geolocation.RWhois.Client")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("cb622086-709f-449e-8f69-c8be35d1f071")]
+[assembly: Guid("e4e13948-8e84-4a65-bdb9-e3e9dfa2b7d0")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Parsers to read WHOIS and RWHOIS records from bulk whois database dumps of IANA organizations (ARIN, AFRINIC, APNIC, LACNIC, RIPE )")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Microsoft.Geolocation.Whois.Parsers.Tests.Properties")]
+[assembly: AssemblyProduct("Microsoft.Geolocation.Whois.Parsers.Tests")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
