@@ -96,6 +96,10 @@
       <Project>{e94f9e4f-f386-4063-aa89-c13c846ba76c}</Project>
       <Name>WhoisDatabaseParsers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WhoisUtils\WhoisUtils.csproj">
+      <Project>{c3c377fb-71d2-4900-a27c-49319fbfd8dd}</Project>
+      <Name>WhoisUtils</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="afrinic.sample.txt">

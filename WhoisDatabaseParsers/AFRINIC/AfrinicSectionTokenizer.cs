@@ -9,7 +9,7 @@ namespace Microsoft.Geolocation.Whois.Parsers
     using System;
     using System.IO;
     using System.Text;
-
+    using Utils;
     public class AfrinicSectionTokenizer : ISectionTokenizer
     {
         public string RetrieveRecord(StreamReader reader)
@@ -45,7 +45,7 @@ namespace Microsoft.Geolocation.Whois.Parsers
                 return ret.ToString();
             }
 
-            var parts = line.Split(new char[] { '\n' });
+            var parts = TextUtils.SplitTextToLines(text: line, removeEmptyEntries: true);
 
             foreach (var part in parts)
             {

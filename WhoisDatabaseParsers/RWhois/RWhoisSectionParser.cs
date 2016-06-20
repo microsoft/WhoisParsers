@@ -10,7 +10,7 @@ namespace Microsoft.Geolocation.Whois.Parsers
     using System.Collections.Generic;
     using System.Globalization;
     using System.Text;
-
+    using Utils;
     public class RWhoisSectionParser : ISectionParser
     {
         public RWhoisSectionParser()
@@ -28,14 +28,14 @@ namespace Microsoft.Geolocation.Whois.Parsers
             this.TypeToFieldNamesList = new Dictionary<string, List<string>>();
         }
 
-        public RawWhoisSection Parse(string lines, string keyValueDelimitator = ":", string lineDelimintator = "\n")
+        public RawWhoisSection Parse(string lines, string keyValueDelimitator = ":")
         {
             if (lines == null)
             {
                 throw new ArgumentException("lines should not be null");
             }
 
-            return this.Parse(lines.Split(new string[] { lineDelimintator }, StringSplitOptions.RemoveEmptyEntries), keyValueDelimitator);
+            return this.Parse(TextUtils.SplitTextToLines(text: lines, removeEmptyEntries: true), keyValueDelimitator);
         }
 
         public RawWhoisSection Parse(IEnumerable<string> lines, string keyValueDelimitator = ":")

@@ -10,7 +10,7 @@ namespace Microsoft.Geolocation.Whois.Parsers
     using System.Collections.Generic;
     using System.Globalization;
     using System.Text;
-
+    using Utils;
     public class SectionParser : ISectionParser
     {
         public SectionParser()
@@ -28,14 +28,14 @@ namespace Microsoft.Geolocation.Whois.Parsers
             this.TypeToFieldNamesList = new Dictionary<string, List<string>>();
         }
 
-        public RawWhoisSection Parse(string lines, string keyValueDelimitator = ":", string lineDelimintator = "\n")
+        public RawWhoisSection Parse(string lines, string keyValueDelimitator = ":")
         {
             if (lines == null)
             {
                 throw new ArgumentException("lines should not be null");
             }
 
-            return this.Parse(lines.Split(new string[] { lineDelimintator }, StringSplitOptions.RemoveEmptyEntries), keyValueDelimitator);
+            return this.Parse(TextUtils.SplitTextToLines(text: lines, removeEmptyEntries: true), keyValueDelimitator);
         }
 
         public RawWhoisSection Parse(IEnumerable<string> lines, string keyValueDelimitator = ":")
@@ -63,36 +63,21 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
                     var parts = line.Split(new string[] { keyValueDelimitator }, StringSplitOptions.RemoveEmptyEntries);
 
-                    if (line.StartsWith("\t", StringComparison.Ordinal) || line.StartsWith(" ", StringComparison.Ordinal) || line.StartsWith("+", StringComparison.Ordinal) || !keyIsValid || parts.Length == 1)
+                    var key = string.Empty;
+                    var value = string.Empty;
+
+                    if (key.Length < line.Length)
                     {
-                        if (currentFieldName != null)
-                        {
-                            this.AddToRecord(records: records, fieldName: currentFieldName, newValueLine: line);
-                        }
-                        else
-                        {
-                            throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "We tried to parse a partial record value when there was not current record, so we don't know where to append the partial record: {0}", line));
-                        }
+                        key = parts[0];
                     }
-                    else if (parts.Length >= 2)
+
+                    if (parts.Length > 1)
                     {
-                        var key = parts[0].Trim();
-                        string value;
+                        value = string.Join(keyValueDelimitator, parts, 1, parts.Length - 1).Trim();
+                    }
 
-                        if (parts.Length == 2)
-                        {
-                            value = parts[1].Trim();
-                        }
-                        else
-                        {
-                            value = string.Join(keyValueDelimitator, parts, 1, parts.Length - 1).Trim();
-                        }
-
-                        if (key.Length == 0)
-                        {
-                            throw new ArgumentException("The key of this tuple line is empty");
-                        }
-
+                    if (key != string.Empty)
+                    {
                         validLineCounter++;
                         currentFieldName = key;
                         this.AddToRecord(records: records, fieldName: currentFieldName, newValueLine: value);
@@ -121,9 +106,13 @@ namespace Microsoft.Geolocation.Whois.Parsers
                             fieldNamesList.Add(key);
                         }
                     }
+                    else if (currentFieldName != null)
+                    {
+                        this.AddToRecord(records: records, fieldName: currentFieldName, newValueLine: line);
+                    }
                     else
                     {
-                        throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "This line does not look like a tuple: {0}", line));
+                        throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "We tried to parse a partial record value when there was not current record, so we don't know where to append the partial record: {0}", line));
                     }
                 }
             }
@@ -165,11 +154,11 @@ namespace Microsoft.Geolocation.Whois.Parsers
             {
                 var parts = line.Split(new string[] { keyValueDelimitator }, StringSplitOptions.RemoveEmptyEntries);
 
-                if (parts.Length >= 2)
+                if (parts.Length >= 1)
                 {
                     var key = parts[0].Trim();
 
-                    if (key.Length > 0 && !key.Contains(" "))
+                    if (key.Length > 0 && !key.Contains(" ") && key.Length < line.Length)
                     {
                         return true;
                     }

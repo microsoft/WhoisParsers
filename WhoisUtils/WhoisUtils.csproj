@@ -71,6 +71,7 @@
     <Compile Include="IPAddressRangeEqualityComparer.cs" />
     <Compile Include="IPUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

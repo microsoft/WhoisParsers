@@ -82,5 +82,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WhoisUtils\WhoisUtils.csproj">
+      <Project>{c3c377fb-71d2-4900-a27c-49319fbfd8dd}</Project>
+      <Name>WhoisUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

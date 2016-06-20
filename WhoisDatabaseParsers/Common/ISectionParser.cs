@@ -15,7 +15,7 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
         Dictionary<string, List<string>> TypeToFieldNamesList { get; set; }
 
-        RawWhoisSection Parse(string lines, string keyValueDelimitator = ":", string lineDelimintator = "\n");
+        RawWhoisSection Parse(string lines, string keyValueDelimitator = ":");
 
         RawWhoisSection Parse(IEnumerable<string> lines, string keyValueDelimitator = ":");
     }

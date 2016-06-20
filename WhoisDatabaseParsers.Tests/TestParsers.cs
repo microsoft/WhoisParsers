@@ -10,6 +10,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using Utils;
 
     #if !NUNIT
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -102,7 +103,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
                     Assert.AreEqual("schmalhoferb@vax.etown.edu", records["Mailbox"].ToString(), "The Mailbox record had an incorrect value");
                     Assert.AreEqual("ARIN", records["Source"].ToString(), "The Source record had an incorrect value");
 
-                    CollectionAssert.AreEquivalent(this.SplitTextToLines("Computer Center\r\nElizabethtown College\r\nOne Alpha Drive"), this.SplitTextToLines(records["Street"].ToString()), "The Street record had an incorrect value");
+                    CollectionAssert.AreEquivalent(TextUtils.SplitTextToLines(text:  "Computer Center\r\nElizabethtown College\r\nOne Alpha Drive", removeEmptyEntries: true), TextUtils.SplitTextToLines(text: records["Street"].ToString(), removeEmptyEntries: true), "The Street record had an incorrect value");
                 }
             }
         }
@@ -149,7 +150,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
                     Assert.AreEqual("schmalhoferb@vax.etown.edu", records["Mailbox"].ToString(), "The Mailbox record had an incorrect value");
                     Assert.AreEqual("ARIN", records["Source"].ToString(), "The Source record had an incorrect value");
 
-                    CollectionAssert.AreEquivalent(this.SplitTextToLines("Computer Center\r\nElizabethtown College\r\nOne Alpha Drive"), this.SplitTextToLines(records["Street"].ToString()), "The Street record had an incorrect value");
+                    CollectionAssert.AreEquivalent(TextUtils.SplitTextToLines(text:  "Computer Center\r\nElizabethtown College\r\nOne Alpha Drive", removeEmptyEntries: true), TextUtils.SplitTextToLines(text: records["Street"].ToString(), removeEmptyEntries: true), "The Street record had an incorrect value");
                 }
                 else if (i == 1)
                 {
@@ -199,7 +200,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
                     Assert.AreEqual("AFRINIC", records["source"].ToString(), "The source record had an incorrect value");
 
                     var certificate = records["certif"].ToString();
-                    var certificateLines = this.SplitTextToLines(certificate);
+                    var certificateLines = TextUtils.SplitTextToLines(text: certificate, removeEmptyEntries: true);
 
                     Assert.IsTrue(certificate.StartsWith("-----BEGIN PGP PUBLIC KEY BLOCK-----", StringComparison.Ordinal), "The certif record does not start with the right value");
                     Assert.IsTrue(certificate.EndsWith("-----END PGP PUBLIC KEY BLOCK-----", StringComparison.Ordinal), "The certif record does not end with the right value");
@@ -288,28 +289,6 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
                     Assert.AreEqual("network", records["Class-Name"].ToString(), "The Class-Name record had an incorrect value");
                 }
             }
-        }
-
-        private List<string> SplitTextToLines(string text)
-        {
-            var ret = new List<string>();
-
-            using (var sr = new StringReader(text))
-            {
-                string line;
-
-                while ((line = sr.ReadLine()) != null)
-                {
-                    line = line.Trim();
-
-                    if (line.Length > 0)
-                    {
-                        ret.Add(line);
-                    }
-                }
-            }
-
-            return ret;
         }
     }
 }
