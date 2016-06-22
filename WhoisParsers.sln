@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhoisUtils.Tests", "WhoisUt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RWhoisClient", "RWhoisClient\RWhoisClient.csproj", "{D04A518A-99C4-4E7D-ABED-6641D4280252}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RWhoisCrawler", "RWhoisCrawler\RWhoisCrawler.csproj", "{7D634A61-C576-4D74-9F47-1A6BA88F1C2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RWhoisConsole", "RWhoisClient.Console\RWhoisConsole.csproj", "{11FA06D7-0E85-4F77-9F74-DB38EFF15951}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +76,26 @@ Global
 		{D04A518A-99C4-4E7D-ABED-6641D4280252}.Release-Net40|Any CPU.Build.0 = Release-Net40|Any CPU
 		{D04A518A-99C4-4E7D-ABED-6641D4280252}.Release-Net45|Any CPU.ActiveCfg = Release-Net45|Any CPU
 		{D04A518A-99C4-4E7D-ABED-6641D4280252}.Release-Net45|Any CPU.Build.0 = Release-Net45|Any CPU
+		{7D634A61-C576-4D74-9F47-1A6BA88F1C2E}.Debug|Any CPU.ActiveCfg = Debug-Net45|Any CPU
+		{7D634A61-C576-4D74-9F47-1A6BA88F1C2E}.Debug|Any CPU.Build.0 = Debug-Net45|Any CPU
+		{7D634A61-C576-4D74-9F47-1A6BA88F1C2E}.Debug-Net45|Any CPU.ActiveCfg = Debug-Net45|Any CPU
+		{7D634A61-C576-4D74-9F47-1A6BA88F1C2E}.Debug-Net45|Any CPU.Build.0 = Debug-Net45|Any CPU
+		{7D634A61-C576-4D74-9F47-1A6BA88F1C2E}.Nunit-Net45|Any CPU.ActiveCfg = Nunit-Net45|Any CPU
+		{7D634A61-C576-4D74-9F47-1A6BA88F1C2E}.Nunit-Net45|Any CPU.Build.0 = Nunit-Net45|Any CPU
+		{7D634A61-C576-4D74-9F47-1A6BA88F1C2E}.Release-Net40|Any CPU.ActiveCfg = Release-Net40|Any CPU
+		{7D634A61-C576-4D74-9F47-1A6BA88F1C2E}.Release-Net40|Any CPU.Build.0 = Release-Net40|Any CPU
+		{7D634A61-C576-4D74-9F47-1A6BA88F1C2E}.Release-Net45|Any CPU.ActiveCfg = Release-Net45|Any CPU
+		{7D634A61-C576-4D74-9F47-1A6BA88F1C2E}.Release-Net45|Any CPU.Build.0 = Release-Net45|Any CPU
+		{11FA06D7-0E85-4F77-9F74-DB38EFF15951}.Debug|Any CPU.ActiveCfg = Debug-Net45|Any CPU
+		{11FA06D7-0E85-4F77-9F74-DB38EFF15951}.Debug|Any CPU.Build.0 = Debug-Net45|Any CPU
+		{11FA06D7-0E85-4F77-9F74-DB38EFF15951}.Debug-Net45|Any CPU.ActiveCfg = Debug-Net45|Any CPU
+		{11FA06D7-0E85-4F77-9F74-DB38EFF15951}.Debug-Net45|Any CPU.Build.0 = Debug-Net45|Any CPU
+		{11FA06D7-0E85-4F77-9F74-DB38EFF15951}.Nunit-Net45|Any CPU.ActiveCfg = Nunit-Net45|Any CPU
+		{11FA06D7-0E85-4F77-9F74-DB38EFF15951}.Nunit-Net45|Any CPU.Build.0 = Nunit-Net45|Any CPU
+		{11FA06D7-0E85-4F77-9F74-DB38EFF15951}.Release-Net40|Any CPU.ActiveCfg = Release-Net40|Any CPU
+		{11FA06D7-0E85-4F77-9F74-DB38EFF15951}.Release-Net40|Any CPU.Build.0 = Release-Net40|Any CPU
+		{11FA06D7-0E85-4F77-9F74-DB38EFF15951}.Release-Net45|Any CPU.ActiveCfg = Release-Net45|Any CPU
+		{11FA06D7-0E85-4F77-9F74-DB38EFF15951}.Release-Net45|Any CPU.Build.0 = Release-Net45|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
