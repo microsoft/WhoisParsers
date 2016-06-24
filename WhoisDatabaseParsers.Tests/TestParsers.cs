@@ -272,5 +272,49 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
                 }
             }
         }
+
+        #if !NUNIT
+        [DeploymentItem("rwhois-xfer.sample.txt")]
+        #endif
+        [TestMethod]
+        public void TestRWhoisXFerRetrieveRecords()
+        {
+            var parser = new WhoisParser(new RWhoisXferSectionTokenizer(), new RWhoisSectionParser());
+            var sections = parser.RetrieveSectionsFromFile("rwhois-xfer.sample.txt");
+
+            var i = -1;
+
+            foreach (var section in sections)
+            {
+                i++;
+
+                if (i == 1)
+                {
+                    // network: NET-207-115-64-0-25
+                    Assert.AreEqual("network", section.Type);
+                    Assert.AreEqual("NET-207-115-64-0-25", section.Id);
+
+                    var records = section.Records;
+
+                    var keys = new HashSet<string>(records.Keys);
+                    var expectedKeys = new HashSet<string>() { "Class-Name", "ID", "Auth-Area", "Network-Name", "IP-Network", "IP-Network-Block", "Organization", "Tech-Contact", "Admin-Contact", "Created", "Updated", "Updated-By" };
+
+                    Assert.IsTrue(keys.SetEquals(expectedKeys), "The returned section keys are different than expected");
+
+                    Assert.AreEqual("network", records["Class-Name"].ToString(), "The Class-Name record had an incorrect value");
+                    Assert.AreEqual("NET-207-115-64-0-25", records["ID"].ToString(), "The ID record had an incorrect value");
+                    Assert.AreEqual("207.115.64.0/19", records["Auth-Area"].ToString(), "The Auth-Area record had an incorrect value");
+                    Assert.AreEqual("NET-207-115-64-0-25", records["Network-Name"].ToString(), "The Network-Name record had an incorrect value");
+                    Assert.AreEqual("207.115.64.0/25", records["IP-Network"].ToString(), "The IP-Network record had an incorrect value");
+                    Assert.AreEqual("207.115.64.0 - 207.115.64.127", records["IP-Network-Block"].ToString(), "The IP-Network-Block record had an incorrect value");
+                    Assert.AreEqual("ISOMEDIA Inc.", records["Organization"].ToString(), "The Organization record had an incorrect value");
+                    Assert.AreEqual("support@isomedia.com", records["Tech-Contact"].ToString(), "The Tech-Contact record had an incorrect value");
+                    Assert.AreEqual("hostmaster@isomedia.com", records["Admin-Contact"].ToString(), "The Admin-Contact record had an incorrect value");
+                    Assert.AreEqual("20050302", records["Created"].ToString(), "The Created record had an incorrect value");
+                    Assert.AreEqual("20080303", records["Updated"].ToString(), "The Updated record had an incorrect value");
+                    Assert.AreEqual("hostmaster@isomedia.com", records["Updated-By"].ToString(), "The  record had an incorrect value");
+                }
+            }
+        }
     }
 }

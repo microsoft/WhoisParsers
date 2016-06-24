@@ -14,14 +14,17 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
     public class SectionParser : ISectionParser
     {
-        public SectionParser()
+        private int skipParts = 0;
+
+        public SectionParser(int skipParts = 0)
         {
+            this.skipParts = skipParts;
             this.ResetFieldStats();
         }
 
-        public Dictionary<string, HashSet<string>> TypeToFieldNamesSet { get; set; }
+        public Dictionary<string, HashSet<string>> TypeToFieldNamesSet { get; protected set; }
 
-        public Dictionary<string, List<string>> TypeToFieldNamesList { get; set; }
+        public Dictionary<string, List<string>> TypeToFieldNamesList { get; protected set; }
 
         public void ResetFieldStats()
         {
@@ -50,10 +53,11 @@ namespace Microsoft.Geolocation.Whois.Parsers
             var validLineCounter = 0;
             string sectionType = null;
             string sectionId = null;
-            HashSet<string> fieldNamesSet = null;
-            List<string> fieldNamesList = null;
+            HashSet<string> localFieldNamesSet = new HashSet<string>();
+            List<string> localFieldNamesList = new List<string>();
 
             string currentFieldName = null;
+            string skipPartsOverrideType = null;
 
             foreach (var line in lines)
             {
@@ -61,6 +65,18 @@ namespace Microsoft.Geolocation.Whois.Parsers
                 if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("dummy for ", StringComparison.OrdinalIgnoreCase) && !line.StartsWith("#") && !line.StartsWith("%"))
                 {
                     var parts = line.Split(new string[] { keyValueDelimitator }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (this.skipParts > 0 && parts.Length >= this.skipParts)
+                    {
+                        if (skipPartsOverrideType == null)
+                        {
+                            skipPartsOverrideType = parts[0];
+                        }
+
+                        var newParts = new string[parts.Length - this.skipParts];
+                        Array.Copy(parts, this.skipParts, newParts, 0, newParts.Length);
+                        parts = newParts;
+                    }
 
                     var key = string.Empty;
                     var value = string.Empty;
@@ -81,28 +97,21 @@ namespace Microsoft.Geolocation.Whois.Parsers
                         currentFieldName = key;
                         this.AddToRecord(records: records, fieldName: currentFieldName, newValueLine: value);
 
-                        if (validLineCounter == 1)
+                        if (validLineCounter == 1 && this.skipParts == 0)
                         {
                             sectionType = key;
                             sectionId = value;
-
-                            if (!this.TypeToFieldNamesSet.TryGetValue(sectionType, out fieldNamesSet))
-                            {
-                                fieldNamesSet = new HashSet<string>();
-                                this.TypeToFieldNamesSet.Add(sectionType, fieldNamesSet);
-                            }
-
-                            if (!this.TypeToFieldNamesList.TryGetValue(sectionType, out fieldNamesList))
-                            {
-                                fieldNamesList = new List<string>();
-                                this.TypeToFieldNamesList.Add(sectionType, fieldNamesList);
-                            }
                         }
 
-                        if (!fieldNamesSet.Contains(key))
+                        if (string.Compare(key, "ID", ignoreCase: true) == 0)
                         {
-                            fieldNamesSet.Add(key);
-                            fieldNamesList.Add(key);
+                            sectionId = value;
+                        }
+
+                        if (!localFieldNamesSet.Contains(key))
+                        {
+                            localFieldNamesSet.Add(key);
+                            localFieldNamesList.Add(key);
                         }
                     }
                     else if (currentFieldName != null)
@@ -116,8 +125,40 @@ namespace Microsoft.Geolocation.Whois.Parsers
                 }
             }
 
+            if (skipPartsOverrideType != null)
+            {
+                sectionType = skipPartsOverrideType;
+            }
+
             if (validLineCounter > 0 && !string.IsNullOrWhiteSpace(sectionType) && !string.IsNullOrWhiteSpace(sectionId) && records.Count > 0)
             {
+                if (sectionType != null)
+                {
+                    HashSet<string> globalFieldNamesSet;
+                    List<string> globalFieldNamesList;
+
+                    if (!this.TypeToFieldNamesSet.TryGetValue(sectionType, out globalFieldNamesSet))
+                    {
+                        globalFieldNamesSet = new HashSet<string>();
+                        this.TypeToFieldNamesSet.Add(sectionType, globalFieldNamesSet);
+                    }
+
+                    if (!this.TypeToFieldNamesList.TryGetValue(sectionType, out globalFieldNamesList))
+                    {
+                        globalFieldNamesList = new List<string>();
+                        this.TypeToFieldNamesList.Add(sectionType, globalFieldNamesList);
+                    }
+
+                    foreach (var fieldName in localFieldNamesSet)
+                    {
+                        if (!globalFieldNamesSet.Contains(fieldName))
+                        {
+                            globalFieldNamesSet.Add(fieldName);
+                            globalFieldNamesList.Add(fieldName);
+                        }
+                    }
+                }
+
                 return new RawWhoisSection(sectionType, sectionId, records);
             }
 

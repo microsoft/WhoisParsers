@@ -11,9 +11,9 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
     public interface ISectionParser
     {
-        Dictionary<string, HashSet<string>> TypeToFieldNamesSet { get; set; }
+        Dictionary<string, HashSet<string>> TypeToFieldNamesSet { get; }
 
-        Dictionary<string, List<string>> TypeToFieldNamesList { get; set; }
+        Dictionary<string, List<string>> TypeToFieldNamesList { get; }
 
         RawWhoisSection Parse(string lines, string keyValueDelimitator = ":");
 

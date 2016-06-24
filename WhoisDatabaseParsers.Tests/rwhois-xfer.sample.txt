@@ -1,0 +1,39 @@
+﻿%xfer network:Class-Name:network
+%xfer network:ID:NET-207-115-64-0-19
+%xfer network:Auth-Area:207.115.64.0/19
+%xfer network:Network-Name:NET-207-115-64-0-19
+%xfer network:IP-Network:207.115.64.0/19
+%xfer network:IP-Network-Block:207.115.64.0 - 207.115.95.255
+%xfer network:Organization:ISOMEDIA-INC
+%xfer network:Tech-Contact:support@isomedia.com
+%xfer network:Admin-Contact:hostmaster@isomedia.com
+%xfer network:Created:20050302
+%xfer network:Updated:20080303
+%xfer network:Updated-By:hostmaster@isomedia.com
+%xfer
+%xfer network:Class-Name:network
+%xfer network:ID:NET-207-115-64-0-25
+%xfer network:Auth-Area:207.115.64.0/19
+%xfer network:Network-Name:NET-207-115-64-0-25
+%xfer network:IP-Network:207.115.64.0/25
+%xfer network:IP-Network-Block:207.115.64.0 - 207.115.64.127
+%xfer network:Organization:ISOMEDIA Inc.
+%xfer network:Tech-Contact:support@isomedia.com
+%xfer network:Admin-Contact:hostmaster@isomedia.com
+%xfer network:Created:20050302
+%xfer network:Updated:20080303
+%xfer network:Updated-By:hostmaster@isomedia.com
+%xfer
+%xfer network:Class-Name:network
+%xfer network:ID:NET-207-115-64-128-26
+%xfer network:Auth-Area:207.115.64.0/19
+%xfer network:Network-Name:NET-207-115-64-128-26
+%xfer network:IP-Network:207.115.64.128/26
+%xfer network:IP-Network-Block:207.115.64.128 - 207.115.64.191
+%xfer network:Organization:ISOMEDIA Inc.
+%xfer network:Tech-Contact:support@isomedia.com
+%xfer network:Admin-Contact:hostmaster@isomedia.com
+%xfer network:Created:20050302
+%xfer network:Updated:20080303
+%xfer network:Updated-By:hostmaster@isomedia.com
+%xfer

@@ -7,11 +7,19 @@
 namespace Microsoft.Geolocation.Whois.Parsers
 {
     using System;
+    using System.Globalization;
     using System.IO;
     using System.Text;
 
     public class SectionTokenizer : ISectionTokenizer
     {
+        private string ignorePrefix;
+
+        public SectionTokenizer(string ignorePrefix = null)
+        {
+            this.ignorePrefix = ignorePrefix;
+        }
+
         public string RetrieveRecord(StreamReader reader)
         {
             if (reader == null)
@@ -41,6 +49,11 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
                 if (line != null)
                 {
+                    if (this.ignorePrefix != null && line.StartsWith(this.ignorePrefix, ignoreCase: true, culture: CultureInfo.InvariantCulture))
+                    {
+                        line = line.Substring(this.ignorePrefix.Length).TrimStart();
+                    }
+
                     if (line.Length == 0)
                     {
                         stop = true;

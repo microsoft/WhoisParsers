@@ -20,6 +20,13 @@ namespace Microsoft.Geolocation.RWhois.Console
     {
         public static void Main(string[] args)
         {
+            var client = new RWhoisClient("rwhois.isomedia.com", 4321, new WhoisParser(new RWhoisXferSectionTokenizer(), new RWhoisSectionParser()));
+
+            foreach (var section in client.RetrieveSectionsForQuery("-xfer 207.115.64.0/19"))
+            {
+                Console.WriteLine(section);
+            }
+
             Console.ReadKey();
         }
     }
