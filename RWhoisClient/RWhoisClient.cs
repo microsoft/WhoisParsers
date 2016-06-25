@@ -13,29 +13,24 @@ namespace Microsoft.Geolocation.RWhois.Client
     public class RWhoisClient : IDisposable
     {
         private RawRWhoisClient client;
-        private IWhoisParser parser;
 
-        public RWhoisClient(string hostname, int port, IWhoisParser parser)
+        public RWhoisClient(string hostname, int port)
         {
             this.client = new RawRWhoisClient(hostname, port);
-
-            if (parser != null)
-            {
-                this.parser = parser;
-            }
-            else
-            {
-                this.parser = new WhoisParser(new SectionTokenizer(), new RWhoisSectionParser());
-            }
         }
 
-        public IEnumerable<RawWhoisSection> RetrieveSectionsForQuery(string query)
+        public IEnumerable<RawWhoisSection> RetrieveSectionsForQuery(IWhoisParser parser, string query)
         {
+            if (parser == null)
+            {
+                throw new ArgumentNullException("parser");
+            }
+
             var result = this.client.AnswerQuery(query);
 
             if (result != null)
             {
-                var sections = this.parser.RetrieveSectionsFromString(result);
+                var sections = parser.RetrieveSectionsFromString(result);
 
                 foreach (var section in sections)
                 {

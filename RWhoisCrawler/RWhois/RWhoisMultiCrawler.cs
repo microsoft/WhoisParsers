@@ -37,7 +37,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                     try
                     {
                         Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "Starting crawler for organizationId: {0}, hostname: {1}, port: {2}", organizationId, hostname, port));
-                        var crawler = new RWhoisCrawler(hostname, port, new WhoisParser(new SectionTokenizer(ignorePrefix: "%xfer"), new SectionParser(skipParts: 1)));
+                        var crawler = new RWhoisCrawler(hostname, port);
                         var consumer = new RWhoisConsumer(string.Format(CultureInfo.InvariantCulture, "{0}.txt", organizationId));
                         crawler.Subscribe(consumer);
                         crawler.CrawlRanges(ranges);

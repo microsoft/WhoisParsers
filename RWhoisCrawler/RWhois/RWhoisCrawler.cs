@@ -22,19 +22,42 @@ namespace Microsoft.Geolocation.RWhois.Crawler
     public class RWhoisCrawler : IObservable<RawWhoisSection>
     {
         private RWhoisClient client;
+        private IWhoisParser rwhoisParser;
+        private IWhoisParser xferParser;
+
         private List<IObserver<RawWhoisSection>> observers;
         private HashSet<IPAddressRange> rangesPreviouslySeenByObservers;
 
         private int ipv4Increment;
         private BigInteger ipv6Increment;
 
-        public RWhoisCrawler(string hostname, int port, IWhoisParser parser = null, int ipv4Increment = 16, BigInteger? ipv6Increment = null)
+        public RWhoisCrawler(string hostname, int port, int? ipv4Increment = null, BigInteger? ipv6Increment = null, IWhoisParser rwhoisParser = null, IWhoisParser xferParser = null)
         {
+            this.client = new RWhoisClient(hostname, port);
+            this.rwhoisParser = rwhoisParser;
+            this.xferParser = xferParser;
+
+            if (this.rwhoisParser == null)
+            {
+                this.rwhoisParser = new WhoisParser(new SectionTokenizer(), new RWhoisSectionParser());
+            }
+
+            if (this.xferParser == null)
+            {
+                this.xferParser = new WhoisParser(new RWhoisXferSectionTokenizer(), new RWhoisSectionParser());
+            }
+
             this.observers = new List<IObserver<RawWhoisSection>>();
-            this.client = new RWhoisClient(hostname, port, parser);
             this.rangesPreviouslySeenByObservers = new HashSet<IPAddressRange>(new IPAddressRangeEqualityComparer());
 
-            this.ipv4Increment = ipv4Increment;
+            if (ipv4Increment == null)
+            {
+                this.ipv4Increment = 16;
+            }
+            else
+            {
+                this.ipv4Increment = ipv4Increment.Value;
+            }
 
             if (ipv6Increment == null)
             {
@@ -97,7 +120,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 
             var query = string.Format(CultureInfo.InvariantCulture, "-xfer {0}", parentRange.ToCidrString());
 
-            foreach (var section in this.client.RetrieveSectionsForQuery(query))
+            foreach (var section in this.client.RetrieveSectionsForQuery(this.xferParser, query))
             {
                 receivedAnyResult = true;
 
@@ -155,7 +178,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 
                     var foundNewRange = false;
 
-                    foreach (var section in this.client.RetrieveSectionsForQuery(query))
+                    foreach (var section in this.client.RetrieveSectionsForQuery(this.rwhoisParser, query))
                     {
                         var sectionIPRange = this.ExtractRangeFromSection(section);
 
