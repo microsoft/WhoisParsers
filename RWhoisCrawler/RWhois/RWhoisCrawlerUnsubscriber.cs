@@ -8,10 +8,13 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 {
     using System;
     using System.Collections.Generic;
+    using NLog;
     using Whois.Parsers;
 
     public class RWhoisCrawlerUnsubscriber : IDisposable
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         private List<IObserver<RawWhoisSection>> observers;
         private IObserver<RawWhoisSection> currentObserver;
 

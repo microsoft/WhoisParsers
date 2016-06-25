@@ -7,13 +7,17 @@
 namespace Microsoft.Geolocation.RWhois.Crawler
 {
     using System;
+    using System.Globalization;
     using System.IO;
     using System.Text;
     using Microsoft.Geolocation.Whois.Parsers;
     using NetTools;
+    using NLog;
 
     public class RWhoisConsumer : IObserver<RawWhoisSection>
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         private IDisposable unsubscriber;
 
         private StreamWriter outFile;
@@ -34,7 +38,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
         public void OnCompleted()
         {
             this.outFile.Close();
-            ////Console.WriteLine("Done receiving data!");
+            logger.Info("Done receiving data!");
             this.Unsubscribe();
         }
 
@@ -54,16 +58,17 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                     this.outFile.Write(section);
                     this.outFile.WriteLine();
                     this.outFile.Flush();
-                    ////Console.WriteLine("Got one: " + IPAddressRange.Parse(rawNetwork.ToString()));
+
+                    logger.Debug(string.Format(CultureInfo.InvariantCulture, "Received records for: {0}", IPAddressRange.Parse(rawNetwork.ToString())));
                 }
                 else
                 {
-                    ////Console.WriteLine("Got one but could not find IP-Network record");
+                    logger.Debug("Received records but could not find IP-Network record");
                 }
             }
             else
             {
-                ////Console.WriteLine("Got one! No records?!");
+                logger.Error("Received an item without records");
             }
         }
 

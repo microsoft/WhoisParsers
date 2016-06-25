@@ -12,10 +12,13 @@ namespace Microsoft.Geolocation.RWhois.Client
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using NLog;
     using Whois.Utils;
 
     public class RawRWhoisClient : RawTcpTextClient
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         private static string holdConnectCommand = "-holdconnect on\r\n";
 
         private bool connectForEachQuery = false;

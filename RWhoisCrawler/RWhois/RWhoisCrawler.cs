@@ -15,12 +15,15 @@ namespace Microsoft.Geolocation.RWhois.Crawler
     using System.Text;
     using System.Threading;
     using NetTools;
+    using NLog;
     using RWhois.Client;
     using Whois.Parsers;
     using Whois.Utils;
 
     public class RWhoisCrawler : IObservable<RawWhoisSection>
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         private RWhoisClient client;
         private IWhoisParser rwhoisParser;
         private IWhoisParser xferParser;
@@ -132,7 +135,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                     {
                         this.rangesPreviouslySeenByObservers.Add(sectionIPRange);
 
-                        Console.WriteLine("Sending to observers range: " + sectionIPRange);
+                        logger.Info(string.Format(CultureInfo.InvariantCulture, "Sending range to observers: {0}", sectionIPRange));
 
                         foreach (var observer in this.observers)
                         {
@@ -141,12 +144,12 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                     }
                     else
                     {
-                        ////Console.WriteLine("sectionIPRange: " + sectionIPRange + " already seen by observers");
+                        logger.Debug(string.Format(CultureInfo.InvariantCulture, "Range already seen by observers: {0}", sectionIPRange));
                     }
                 }
                 else
                 {
-                    ////Console.WriteLine("Could not extract IP range from section: " + section);
+                    logger.Debug(string.Format(CultureInfo.InvariantCulture, "Could not extract IP range from section: {0}", section));
                 }
             }
 
@@ -170,7 +173,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 
                 if (!previouslySeenStartIPs.Contains(currentStartIP))
                 {
-                    Console.WriteLine("Did not query using this start IP before: " + currentStartIP);
+                    logger.Info(string.Format(CultureInfo.InvariantCulture, "First time querying using this start IP: {0}", currentStartIP));
 
                     previouslySeenStartIPs.Add(currentStartIP);
 
@@ -190,7 +193,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 
                                 this.rangesPreviouslySeenByObservers.Add(sectionIPRange);
 
-                                Console.WriteLine("Sending to observers range: " + sectionIPRange);
+                                logger.Info(string.Format(CultureInfo.InvariantCulture, "Sending to observers range: {0}", sectionIPRange));
 
                                 foreach (var observer in this.observers)
                                 {
@@ -201,12 +204,12 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                             }
                             else
                             {
-                                ////Console.WriteLine("sectionIPRange: " + sectionIPRange + " already seen by observers");
+                                logger.Debug(string.Format(CultureInfo.InvariantCulture, "Range already seen by observers: {0}", sectionIPRange));
                             }
                         }
                         else
                         {
-                            ////Console.WriteLine("Could not extract IP range from section: " + section);
+                            logger.Debug(string.Format(CultureInfo.InvariantCulture, "Could not extract IP range from section: {0}", section));
                         }
                     }
 
@@ -217,12 +220,11 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                 }
                 else
                 {
-                    ////Console.WriteLine("Already seen this item: " + currentStartIP);
+                    logger.Debug(string.Format(CultureInfo.InvariantCulture, "Already seen this start IP: {0}", currentStartIP));
                 }
 
+                // TODO
                 Thread.Sleep(1 * 1000);
-                ////Console.WriteLine("Press a key to continue");
-                ////Console.ReadKey();
             }
         }
 
@@ -260,7 +262,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 
             if (newStartIP.IsLessThan(parentRange.End))
             {
-                ////Console.WriteLine("Adding incremented IP to startIPCrawlerQueue: " + newStartIP);
+                logger.Debug(string.Format(CultureInfo.InvariantCulture, "Adding incremented IP to startIPCrawlerQueue: {0}", newStartIP));
                 startIPCrawlerQueue.Enqueue(newStartIP);
             }
         }
@@ -290,17 +292,17 @@ namespace Microsoft.Geolocation.RWhois.Crawler
             {
                 if (!previouslySeenStartIPs.Contains(newIPStart))
                 {
-                    ////Console.WriteLine("-- Enqueuing new start IP: " + newIPStart);
+                    logger.Debug(string.Format("Enqueuing new start IP: {0}", newIPStart));
                     startIPCrawlerQueue.Enqueue(newIPStart);
                 }
                 else
                 {
-                    ////Console.WriteLine("-- Already seen this start IP so we will not enqueue it: " + newIPStart);
+                    logger.Debug(string.Format("Already seen this start IP so we will not enqueue it: {0}", newIPStart));
                 }
             }
             else
             {
-                ////Console.WriteLine("-- newIPStart: " + newIPStart + " was larger than parentRange.End: " + parentRange.End);
+                logger.Debug(string.Format(CultureInfo. InvariantCulture, "newIPStart: {0} was larger than parentRange.End: {0}", newIPStart, parentRange.End));
             }
         }
     }

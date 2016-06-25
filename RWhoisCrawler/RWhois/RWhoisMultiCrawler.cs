@@ -10,10 +10,12 @@ namespace Microsoft.Geolocation.RWhois.Crawler
     using System.Collections.Generic;
     using System.Globalization;
     using NetTools;
-    using Whois.Parsers;
+    using NLog;
 
     public class RWhoisMultiCrawler
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         public void Crawl(Dictionary<string, string> organizationsToRefServers, Dictionary<string, HashSet<IPAddressRange>> organizationsToRefRanges)
         {
             foreach (var entry in organizationsToRefRanges)
@@ -36,16 +38,18 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 
                     try
                     {
-                        Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "Starting crawler for organizationId: {0}, hostname: {1}, port: {2}", organizationId, hostname, port));
+                        logger.Info(string.Format(CultureInfo.InvariantCulture, "Starting crawler for organizationId: {0}, hostname: {1}, port: {2}", organizationId, hostname, port));
+
                         var crawler = new RWhoisCrawler(hostname, port);
                         var consumer = new RWhoisConsumer(string.Format(CultureInfo.InvariantCulture, "{0}.txt", organizationId));
                         crawler.Subscribe(consumer);
                         crawler.CrawlRanges(ranges);
-                        Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "Done with crawler for organizationId: {0}, hostname: {1}, port: {2}", organizationId, hostname, port));
+
+                        logger.Info(string.Format(CultureInfo.InvariantCulture, "Done with crawler for organizationId: {0}, hostname: {1}, port: {2}", organizationId, hostname, port));
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex);
+                        logger.Error(ex);
                     }
                 }
             }
