@@ -2,8 +2,8 @@
 <package >
   <metadata>
     <id>WhoisParsers</id>
-    <version>0.0.2</version>
-    <title>Parse Whois records from ARIN, AFRINIC, APNIC, LACNIC, RIPE database dumps. Also crawlers to retrieve RWhois data from ARIN Referral Whois servers (RFC 2167).</title>
+    <version>0.0.3</version>
+    <title>Whois and RWhois Parsers and Crawlers</title>
     <authors>Ovidiu Dan</authors>
     <owners>Ovidiu Dan</owners>
     <licenseUrl>https://raw.githubusercontent.com/Microsoft/WhoisParsers/master/LICENSE</licenseUrl>
