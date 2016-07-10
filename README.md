@@ -18,3 +18,15 @@ Create a new console C# project, then install the [WhoisParsers NuGet package](h
 ```PowerShell
 Install-Package WhoisParsers
 ```
+
+## Parsing offline bulk Whois databases
+
+#### Creating a parser instance for reading ARIN, APNIC, LACNIC, or RIPE databases
+```C#
+var parser = new WhoisParser(new SectionTokenizer(), new SectionParser());
+```
+
+#### Creating a parser instance for reading AFRINIC databases
+```C#
+var parser = new WhoisParser(new AfrinicSectionTokenizer(), new SectionParser());
+```
