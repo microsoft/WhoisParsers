@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>WhoisParsers</id>
+    <version>0.0.1</version>
+    <title>Parsers to read Whois records from bulk whois database dumps (IANA: ARIN, AFRINIC, APNIC, LACNIC, RIPE ). Crawlers to retrieve RWhois data from ARIN Referral Whois servers (RFC 2167).</title>
+    <authors>Ovidiu Dan</authors>
+    <owners>Ovidiu Dan</owners>
+    <licenseUrl>https://raw.githubusercontent.com/Microsoft/WhoisParsers/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/Microsoft/WhoisParsers</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This package provides: 1) Parsers to read Whois records from bulk whois database dumps of IANA organizations (ARIN, AFRINIC, APNIC, LACNIC, RIPE ) and 2) Crawlers to retrieve RWhois data from ARIN Referral Whois servers (RFC 2167).</description>
+    <releaseNotes>Initial Release</releaseNotes>
+    <copyright>Copyright Microsoft</copyright>
+    <tags>html extraction scraping scraper parser parsing open scraping openscraping</tags>
+    <dependencies> 
+       <group>
+          <dependency id="NLog" version="4.3.5" />
+          <dependency id="NLog.Config" version="4.3.5" />
+          <dependency id="NLog.Schema" version="4.3.4" />
+          <dependency id="IPAddressRange" version="1.6.0.0" />
+       </group>
+    </dependencies> 
+  </metadata>
+  <files>
+      <!-- .NET 4.0 is not available/possible because we use .NET 4.5 specific features -->
+      
+      <!--
+      <file src="..\RWhoisClient\bin\Release-Net40\Microsoft.Geolocation.RWhois.Client.dll" target="lib\net40" />
+      <file src="..\RWhoisClient\bin\Release-Net40\Microsoft.Geolocation.RWhois.Client.pdb" target="lib\net40" />
+      
+      <file src="..\RWhoisCrawler\bin\Release-Net40\Microsoft.Geolocation.RWhois.Crawler.dll" target="lib\net40" />
+      <file src="..\RWhoisCrawler\bin\Release-Net40\Microsoft.Geolocation.RWhois.Crawler.pdb" target="lib\net40" />
+      
+      <file src="..\WhoisDatabaseParsers\bin\Release-Net40\Microsoft.Geolocation.Whois.Parsers.dll" target="lib\net40" />
+      <file src="..\WhoisDatabaseParsers\bin\Release-Net40\Microsoft.Geolocation.Whois.Parsers.pdb" target="lib\net40" />
+      
+      <file src="..\WhoisUtils\bin\Release-Net40\Microsoft.Geolocation.Whois.Utils.dll" target="lib\net40" />
+      <file src="..\WhoisUtils\bin\Release-Net40\Microsoft.Geolocation.Whois.Utils.pdb" target="lib\net40" />
+      -->
+      
+      <!-- .NET 4.5 -->
+      
+      <file src="..\RWhoisClient\bin\Release-Net45\Microsoft.Geolocation.RWhois.Client.dll" target="lib\net45" />
+      <file src="..\RWhoisClient\bin\Release-Net45\Microsoft.Geolocation.RWhois.Client.pdb" target="lib\net45" />
+      
+      <file src="..\RWhoisCrawler\bin\Release-Net45\Microsoft.Geolocation.RWhois.Crawler.dll" target="lib\net45" />
+      <file src="..\RWhoisCrawler\bin\Release-Net45\Microsoft.Geolocation.RWhois.Crawler.pdb" target="lib\net45" />
+      
+      <file src="..\WhoisDatabaseParsers\bin\Release-Net45\Microsoft.Geolocation.Whois.Parsers.dll" target="lib\net45" />
+      <file src="..\WhoisDatabaseParsers\bin\Release-Net45\Microsoft.Geolocation.Whois.Parsers.pdb" target="lib\net45" />
+      
+      <file src="..\WhoisUtils\bin\Release-Net45\Microsoft.Geolocation.Whois.Utils.dll" target="lib\net45" />
+      <file src="..\WhoisUtils\bin\Release-Net45\Microsoft.Geolocation.Whois.Utils.pdb" target="lib\net45" />
+
+      <!-- Source -->
+      
+      <file src="..\RWhoisClient\**\*.cs" target="src\RWhoisClient" />
+      <file src="..\RWhoisCrawler\**\*.cs" target="src\RWhoisCrawler" />
+      <file src="..\WhoisDatabaseParsers\**\*.cs" target="src\WhoisDatabaseParsers" />
+      <file src="..\WhoisUtils\**\*.cs" target="src\WhoisUtils" />
+  </files>
+</package>
