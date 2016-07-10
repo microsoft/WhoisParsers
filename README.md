@@ -35,7 +35,7 @@ You can get the sample *arin.sample.txt* file from [here](WhoisDatabaseParsers.T
 
 ```C#
 var parser = new WhoisParser(new SectionTokenizer(), new SectionParser());
-var sections = parser.RetrieveSectionsFromFile(@"arin.sample.txt");
+var sections = parser.RetrieveSections(@"arin.sample.txt");
 
 foreach (var section in sections)
 {
