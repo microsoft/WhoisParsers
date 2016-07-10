@@ -6,8 +6,8 @@
 
 This library provides two main features:
 
-1. Parsers to read Whois records from **offline** whois database dumps of IANA organizations (ARIN, AFRINIC, APNIC, LACNIC, RIPE )
-2. Crawlers to retrieve **online** RWhois data from ARIN Referral Whois servers. This is a partial implementation of [RFC 2167](https://tools.ietf.org/html/rfc2167) that supports both bulk crawls using the *-xfer* command and incremental crawls.
+1. Parsers to read Whois records from **offline bulk whois database dumps** of [IANA](https://www.iana.org/) organizations ([ARIN](https://www.arin.net/), [AFRINIC](https://www.afrinic.net/), [APNIC](https://www.apnic.net/), [LACNIC](http://www.lacnic.net), and [RIPE](https://www.ripe.net/))
+2. Crawlers to retrieve **online RWhois** data from ARIN Referral Whois servers. This is a partial implementation of [RFC 2167](https://tools.ietf.org/html/rfc2167) that supports both bulk crawls using the *-xfer* command and incremental crawls.
 
 This library does **NOT** provide features to contact the REST APIs such as [ARIN's Whois-RWS](https://www.arin.net/resources/whoisrws/).
 
