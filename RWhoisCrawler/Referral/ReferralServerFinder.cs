@@ -39,7 +39,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 
             var organizationsToRefServers = new Dictionary<string, string>();
 
-            foreach (var organization in settings.Parser.RetrieveSectionsFromFile(organizationsFilePath, settings.OrganizationIdField))
+            foreach (var organization in settings.Parser.RetrieveSections(organizationsFilePath, settings.OrganizationIdField))
             {
                 if (organization.Records != null)
                 {
@@ -84,7 +84,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 
             var organizationsToRefRanges = new Dictionary<string, HashSet<IPAddressRange>>();
 
-            foreach (var network in settings.Parser.RetrieveSectionsFromFile(networksFilePath, settings.NetworkIdField))
+            foreach (var network in settings.Parser.RetrieveSections(networksFilePath, settings.NetworkIdField))
             {
                 if (network.Records != null)
                 {

@@ -12,25 +12,25 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
     public interface IWhoisParser
     {
-        Dictionary<string, List<string>> ColumnsPerTypeFromReader(StreamReader reader);
+        Dictionary<string, List<string>> ColumnsPerType(StreamReader reader);
 
-        Dictionary<string, List<string>> ColumnsPerTypeFromFile(string filePath);
+        Dictionary<string, List<string>> ColumnsPerType(string filePath);
 
         //// From reader
 
-        IEnumerable<RawWhoisSection> RetrieveSectionsFromReader(StreamReader reader);
+        IEnumerable<RawWhoisSection> RetrieveSections(StreamReader reader);
 
-        IEnumerable<RawWhoisSection> RetrieveSectionsFromReader(StreamReader reader, string desiredType);
+        IEnumerable<RawWhoisSection> RetrieveSections(StreamReader reader, string desiredType);
 
-        IEnumerable<RawWhoisSection> RetrieveSectionsFromReader(StreamReader reader, HashSet<string> desiredTypes);
+        IEnumerable<RawWhoisSection> RetrieveSections(StreamReader reader, HashSet<string> desiredTypes);
 
         //// From file
 
-        IEnumerable<RawWhoisSection> RetrieveSectionsFromFile(string filePath);
+        IEnumerable<RawWhoisSection> RetrieveSections(string filePath);
 
-        IEnumerable<RawWhoisSection> RetrieveSectionsFromFile(string filePath, string desiredType);
+        IEnumerable<RawWhoisSection> RetrieveSections(string filePath, string desiredType);
 
-        IEnumerable<RawWhoisSection> RetrieveSectionsFromFile(string filePath, HashSet<string> desiredTypes);
+        IEnumerable<RawWhoisSection> RetrieveSections(string filePath, HashSet<string> desiredTypes);
 
         //// From block of text
 

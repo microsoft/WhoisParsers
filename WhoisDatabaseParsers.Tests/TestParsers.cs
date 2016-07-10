@@ -35,7 +35,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
         public void TestArinColumnTypes()
         {
             var parser = new WhoisParser(new SectionTokenizer(), new SectionParser());
-            var columns = parser.ColumnsPerTypeFromFile("arin.sample.txt");
+            var columns = parser.ColumnsPerType("arin.sample.txt");
 
             CollectionAssert.AreEquivalent(new List<string>() { "ASHandle", "NetHandle", "OrgID", "POCHandle" }, columns.Keys, "The sample file should contain four types: ASHandle, NetHandle, OrgID, and POCHandle");
             CollectionAssert.AreEquivalent(new List<string>() { "ASHandle", "OrgID", "ASName", "ASNumber", "RegDate", "Updated", "Source" }, columns["ASHandle"], "Columns were not extracted correctly for the ASHandle type");
@@ -51,7 +51,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
         public void TestArinRetrieveRecords()
         {
             var parser = new WhoisParser(new SectionTokenizer(), new SectionParser());
-            var sections = parser.RetrieveSectionsFromFile("arin.sample.txt");
+            var sections = parser.RetrieveSections("arin.sample.txt");
 
             var i = -1;
 
@@ -98,7 +98,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
         public void TestArinRetrieveRecordOfType()
         {
             var parser = new WhoisParser(new SectionTokenizer(), new SectionParser());
-            var sections = parser.RetrieveSectionsFromFile("arin.sample.txt", "POCHandle");
+            var sections = parser.RetrieveSections("arin.sample.txt", "POCHandle");
 
             var i = -1;
 
@@ -153,7 +153,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
         public void TestAfrinicSectionTokenizer()
         {
             var parser = new WhoisParser(new AfrinicSectionTokenizer(), new SectionParser());
-            var sections = parser.RetrieveSectionsFromFile("afrinic.sample.txt", "key-cert");
+            var sections = parser.RetrieveSections("afrinic.sample.txt", "key-cert");
 
             var i = -1;
 
@@ -203,7 +203,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
         public void TestRWhoisRetrieveRecords()
         {
             var parser = new WhoisParser(new SectionTokenizer(), new RWhoisSectionParser());
-            var sections = parser.RetrieveSectionsFromFile("rwhois.sample.txt");
+            var sections = parser.RetrieveSections("rwhois.sample.txt");
 
             var i = -1;
 
@@ -280,7 +280,7 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
         public void TestRWhoisXFerRetrieveRecords()
         {
             var parser = new WhoisParser(new RWhoisXferSectionTokenizer(), new RWhoisSectionParser());
-            var sections = parser.RetrieveSectionsFromFile("rwhois-xfer.sample.txt");
+            var sections = parser.RetrieveSections("rwhois-xfer.sample.txt");
 
             var i = -1;
 

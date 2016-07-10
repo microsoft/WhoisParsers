@@ -15,6 +15,8 @@ namespace Microsoft.Geolocation.RWhois.Console
     {
         public static void Main(string[] args)
         {
+
+
             /*
             var client = new RWhoisClient("rwhois.isomedia.com", 4321);
             client.ConnectAsync().Wait();
@@ -69,6 +71,7 @@ namespace Microsoft.Geolocation.RWhois.Console
             Console.WriteLine("Done");
             */
 
+            /*
             var crawler = new RWhoisCrawler("rwhois.frontiernet.net", 4321, crawlIterationDelayMilli: 10000);
             crawler.ConnectAsync().Wait();
 
@@ -83,6 +86,7 @@ namespace Microsoft.Geolocation.RWhois.Console
             crawler.Subscribe(consumer);
 
             crawler.CrawlRangeAsync(IPAddressRange.Parse("184.8.0.0/13")).Wait();
+            */
 
             /*
             var settings = new ReferralServerFinderSettings()

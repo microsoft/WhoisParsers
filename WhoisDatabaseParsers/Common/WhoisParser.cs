@@ -24,7 +24,7 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
         public ISectionParser SectionParser { get; set; }
 
-        public Dictionary<string, List<string>> ColumnsPerTypeFromReader(StreamReader reader)
+        public Dictionary<string, List<string>> ColumnsPerType(StreamReader reader)
         {
             string record;
 
@@ -36,15 +36,15 @@ namespace Microsoft.Geolocation.Whois.Parsers
             return this.SectionParser.TypeToFieldNamesList;
         }
 
-        public Dictionary<string, List<string>> ColumnsPerTypeFromFile(string filePath)
+        public Dictionary<string, List<string>> ColumnsPerType(string filePath)
         {
             using (var reader = new StreamReader(filePath))
             {
-                return this.ColumnsPerTypeFromReader(reader);
+                return this.ColumnsPerType(reader);
             }
         }
 
-        public IEnumerable<RawWhoisSection> RetrieveSectionsFromReader(StreamReader reader)
+        public IEnumerable<RawWhoisSection> RetrieveSections(StreamReader reader)
         {
             string record;
 
@@ -59,12 +59,12 @@ namespace Microsoft.Geolocation.Whois.Parsers
             }
         }
 
-        public IEnumerable<RawWhoisSection> RetrieveSectionsFromReader(StreamReader reader, string desiredType)
+        public IEnumerable<RawWhoisSection> RetrieveSections(StreamReader reader, string desiredType)
         {
-            return this.RetrieveSectionsFromReader(reader, new HashSet<string>() { desiredType });
+            return this.RetrieveSections(reader, new HashSet<string>() { desiredType });
         }
 
-        public IEnumerable<RawWhoisSection> RetrieveSectionsFromReader(StreamReader reader, HashSet<string> desiredTypes)
+        public IEnumerable<RawWhoisSection> RetrieveSections(StreamReader reader, HashSet<string> desiredTypes)
         {
             string record;
 
@@ -79,27 +79,27 @@ namespace Microsoft.Geolocation.Whois.Parsers
             }
         }
 
-        public IEnumerable<RawWhoisSection> RetrieveSectionsFromFile(string filePath)
+        public IEnumerable<RawWhoisSection> RetrieveSections(string filePath)
         {
             using (var reader = new StreamReader(filePath))
             {
-                foreach (var record in this.RetrieveSectionsFromReader(reader))
+                foreach (var record in this.RetrieveSections(reader))
                 {
                     yield return record;
                 }
             }
         }
 
-        public IEnumerable<RawWhoisSection> RetrieveSectionsFromFile(string filePath, string desiredType)
+        public IEnumerable<RawWhoisSection> RetrieveSections(string filePath, string desiredType)
         {
-            return this.RetrieveSectionsFromFile(filePath, new HashSet<string>() { desiredType });
+            return this.RetrieveSections(filePath, new HashSet<string>() { desiredType });
         }
 
-        public IEnumerable<RawWhoisSection> RetrieveSectionsFromFile(string filePath, HashSet<string> desiredTypes)
+        public IEnumerable<RawWhoisSection> RetrieveSections(string filePath, HashSet<string> desiredTypes)
         {
             using (var reader = new StreamReader(filePath))
             {
-                foreach (var section in this.RetrieveSectionsFromReader(reader, desiredTypes))
+                foreach (var section in this.RetrieveSections(reader, desiredTypes))
                 {
                     yield return section;
                 }
@@ -108,17 +108,17 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
         public IEnumerable<RawWhoisSection> RetrieveSectionsFromString(string text)
         {
-            return this.RetrieveSectionsFromReader(this.StreamFromString(text));
+            return this.RetrieveSections(this.StreamFromString(text));
         }
 
         public IEnumerable<RawWhoisSection> RetrieveSectionsFromString(string text, string desiredType)
         {
-            return this.RetrieveSectionsFromReader(this.StreamFromString(text), desiredType);
+            return this.RetrieveSections(this.StreamFromString(text), desiredType);
         }
 
         public IEnumerable<RawWhoisSection> RetrieveSectionsFromString(string text, HashSet<string> desiredTypes)
         {
-            return this.RetrieveSectionsFromReader(this.StreamFromString(text), desiredTypes);
+            return this.RetrieveSections(this.StreamFromString(text), desiredTypes);
         }
 
         [SuppressMessage(category: "Microsoft.Reliability", checkId: "CA2000", Justification = "This memory stream needs to be disposed of outside this function")]
