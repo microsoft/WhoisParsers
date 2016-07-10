@@ -48,3 +48,11 @@ foreach (var section in sections)
     Console.WriteLine();
 }
 ```
+
+Public functions provided by WhoisParser include:
+
+| Function | Description |
+| -------- | ----------- |
+| **ColumnsPerType** | Retrieve a list of unique record names for each type of records in a database dump. Signature variations: <ul><li>*(string filePath)* - read from text file path</li><li>*(StreamReader reader)* - read from an existing reader</li></ul> |
+| **RetrieveSections** | Retrieve parsed sections from the bulk database. Signature variations: <ul><li>*(string filePath)* - read from text file path</li><li>*(string filePath, string desiredType)* - read sections with only a certain type from text file path</li><li>*(string filePath, HashSet<string> desiredTypes)* - read sections with only certain *types* from text file path</li><li>*(StreamReader reader, string desiredType)* - read sections with only a certain type from an existing reader</li><li>*(StreamReader reader, HashSet<string> desiredTypes)* - read sections with only certain *types* from an existing reader</li></ul>  |
+| **RetrieveSectionsFromString** | Retrieve parsed sections from the bulk database where the database is passed in as a string. Signature variations: <ul><li>*(string text)* - read all sections from the string</li><li>*(string text, string desiredType)* - read sections with only a certain type from the string</li><li>*(string text, HashSet<string> desiredTypes)* - read sections with only certain *types* from the string</li></ul> |
