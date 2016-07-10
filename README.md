@@ -30,3 +30,21 @@ var parser = new WhoisParser(new SectionTokenizer(), new SectionParser());
 ```C#
 var parser = new WhoisParser(new AfrinicSectionTokenizer(), new SectionParser());
 ```
+
+#### Parsing Whois sections
+
+You can get the sample *arin.sample.txt* file from [here](WhoisDatabaseParsers.Tests/afrinic.sample.txt).
+
+```C#
+var parser = new WhoisParser(new SectionTokenizer(), new SectionParser());
+var sections = parser.RetrieveSectionsFromFile(@"arin.sample.txt");
+
+foreach (var section in sections)
+{
+    Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "Section ID: {0}", section.Id));
+    Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "Number of records: {0}", section.Records.Count));
+    Console.WriteLine("---- Section Records:");
+    Console.WriteLine(section);
+    Console.WriteLine();
+}
+```
