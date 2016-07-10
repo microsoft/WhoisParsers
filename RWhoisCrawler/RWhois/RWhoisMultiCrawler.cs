@@ -9,6 +9,8 @@ namespace Microsoft.Geolocation.RWhois.Crawler
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
+    using System.Threading.Tasks;
     using NetTools;
     using NLog;
 
@@ -16,7 +18,19 @@ namespace Microsoft.Geolocation.RWhois.Crawler
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
-        public void Crawl(Dictionary<string, string> organizationsToRefServers, Dictionary<string, HashSet<IPAddressRange>> organizationsToRefRanges)
+        private string outputPath;
+
+        public RWhoisMultiCrawler(string outputPath)
+        {
+            this.outputPath = outputPath;
+
+            if (!Directory.Exists(this.outputPath))
+            {
+                Directory.CreateDirectory(this.outputPath);
+            }
+        }
+
+        public async Task Crawl(Dictionary<string, string> organizationsToRefServers, Dictionary<string, HashSet<IPAddressRange>> organizationsToRefRanges)
         {
             foreach (var entry in organizationsToRefRanges)
             {
@@ -41,9 +55,14 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                         logger.Info(string.Format(CultureInfo.InvariantCulture, "Starting crawler for organizationId: {0}, hostname: {1}, port: {2}", organizationId, hostname, port));
 
                         var crawler = new RWhoisCrawler(hostname, port);
-                        var consumer = new RWhoisConsumer(string.Format(CultureInfo.InvariantCulture, "{0}.txt", organizationId));
+                        await crawler.ConnectAsync();
+
+                        var outFile = Path.Combine(this.outputPath, string.Format(CultureInfo.InvariantCulture, "{0}.txt", organizationId));
+
+                        var consumer = new RWhoisConsumer(outFile.ToString());
+
                         crawler.Subscribe(consumer);
-                        crawler.CrawlRanges(ranges);
+                        await crawler.CrawlRangesAsync(ranges);
 
                         logger.Info(string.Format(CultureInfo.InvariantCulture, "Done with crawler for organizationId: {0}, hostname: {1}, port: {2}", organizationId, hostname, port));
                     }

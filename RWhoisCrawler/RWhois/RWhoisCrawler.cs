@@ -14,6 +14,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
     using System.Numerics;
     using System.Text;
     using System.Threading;
+    using System.Threading.Tasks;
     using NetTools;
     using NLog;
     using RWhois.Client;
@@ -34,7 +35,9 @@ namespace Microsoft.Geolocation.RWhois.Crawler
         private int ipv4Increment;
         private BigInteger ipv6Increment;
 
-        public RWhoisCrawler(string hostname, int port, int? ipv4Increment = null, BigInteger? ipv6Increment = null, IWhoisParser rwhoisParser = null, IWhoisParser xferParser = null)
+        private int crawlIterationDelayMilli;
+
+        public RWhoisCrawler(string hostname, int port, int? ipv4Increment = null, BigInteger? ipv6Increment = null, int crawlIterationDelayMilli = 100, IWhoisParser rwhoisParser = null, IWhoisParser xferParser = null)
         {
             this.client = new RWhoisClient(hostname, port);
             this.rwhoisParser = rwhoisParser;
@@ -72,9 +75,16 @@ namespace Microsoft.Geolocation.RWhois.Crawler
             {
                 this.ipv6Increment = ipv6Increment.Value;
             }
+
+            this.crawlIterationDelayMilli = crawlIterationDelayMilli;
         }
 
-        public void CrawlRanges(IEnumerable<IPAddressRange> parentRanges)
+        public async Task ConnectAsync()
+        {
+            await this.client.ConnectAsync();
+        }
+
+        public async Task CrawlRangesAsync(IEnumerable<IPAddressRange> parentRanges)
         {
             if (parentRanges == null)
             {
@@ -83,22 +93,24 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 
             foreach (var parentRange in parentRanges)
             {
-                this.CrawlRange(parentRange);
+                await this.CrawlRangeAsync(parentRange);
             }
         }
 
-        public void CrawlRange(IPAddressRange parentRange)
+        public async Task CrawlRangeAsync(IPAddressRange parentRange)
         {
             if (parentRange == null)
             {
                 throw new ArgumentNullException("parentRange");
             }
 
-            var successfullyCrawledInBulk = this.AttemptBulkCrawl(parentRange);
-
-            if (!successfullyCrawledInBulk)
+            if (this.client.RawClient.XferCommandSupported)
             {
-                this.CrawlRangeGradually(parentRange);
+                await this.CrawlRangeInBulk(parentRange);
+            }
+            else
+            {
+                await this.CrawlRangeGradually(parentRange);
             }
         }
 
@@ -112,51 +124,62 @@ namespace Microsoft.Geolocation.RWhois.Crawler
             return new RWhoisCrawlerUnsubscriber(this.observers, observer);
         }
 
-        private bool AttemptBulkCrawl(IPAddressRange parentRange)
+        private async Task CrawlRangeInBulk(IPAddressRange parentRange)
         {
-            if (parentRange == null)
+            if (!await this.AttemptRawBulkCrawl(parentRange))
             {
-                throw new ArgumentNullException("parentRange");
-            }
+                BigInteger defaultIncrementStep = 16;
 
-            var receivedAnyResult = false;
-
-            var query = string.Format(CultureInfo.InvariantCulture, "-xfer {0}", parentRange.ToCidrString());
-
-            foreach (var section in this.client.RetrieveSectionsForQuery(this.xferParser, query))
-            {
-                receivedAnyResult = true;
-
-                var sectionIPRange = this.ExtractRangeFromSection(section);
-
-                if (sectionIPRange != null)
+                if (parentRange.Begin.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    if (!this.rangesPreviouslySeenByObservers.Contains(sectionIPRange))
+                    defaultIncrementStep = this.ipv4Increment;
+                }
+                else if (parentRange.Begin.AddressFamily == AddressFamily.InterNetworkV6)
+                {
+                    defaultIncrementStep = this.ipv6Increment;
+                }
+
+                var incrementStep = defaultIncrementStep;
+
+                var targetIP = parentRange.Begin;
+                var alreadySeenAuthAreas = new HashSet<string>();
+
+                while (targetIP.IsLessThanOrEqual(parentRange.End))
+                {
+                    var query = targetIP.ToString();
+
+                    foreach (var section in await this.client.RetrieveSectionsForQueryAsync(this.rwhoisParser, query))
                     {
-                        this.rangesPreviouslySeenByObservers.Add(sectionIPRange);
+                        var authAreaName = this.ExtractValueFromSection(section, "Auth-Area");
 
-                        logger.Info(string.Format(CultureInfo.InvariantCulture, "Sending range to observers: {0}", sectionIPRange));
-
-                        foreach (var observer in this.observers)
+                        if (authAreaName != null && !alreadySeenAuthAreas.Contains(authAreaName))
                         {
-                            observer.OnNext(section);
+                            alreadySeenAuthAreas.Add(authAreaName);
+
+                            var localMaxIP = await this.AttemptRawBulkCrawl(authAreaName.Trim());
+
+                            if (targetIP.IsLessThan(localMaxIP))
+                            {
+                                logger.Info(string.Format(CultureInfo.InvariantCulture, "Update targetIP to: {0} while crawling auth area: {1}", localMaxIP, authAreaName));
+                                targetIP = localMaxIP;
+
+                                incrementStep = defaultIncrementStep;
+                            }
                         }
                     }
-                    else
-                    {
-                        logger.Debug(string.Format(CultureInfo.InvariantCulture, "Range already seen by observers: {0}", sectionIPRange));
-                    }
-                }
-                else
-                {
-                    logger.Debug(string.Format(CultureInfo.InvariantCulture, "Could not extract IP range from section: {0}", section));
+
+                    var newTargetIP = targetIP.IncrementBy(incrementStep);
+                    logger.Info(string.Format(CultureInfo.InvariantCulture, "Incremented targetIP from: {0} to: {1} (incrementStep: {2})", targetIP, newTargetIP, incrementStep));
+                    targetIP = newTargetIP;
+
+                    incrementStep = incrementStep + defaultIncrementStep;
+
+                    await Task.Delay(this.crawlIterationDelayMilli);
                 }
             }
-
-            return receivedAnyResult;
         }
 
-        private void CrawlRangeGradually(IPAddressRange parentRange)
+        private async Task CrawlRangeGradually(IPAddressRange parentRange)
         {
             if (parentRange == null)
             {
@@ -181,9 +204,9 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 
                     var foundNewRange = false;
 
-                    foreach (var section in this.client.RetrieveSectionsForQuery(this.rwhoisParser, query))
+                    foreach (var section in await this.client.RetrieveSectionsForQueryAsync(this.rwhoisParser, query))
                     {
-                        var sectionIPRange = this.ExtractRangeFromSection(section);
+                        var sectionIPRange = this.ExtractRangeFromRecord(section, "IP-Network");
 
                         if (sectionIPRange != null)
                         {
@@ -223,9 +246,71 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                     logger.Debug(string.Format(CultureInfo.InvariantCulture, "Already seen this start IP: {0}", currentStartIP));
                 }
 
-                // TODO
-                Thread.Sleep(1 * 1000);
+                await Task.Delay(this.crawlIterationDelayMilli);
             }
+        }
+
+        private async Task<bool> AttemptRawBulkCrawl(IPAddressRange parentRange)
+        {
+            if (parentRange == null)
+            {
+                throw new ArgumentNullException("parentRange");
+            }
+
+            var maxIP = await this.AttemptRawBulkCrawl(parentRange.ToCidrString());
+
+            return maxIP != null;
+        }
+
+        private async Task<IPAddress> AttemptRawBulkCrawl(string rangeName)
+        {
+            if (rangeName == null)
+            {
+                throw new ArgumentNullException("rangeName");
+            }
+
+            IPAddress maxIP = null;
+
+            var query = string.Format(CultureInfo.InvariantCulture, "-xfer {0}", rangeName);
+
+            foreach (var section in await this.client.RetrieveSectionsForQueryAsync(this.xferParser, query))
+            {
+                var sectionIPRange = this.ExtractRangeFromRecord(section, "IP-Network");
+
+                if (sectionIPRange != null)
+                {
+                    if (maxIP == null)
+                    {
+                        maxIP = sectionIPRange.End;
+                    }
+                    else if (maxIP.IsLessThan(sectionIPRange.End))
+                    {
+                        maxIP = sectionIPRange.End;
+                    }
+
+                    if (!this.rangesPreviouslySeenByObservers.Contains(sectionIPRange))
+                    {
+                        this.rangesPreviouslySeenByObservers.Add(sectionIPRange);
+
+                        logger.Info(string.Format(CultureInfo.InvariantCulture, "Sending range to observers: {0}", sectionIPRange));
+
+                        foreach (var observer in this.observers)
+                        {
+                            observer.OnNext(section);
+                        }
+                    }
+                    else
+                    {
+                        logger.Debug(string.Format(CultureInfo.InvariantCulture, "Range already seen by observers: {0}", sectionIPRange));
+                    }
+                }
+                else
+                {
+                    logger.Debug(string.Format(CultureInfo.InvariantCulture, "Could not extract IP range from section: {0}", section));
+                }
+            }
+
+            return maxIP;
         }
 
         private void FindNewStartIP(Queue<IPAddress> startIPCrawlerQueue, IPAddressRange parentRange, IPAddress currentStartIP)
@@ -267,11 +352,11 @@ namespace Microsoft.Geolocation.RWhois.Crawler
             }
         }
 
-        private IPAddressRange ExtractRangeFromSection(RawWhoisSection section)
+        private IPAddressRange ExtractRangeFromRecord(RawWhoisSection section, string fieldName)
         {
             StringBuilder rawSectionRange;
 
-            if (section.Records != null && section.Records.TryGetValue("IP-Network", out rawSectionRange))
+            if (section.Records != null && section.Records.TryGetValue(fieldName, out rawSectionRange))
             {
                 IPAddressRange sectionIPRange;
 
@@ -279,6 +364,18 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                 {
                     return sectionIPRange;
                 }
+            }
+
+            return null;
+        }
+
+        private string ExtractValueFromSection(RawWhoisSection section, string fieldName)
+        {
+            StringBuilder rawSectionRange;
+
+            if (section.Records != null && section.Records.TryGetValue(fieldName, out rawSectionRange))
+            {
+                return rawSectionRange.ToString();
             }
 
             return null;
@@ -302,7 +399,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
             }
             else
             {
-                logger.Debug(string.Format(CultureInfo. InvariantCulture, "newIPStart: {0} was larger than parentRange.End: {0}", newIPStart, parentRange.End));
+                logger.Debug(string.Format(CultureInfo.InvariantCulture, "newIPStart: {0} was larger than parentRange.End: {1}", newIPStart, parentRange.End));
             }
         }
     }

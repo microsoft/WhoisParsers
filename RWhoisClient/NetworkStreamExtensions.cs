@@ -10,17 +10,13 @@ namespace Microsoft.Geolocation.RWhois.Client
     using System.Linq;
     using System.Net.Sockets;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public static class NetworkStreamExtensions
     {
-        public static async Task<string> ReadText(this NetworkStream stream, string[] delimitators = null, Encoding encoding = null)
+        public static async Task<string> ReadTextAsync(this NetworkStream stream, int readTimeoutMilli = 5000, int iterationDelayMilli = 200, Encoding encoding = null)
         {
-            if (delimitators == null)
-            {
-                delimitators = new string[] { "\r\n", "\r", "\n" };
-            }
-
             if (encoding == null)
             {
                 encoding = Encoding.UTF8;
@@ -29,24 +25,50 @@ namespace Microsoft.Geolocation.RWhois.Client
             var partialText = new StringBuilder();
 
             int returnedBytes;
-            var buf = new byte[4096];
+            var buf = new byte[8192];
 
-            while ((returnedBytes = await stream.ReadAsync(buf, 0, buf.Length)) >= 0)
+            do
             {
-                if (returnedBytes == 0)
-                {
-                    // TODO: Double check
-                    break;
-                }
+                await Task.Delay(iterationDelayMilli);
 
-                var text = encoding.GetString(buf, 0, returnedBytes);
-                partialText.Append(text);
+                returnedBytes = 0;
 
-                if (delimitators.Any(p => text.EndsWith(p)))
+                if (partialText.Length == 0 || stream.DataAvailable)
                 {
-                    return partialText.ToString();
+                    var readTask = stream.ReadAsync(buf, 0, buf.Length);
+                    var timeoutTask = Task.Delay(readTimeoutMilli);
+
+                    var couldReadBeforeTimeout = await Task.Factory.ContinueWhenAny<bool>(
+                        new Task[] { readTask, timeoutTask },
+                        (completedTask) =>
+                        {
+                            if (completedTask == timeoutTask)
+                            {
+                                stream.Close();
+                                return false;
+                            }
+                            else
+                            {
+                                returnedBytes = readTask.Result;
+                                return true;
+                            }
+                        });
+
+                    if (couldReadBeforeTimeout)
+                    {
+                        if (returnedBytes > 0)
+                        {
+                            var text = encoding.GetString(buf, 0, returnedBytes);
+                            partialText.Append(text);
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Could not read text from stream");
+                    }
                 }
             }
+            while (returnedBytes > 0 || (stream.CanRead && stream.DataAvailable));
 
             return partialText.ToString();
         }

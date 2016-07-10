@@ -9,58 +9,39 @@ namespace Microsoft.Geolocation.RWhois.Client
     using System;
     using System.Net.Sockets;
     using System.Threading.Tasks;
+    using NLog;
 
     public class RawTcpTextClient : IDisposable
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         private string hostname;
         private int port;
 
         private TcpClient client = null;
         private NetworkStream stream = null;
 
-        public RawTcpTextClient(string hostname, int port, bool autoConnect = true)
+        private int receiveTimeout;
+        private int sendTimeout;
+
+        public RawTcpTextClient(string hostname, int port, int receiveTimeout = 5000, int sendTimeout = 5000)
         {
             this.hostname = hostname;
             this.port = port;
-
-            if (autoConnect)
-            {
-                this.Connect();
-            }
+            this.receiveTimeout = receiveTimeout;
+            this.sendTimeout = sendTimeout;
         }
 
-        public async Task<string> ReadTextAsync(string[] delimitators = null)
+        public async Task<string> ReadTextAsync(int readTimeoutMilli = 5000, int iterationDelayMilli = 200)
         {
-            this.EnsureClientIsConnected();
-            return await this.stream.ReadText(delimitators);
+            await this.EnsureClientIsConnected();
+            return await this.stream.ReadTextAsync(readTimeoutMilli: readTimeoutMilli, iterationDelayMilli: iterationDelayMilli);
         }
 
-        public string ReadText(string[] delimitators = null)
+        public async Task WriteTextAsync(string text)
         {
-            this.EnsureClientIsConnected();
-
-            /*
-            // TODO
-            if (this.stream.CanRead && this.stream.DataAvailable)
-            {
-            }
-            */
-
-            var readTextTask = this.stream.ReadText(delimitators);
-            readTextTask.Wait();
-            return readTextTask.Result;
-        }
-
-        public async void WriteTextAsync(string text)
-        {
-            this.EnsureClientIsConnected();
+            await this.EnsureClientIsConnected();
             await this.stream.WriteText(text);
-        }
-
-        public void WriteText(string text)
-        {
-            this.EnsureClientIsConnected();
-            this.stream.WriteText(text).Wait();
         }
 
         public void Dispose()
@@ -69,11 +50,37 @@ namespace Microsoft.Geolocation.RWhois.Client
             GC.SuppressFinalize(this);
         }
 
-        protected void Connect()
+        public virtual async Task ConnectAsync()
         {
-            // TODO: Close current stream, if any
-            this.client = new TcpClient(this.hostname, this.port);
+            this.client = new TcpClient()
+            {
+                    ReceiveTimeout = this.receiveTimeout,
+                SendTimeout = this.sendTimeout
+            };
+
+            await this.client.ConnectAsync(this.hostname, this.port);
             this.stream = this.client.GetStream();
+        }
+
+        public void Disconnect()
+        {
+            try
+            {
+                this.client.GetStream().Close();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+            }
+
+            try
+            {
+                this.client.Close();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex);
+            }
         }
 
         protected virtual void Dispose(bool disposing)
@@ -88,7 +95,7 @@ namespace Microsoft.Geolocation.RWhois.Client
             }
         }
 
-        private void EnsureClientIsConnected()
+        private async Task EnsureClientIsConnected()
         {
             if (this.client == null)
             {
@@ -102,7 +109,8 @@ namespace Microsoft.Geolocation.RWhois.Client
 
             if (!this.client.Connected)
             {
-                throw new ArgumentException("The client is not connected (anymore?)");
+                logger.Error("The client was not connected, so attempting to reconnect");
+                await this.ConnectAsync();
             }
         }
     }

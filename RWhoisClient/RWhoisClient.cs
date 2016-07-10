@@ -8,34 +8,53 @@ namespace Microsoft.Geolocation.RWhois.Client
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using NLog;
     using Whois.Parsers;
 
     public class RWhoisClient : IDisposable
     {
-        private RawRWhoisClient client;
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
-        public RWhoisClient(string hostname, int port)
+        public RWhoisClient(string hostname, int port, int receiveTimeout = 5000, int sendTimeout = 5000)
         {
-            this.client = new RawRWhoisClient(hostname, port);
+            this.RawClient = new RawRWhoisClient(hostname, port, receiveTimeout, sendTimeout);
         }
 
-        public IEnumerable<RawWhoisSection> RetrieveSectionsForQuery(IWhoisParser parser, string query)
+        public RawRWhoisClient RawClient { get; set; }
+
+        public async Task ConnectAsync()
+        {
+            await this.RawClient.ConnectAsync();
+        }
+
+        public async Task<IEnumerable<RawWhoisSection>> RetrieveSectionsForQueryAsync(IWhoisParser parser, string query)
         {
             if (parser == null)
             {
                 throw new ArgumentNullException("parser");
             }
 
-            var result = this.client.AnswerQuery(query);
+            var result = await this.RawClient.AnswerQueryAsync(query);
 
             if (result != null)
             {
-                var sections = parser.RetrieveSectionsFromString(result);
+                return parser.RetrieveSectionsFromString(result);
+            }
 
-                foreach (var section in sections)
-                {
-                    yield return section;
-                }
+            return Enumerable.Empty<RawWhoisSection>();
+        }
+
+        public void Disconnect()
+        {
+            try
+            {
+                this.RawClient.Disconnect();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
             }
         }
 
@@ -49,10 +68,10 @@ namespace Microsoft.Geolocation.RWhois.Client
         {
             if (disposing)
             {
-                if (this.client != null)
+                if (this.RawClient != null)
                 {
-                    this.client.Dispose();
-                    this.client = null;
+                    this.RawClient.Dispose();
+                    this.RawClient = null;
                 }
             }
         }

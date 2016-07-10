@@ -21,68 +21,41 @@ namespace Microsoft.Geolocation.RWhois.Client
 
         private static string holdConnectCommand = "-holdconnect on\r\n";
 
-        private bool connectForEachQuery = false;
+        private static string xferCheckCommand = "-xfer\r\n";
 
         // Implements a subset of RFC 2167: http://projects.arin.net/rwhois/docs/rfc2167.txt
-        public RawRWhoisClient(string hostname, int port) : base(hostname: hostname, port: port, autoConnect: false)
+        public RawRWhoisClient(string hostname, int port, int receiveTimeout = 5000, int sendTimeout = 5000) : base(hostname, port, receiveTimeout, sendTimeout)
+        {
+            this.ConnectForEachQuery = false; // This is the default, we will set it to the right value in ConnectAsync
+        }
+
+        public bool ConnectForEachQuery { get; set; }
+
+        public bool XferCommandSupported { get; set; }
+
+        public string InitialServerBanner { get; set; }
+
+        public override async Task ConnectAsync()
         {
             // Connect and read the version banner sent by the target RWhois server
-            this.ConnectAndReadBanner();
+            await this.ConnectAndReadBannerAsync();
 
             // The client sends a directive to hold the connection until it sends a directive to close the connection.
             // This setting allows querying the server multiple times using a single connection
             // See RFC 2167 Section 3.3.5
-            this.WriteText(holdConnectCommand);
+            await this.WriteTextAsync(holdConnectCommand);
 
             // Get the response for the holdconnect command
-            var holdConnectResponse = this.ReadText();
+            var holdConnectResponse = await this.ReadTextAsync();
 
-            if (string.IsNullOrWhiteSpace(holdConnectResponse))
+            var holdConnectResponseLines = TextUtils.SplitTextToLines(text: holdConnectResponse, removeEmptyEntries: true);
+
+            if (!RWhoisUtils.IsOkResponse(holdConnectResponseLines))
             {
-                // throw new ArgumentException("Did not receive a response when sending the holdconnect command");
-                this.connectForEachQuery = true;
-            }
-            else
-            {
-                // Regarding the string[] delimitator array below: To avoid ambiguous results when strings in separator have 
-                // characters in common, the Split operation proceeds from the beginning to the end of the value of the instance, 
-                // and matches the first element in separator that is equal to a delimiter in the instance. The order in which 
-                // substrings are encountered in the instance takes precedence over the order of elements in separator.
-                // https://msdn.microsoft.com/en-us/library/tabh47cf(v=vs.110).aspx
-                var holdConnectResponseLines = TextUtils.SplitTextToLines(text: holdConnectResponse, removeEmptyEntries: true);
-
-                if (!RWhoisUtils.IsOkResponse(holdConnectResponseLines))
-                {
-                    throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Did not receive a correct response after sending the holdconnect command. The response was: {0}", holdConnectResponse));
-                }
-            }
-        }
-
-        public string InitialServerBanner { get; set; }
-
-        public string AnswerQuery(string query)
-        {
-            if (query == null)
-            {
-                throw new ArgumentException("query should not be null");
+                this.ConnectForEachQuery = true;
             }
 
-            if (query.Contains("\r") || query.Contains("\n"))
-            {
-                throw new ArgumentException("query should not contain linefeed or carriage return (newline) characters");
-            }
-
-            if (this.connectForEachQuery)
-            {
-                this.ConnectAndReadBanner();
-            }
-
-            query = string.Format(CultureInfo.InvariantCulture, "{0}\r\n", query);
-            this.WriteText(query);
-
-            var responseTask = this.ReadTextAsync();
-            responseTask.Wait();
-            return responseTask.Result;
+            this.XferCommandSupported = await this.CheckXferSupport();
         }
 
         public async Task<string> AnswerQueryAsync(string query)
@@ -97,24 +70,48 @@ namespace Microsoft.Geolocation.RWhois.Client
                 throw new ArgumentException("query should not contain linefeed or carriage return (newline) characters");
             }
 
-            if (this.connectForEachQuery)
+            if (this.ConnectForEachQuery)
             {
-                this.ConnectAndReadBanner();
+                await this.ConnectAndReadBannerAsync();
             }
 
             query = string.Format(CultureInfo.InvariantCulture, "{0}\r\n", query);
-            this.WriteText(query);
+            await this.WriteTextAsync(query);
 
             return await this.ReadTextAsync();
         }
 
-        private void ConnectAndReadBanner()
+        private async Task ConnectAndReadBannerAsync()
         {
-            this.Connect();
+            await base.ConnectAsync();
 
             // Read the initial banner sent by the server
             // The initial banner is mandatory as per RFC 2167 Section 3.1.9 
-            this.InitialServerBanner = this.ReadText();
+            this.InitialServerBanner = await this.ReadTextAsync();
+        }
+
+        // Checks if this server supports bulk commands (xfer)
+        private async Task<bool> CheckXferSupport()
+        {
+            if (this.ConnectForEachQuery)
+            {
+                await this.ConnectAndReadBannerAsync();
+            }
+
+            await this.WriteTextAsync(xferCheckCommand);
+
+            var xferCheckResponse = await this.ReadTextAsync();
+
+            var parts = xferCheckResponse.Split(new char[] { ' ' });
+
+            // Looking for: %error 338 Invalid directive syntax
+            // This means -xfer is supported we just did not pass in the right parameters
+            if (parts.Length >= 2 && string.Compare(parts[0], "%error", ignoreCase: true) == 0 && parts[1] == "338")
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
