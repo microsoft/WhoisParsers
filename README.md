@@ -1,6 +1,6 @@
 # WhoisParsers: Whois and RWhois Parsers and Crawlers C# Library
 
-[![license:isc](https://img.shields.io/badge/license-mit-brightgreen.svg?style=flat-square)](https://github.com/Microsoft/WhoisParsers/blob/master/LICENSE) [![NuGet Package version](https://img.shields.io/nuget/v/WhoisParsers.svg?style=flat-square)](https://www.nuget.org/packages/WhoisParsers/) [![Build Status](https://img.shields.io/travis/Microsoft/WhoisParsers.svg?style=flat-square)](https://travis-ci.org/Microsoft/WhoisParsers) 
+[![license:isc](https://img.shields.io/badge/license-mit-brightgreen.svg?style=flat-square#123)](https://github.com/Microsoft/WhoisParsers/blob/master/LICENSE) [![NuGet Package version](https://img.shields.io/nuget/v/WhoisParsers.svg?style=flat-square)](https://www.nuget.org/packages/WhoisParsers/) [![Build Status](https://img.shields.io/travis/Microsoft/WhoisParsers.svg?style=flat-square)](https://travis-ci.org/Microsoft/WhoisParsers) 
 
 This library provides two main features:
 
