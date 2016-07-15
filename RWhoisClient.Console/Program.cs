@@ -10,7 +10,7 @@ namespace Microsoft.Geolocation.RWhois.Console
     using System.IO;
     using Crawler;
     using NetTools;
-
+    using Whois.Parsers;
     public static class Program
     {
         public static void Main(string[] args)
@@ -88,7 +88,6 @@ namespace Microsoft.Geolocation.RWhois.Console
             crawler.CrawlRangeAsync(IPAddressRange.Parse("184.8.0.0/13")).Wait();
             */
 
-            /*
             var settings = new ReferralServerFinderSettings()
             {
                 Parser = new WhoisParser(new SectionTokenizer(), new SectionParser()),
@@ -103,7 +102,6 @@ namespace Microsoft.Geolocation.RWhois.Console
 
             Console.WriteLine("FindOrganizationsToRefRanges");
             var organizationsToRefRanges = ReferralServerFinder.FindOrganizationsToRefRanges(settings: settings, organizationsToRefServers: organizationsToRefServers, networksFilePath: @"C:\Users\zmarty\Downloads\arin\networks.txt");
-            */
 
             //// Diff:
             //// var organizationsWithRefServers = organizationsToRefServers.Keys;
@@ -135,11 +133,9 @@ namespace Microsoft.Geolocation.RWhois.Console
             };
             */
 
-            /*
             Console.WriteLine("RWhoisMultiCrawler");
             var multiCrawler = new RWhoisMultiCrawler("./CrawlResults");
-            multiCrawler.Crawl(organizationsToRefServers, organizationsToRefRanges).Wait();
-            */
+            multiCrawler.CrawlInParallel(organizationsToRefServers, organizationsToRefRanges).Wait();
 
             /*
             var settings = new ReferralServerFinderSettings()
