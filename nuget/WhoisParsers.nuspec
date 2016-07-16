@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>WhoisParsers</id>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
     <title>Whois and RWhois Parsers and Crawlers</title>
     <authors>Ovidiu Dan</authors>
     <owners>Ovidiu Dan</owners>
@@ -37,6 +37,9 @@
       
       <file src="..\WhoisUtils\bin\Release-Net40\Microsoft.Geolocation.Whois.Utils.dll" target="lib\net40" />
       <file src="..\WhoisUtils\bin\Release-Net40\Microsoft.Geolocation.Whois.Utils.pdb" target="lib\net40" />
+      
+      <file src="..\WhoisTsvExport\bin\Release-Net40\Microsoft.Geolocation.Whois.TsvExport.dll" target="lib\net40" />
+      <file src="..\WhoisTsvExport\bin\Release-Net40\Microsoft.Geolocation.Whois.TsvExport.pdb" target="lib\net40" />
       -->
       
       <!-- .NET 4.5 -->
@@ -53,6 +56,9 @@
       <file src="..\WhoisUtils\bin\Release-Net45\Microsoft.Geolocation.Whois.Utils.dll" target="lib\net45" />
       <file src="..\WhoisUtils\bin\Release-Net45\Microsoft.Geolocation.Whois.Utils.pdb" target="lib\net45" />
 
+      <file src="..\WhoisTsvExport\bin\Release-Net45\Microsoft.Geolocation.Whois.TsvExport.dll" target="lib\net45" />
+      <file src="..\WhoisTsvExport\bin\Release-Net45\Microsoft.Geolocation.Whois.TsvExport.pdb" target="lib\net45" />
+      
       <!-- Source -->
       
       <file src="..\RWhoisClient\**\*.cs" target="src\RWhoisClient" />
