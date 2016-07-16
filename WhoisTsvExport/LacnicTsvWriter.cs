@@ -11,6 +11,10 @@ namespace Microsoft.Geolocation.Whois.TsvExport
 
     public class LacnicTsvWriter : TsvWriter
     {
+        public LacnicTsvWriter() : base(new WhoisParser(new SectionTokenizer(), new SectionParser()))
+        {
+        }
+
         public LacnicTsvWriter(IWhoisParser parser) : base(parser)
         {
         }

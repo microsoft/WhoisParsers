@@ -11,6 +11,10 @@ namespace Microsoft.Geolocation.Whois.TsvExport
 
     public class ApnicTsvWriter : TsvWriter
     {
+        public ApnicTsvWriter() : base(new WhoisParser(new SectionTokenizer(), new SectionParser()))
+        {
+        }
+
         public ApnicTsvWriter(IWhoisParser parser) : base(parser)
         {
         }

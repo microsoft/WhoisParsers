@@ -11,6 +11,10 @@ namespace Microsoft.Geolocation.Whois.TsvExport
 
     public class AfrinicTsvWriter : TsvWriter
     {
+        public AfrinicTsvWriter() : base(new WhoisParser(new AfrinicSectionTokenizer(), new SectionParser()))
+        {
+        }
+
         public AfrinicTsvWriter(IWhoisParser parser) : base(parser)
         {
         }

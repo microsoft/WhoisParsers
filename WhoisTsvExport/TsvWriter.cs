@@ -18,7 +18,7 @@ namespace Microsoft.Geolocation.Whois.TsvExport
             this.Parser = parser;
         }
 
-        IWhoisParser Parser { get; set; }
+        public IWhoisParser Parser { get; set; }
 
         public void ExportFieldsToTsv(string inputFilePath, string outputFilePath, string recordType, List<string> outputColumns)
         {

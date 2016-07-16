@@ -11,6 +11,10 @@ namespace Microsoft.Geolocation.Whois.TsvExport
 
     public class ArinTsvWriter : TsvWriter
     {
+        public ArinTsvWriter() : base(new WhoisParser(new SectionTokenizer(), new SectionParser()))
+        {
+        }
+
         public ArinTsvWriter(IWhoisParser parser) : base(parser)
         {
         }
