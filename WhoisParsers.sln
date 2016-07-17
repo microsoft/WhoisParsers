@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RWhoisConsole", "RWhoisClie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhoisTsvExport", "WhoisTsvExport\WhoisTsvExport.csproj", "{AA0FC077-5096-45D3-A99B-D6D70C633D0A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhoisDownload", "WhoisDownload\WhoisDownload.csproj", "{9FE9520D-E188-48FF-BD13-CFC0DCB92B92}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug-Net45|Any CPU = Debug-Net45|Any CPU
@@ -91,6 +93,14 @@ Global
 		{AA0FC077-5096-45D3-A99B-D6D70C633D0A}.Release-Net40|Any CPU.Build.0 = Release-Net40|Any CPU
 		{AA0FC077-5096-45D3-A99B-D6D70C633D0A}.Release-Net45|Any CPU.ActiveCfg = Release-Net45|Any CPU
 		{AA0FC077-5096-45D3-A99B-D6D70C633D0A}.Release-Net45|Any CPU.Build.0 = Release-Net45|Any CPU
+		{9FE9520D-E188-48FF-BD13-CFC0DCB92B92}.Debug-Net45|Any CPU.ActiveCfg = Debug-Net45|Any CPU
+		{9FE9520D-E188-48FF-BD13-CFC0DCB92B92}.Debug-Net45|Any CPU.Build.0 = Debug-Net45|Any CPU
+		{9FE9520D-E188-48FF-BD13-CFC0DCB92B92}.Nunit-Net45|Any CPU.ActiveCfg = Nunit-Net45|Any CPU
+		{9FE9520D-E188-48FF-BD13-CFC0DCB92B92}.Nunit-Net45|Any CPU.Build.0 = Nunit-Net45|Any CPU
+		{9FE9520D-E188-48FF-BD13-CFC0DCB92B92}.Release-Net40|Any CPU.ActiveCfg = Release-Net40|Any CPU
+		{9FE9520D-E188-48FF-BD13-CFC0DCB92B92}.Release-Net40|Any CPU.Build.0 = Release-Net40|Any CPU
+		{9FE9520D-E188-48FF-BD13-CFC0DCB92B92}.Release-Net45|Any CPU.ActiveCfg = Release-Net45|Any CPU
+		{9FE9520D-E188-48FF-BD13-CFC0DCB92B92}.Release-Net45|Any CPU.Build.0 = Release-Net45|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

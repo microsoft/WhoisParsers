@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>WhoisParsers</id>
-    <version>0.0.7</version>
+    <version>0.0.8</version>
     <title>Whois and RWhois Parsers and Crawlers</title>
     <authors>Ovidiu Dan</authors>
     <owners>Ovidiu Dan</owners>
@@ -19,6 +19,7 @@
           <dependency id="NLog.Config" version="4.3.5" />
           <dependency id="NLog.Schema" version="4.3.4" />
           <dependency id="IPAddressRange" version="1.6.0.0" />
+          <dependency id="DotNetZip" version="1.10.1.0" />
        </group>
     </dependencies> 
   </metadata>
@@ -40,6 +41,9 @@
       
       <file src="..\WhoisTsvExport\bin\Release-Net40\Microsoft.Geolocation.Whois.TsvExport.dll" target="lib\net40" />
       <file src="..\WhoisTsvExport\bin\Release-Net40\Microsoft.Geolocation.Whois.TsvExport.pdb" target="lib\net40" />
+      
+      <file src="..\WhoisDownload\bin\Release-Net40\Microsoft.Geolocation.Whois.Download.dll" target="lib\net40" />
+      <file src="..\WhoisDownload\bin\Release-Net40\Microsoft.Geolocation.Whois.Download.pdb" target="lib\net40" />
       -->
       
       <!-- .NET 4.5 -->
@@ -58,6 +62,9 @@
 
       <file src="..\WhoisTsvExport\bin\Release-Net45\Microsoft.Geolocation.Whois.TsvExport.dll" target="lib\net45" />
       <file src="..\WhoisTsvExport\bin\Release-Net45\Microsoft.Geolocation.Whois.TsvExport.pdb" target="lib\net45" />
+
+      <file src="..\WhoisDownload\bin\Release-Net45\Microsoft.Geolocation.Whois.Download.dll" target="lib\net45" />
+      <file src="..\WhoisDownload\bin\Release-Net45\Microsoft.Geolocation.Whois.Download.pdb" target="lib\net45" />
       
       <!-- Source -->
       
@@ -65,5 +72,7 @@
       <file src="..\RWhoisCrawler\**\*.cs" target="src\RWhoisCrawler" />
       <file src="..\WhoisDatabaseParsers\**\*.cs" target="src\WhoisDatabaseParsers" />
       <file src="..\WhoisUtils\**\*.cs" target="src\WhoisUtils" />
+      <file src="..\WhoisTsvExport\**\*.cs" target="src\WhoisTsvExport" />
+      <file src="..\WhoisDownload\**\*.cs" target="src\WhoisDownload" />
   </files>
 </package>
