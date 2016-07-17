@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>WhoisParsers</id>
-    <version>0.0.8</version>
+    <version>0.0.9</version>
     <title>Whois and RWhois Parsers and Crawlers</title>
     <authors>Ovidiu Dan</authors>
     <owners>Ovidiu Dan</owners>
@@ -12,7 +12,7 @@
     <description>This package provides: 1) Parsers to read Whois records from bulk whois database dumps of IANA organizations (ARIN, AFRINIC, APNIC, LACNIC, and RIPE) and 2) Crawlers to retrieve RWhois data from ARIN Referral Whois servers (RFC 2167).</description>
     <releaseNotes>Initial Release</releaseNotes>
     <copyright>Copyright Microsoft</copyright>
-    <tags>whois rwhois parser parsers crawling arin afrinic apnic lacnic ripe iana database rfc 2167 referral servers</tags>
+    <tags>whois rwhois parser parsers crawling arin afrinic apnic lacnic ripe iana bulk database databases rfc 2167 referral servers download unpack decompress tsv</tags>
     <dependencies> 
        <group>
           <dependency id="NLog" version="4.3.5" />
