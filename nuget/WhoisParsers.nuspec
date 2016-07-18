@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>WhoisParsers</id>
-    <version>0.0.9</version>
+    <version>0.1.0</version>
     <title>Whois and RWhois Parsers and Crawlers</title>
     <authors>Ovidiu Dan</authors>
     <owners>Ovidiu Dan</owners>

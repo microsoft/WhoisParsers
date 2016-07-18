@@ -11,12 +11,11 @@ namespace Microsoft.Geolocation.RWhois.Console
     using Crawler;
     using NetTools;
     using Whois.Parsers;
+    using Whois.TsvExport;
     public static class Program
     {
         public static void Main(string[] args)
         {
-
-
             /*
             var client = new RWhoisClient("rwhois.isomedia.com", 4321);
             client.ConnectAsync().Wait();
@@ -88,6 +87,7 @@ namespace Microsoft.Geolocation.RWhois.Console
             crawler.CrawlRangeAsync(IPAddressRange.Parse("184.8.0.0/13")).Wait();
             */
 
+            /*
             var settings = new ReferralServerFinderSettings()
             {
                 Parser = new WhoisParser(new SectionTokenizer(), new SectionParser()),
@@ -102,6 +102,7 @@ namespace Microsoft.Geolocation.RWhois.Console
 
             Console.WriteLine("FindOrganizationsToRefRanges");
             var organizationsToRefRanges = ReferralServerFinder.FindOrganizationsToRefRanges(settings: settings, organizationsToRefServers: organizationsToRefServers, networksFilePath: @"C:\Users\zmarty\Downloads\arin\networks.txt");
+            */
 
             //// Diff:
             //// var organizationsWithRefServers = organizationsToRefServers.Keys;
@@ -133,9 +134,11 @@ namespace Microsoft.Geolocation.RWhois.Console
             };
             */
 
+            /*
             Console.WriteLine("RWhoisMultiCrawler");
             var multiCrawler = new RWhoisMultiCrawler("./CrawlResults");
             multiCrawler.CrawlInParallel(organizationsToRefServers, organizationsToRefRanges).Wait();
+            */
 
             /*
             var settings = new ReferralServerFinderSettings()
@@ -257,6 +260,14 @@ namespace Microsoft.Geolocation.RWhois.Console
             Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "errors = {0}", errors));
             Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "total = {0}", total));
             */
+
+            var parser = new WhoisParser(new RWhoisXferSectionTokenizer(), new RWhoisSectionParser());
+
+            var completeInputPath = @"C:\Users\zmarty\lacnic.db";
+            var completeOutputPath = @"C:\Users\zmarty\lacnic.tsv";
+
+            var tsvWriter = new LacnicTsvWriter();
+            tsvWriter.ExportIpv4RangesToTsv(completeInputPath, completeOutputPath);
 
             Console.WriteLine("Done!");
             Console.ReadKey();

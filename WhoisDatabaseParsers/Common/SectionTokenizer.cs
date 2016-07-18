@@ -42,9 +42,16 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
                 linesCounter++;
 
-                if (linesCounter > 10000)
+                if (linesCounter > 30000)
                 {
-                    throw new ArgumentException("A section cannot contain more than 10,000 lines. Maybe the section delimitator is incorrect?");
+                    var sample = ret.ToString();
+
+                    if (ret.Length > 200)
+                    {
+                        sample = ret.ToString().Substring(0, 200);
+                    }
+
+                    throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "A section cannot contain more than 30,000 lines. Maybe the section delimitator is incorrect? First characters of buffer: {0}", sample));
                 }
 
                 if (line != null)

@@ -19,7 +19,7 @@ namespace Microsoft.Geolocation.Whois.TsvExport
         {
         }
 
-        public void ExportIpvRangesToTsv(string inputFilePath, string outputFilePath)
+        public void ExportIpv4RangesToTsv(string inputFilePath, string outputFilePath)
         {
             var outputColumns = new List<string> { "inetnum", "status", "owner", "city", "country", "owner-c", "tech-c", "abuse-c", "inetrev", "nserver", "created", "changed", "source", "inetnum-up" };
             this.ExportFieldsToTsv(inputFilePath: inputFilePath, outputFilePath: outputFilePath, recordType: "inetnum", outputColumns: outputColumns);
