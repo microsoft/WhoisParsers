@@ -14,10 +14,11 @@ namespace Microsoft.Geolocation.Whois.TsvExport
         public static string GenerateTsvLine(Dictionary<string, StringBuilder> records, List<string> outputColumns)
         {
             var ret = new StringBuilder();
+            var firstColumn = true;
 
             foreach (var outputColumn in outputColumns)
             {
-                if (ret.Length > 0)
+                if (!firstColumn)
                 {
                     ret.Append("\t");
                 }
@@ -28,6 +29,8 @@ namespace Microsoft.Geolocation.Whois.TsvExport
                 {
                     ret.Append(ReplaceAndTrimIllegalCharacters(val.ToString()));
                 }
+
+                firstColumn = false;
             }
 
             return ret.ToString();
