@@ -19,8 +19,9 @@ namespace Microsoft.Geolocation.RWhois.Crawler
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
         private string outputPath;
+        private bool attemptCrawlOrganizations;
 
-        public RWhoisMultiCrawler(string outputPath)
+        public RWhoisMultiCrawler(string outputPath, bool attemptCrawlOrganizations = false)
         {
             this.outputPath = outputPath;
 
@@ -28,6 +29,8 @@ namespace Microsoft.Geolocation.RWhois.Crawler
             {
                 Directory.CreateDirectory(this.outputPath);
             }
+
+            this.attemptCrawlOrganizations = attemptCrawlOrganizations;
         }
 
         public async Task CrawlOneByOne(Dictionary<string, string> organizationsToRefServers, Dictionary<string, HashSet<IPAddressRange>> organizationsToRefRanges)
@@ -50,7 +53,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                     var hostname = refServerUri.Host;
                     var port = refServerUri.Port;
 
-                    var crawlerTask = CreateCrawlerTask(organizationId, hostname, port, ranges);
+                    var crawlerTask = this.CreateCrawlerTask(organizationId, hostname, port, ranges);
                     await crawlerTask;
                 }
             }
@@ -78,7 +81,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                     var hostname = refServerUri.Host;
                     var port = refServerUri.Port;
 
-                    var crawlerTask = CreateCrawlerTask(organizationId, hostname, port, ranges);
+                    var crawlerTask = this.CreateCrawlerTask(organizationId, hostname, port, ranges);
                     crawlTasks.Add(crawlerTask);
                 }
             }
@@ -93,7 +96,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
             {
                 logger.Info(string.Format(CultureInfo.InvariantCulture, "Starting crawler for organizationId: {0}, hostname: {1}, port: {2}", organizationId, hostname, port));
 
-                var crawler = new RWhoisCrawler(hostname, port);
+                var crawler = new RWhoisCrawler(hostname, port, attemptCrawlOrganizations: this.attemptCrawlOrganizations);
                 await crawler.ConnectAsync();
 
                 var outFile = Path.Combine(this.outputPath, string.Format(CultureInfo.InvariantCulture, "{0}.txt", organizationId));

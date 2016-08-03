@@ -69,6 +69,7 @@
     <Compile Include="ArinTsvWriter.cs" />
     <Compile Include="LacnicTsvWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RWhoisTsvWriter.cs" />
     <Compile Include="TsvUtils.cs" />
     <Compile Include="TsvWriter.cs" />
   </ItemGroup>

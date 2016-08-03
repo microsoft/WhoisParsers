@@ -12,6 +12,7 @@ namespace Microsoft.Geolocation.RWhois.Console
     using NetTools;
     using Whois.Parsers;
     using Whois.TsvExport;
+    using System.Collections.Generic;
     public static class Program
     {
         public static void Main(string[] args)
@@ -87,7 +88,6 @@ namespace Microsoft.Geolocation.RWhois.Console
             crawler.CrawlRangeAsync(IPAddressRange.Parse("184.8.0.0/13")).Wait();
             */
 
-            /*
             var settings = new ReferralServerFinderSettings()
             {
                 Parser = new WhoisParser(new SectionTokenizer(), new SectionParser()),
@@ -102,7 +102,6 @@ namespace Microsoft.Geolocation.RWhois.Console
 
             Console.WriteLine("FindOrganizationsToRefRanges");
             var organizationsToRefRanges = ReferralServerFinder.FindOrganizationsToRefRanges(settings: settings, organizationsToRefServers: organizationsToRefServers, networksFilePath: @"C:\Users\zmarty\Downloads\arin\networks.txt");
-            */
 
             //// Diff:
             //// var organizationsWithRefServers = organizationsToRefServers.Keys;
@@ -134,11 +133,9 @@ namespace Microsoft.Geolocation.RWhois.Console
             };
             */
 
-            /*
             Console.WriteLine("RWhoisMultiCrawler");
-            var multiCrawler = new RWhoisMultiCrawler("./CrawlResults");
+            var multiCrawler = new RWhoisMultiCrawler("./CrawlResults", attemptCrawlOrganizations: true);
             multiCrawler.CrawlInParallel(organizationsToRefServers, organizationsToRefRanges).Wait();
-            */
 
             /*
             var settings = new ReferralServerFinderSettings()
@@ -162,7 +159,7 @@ namespace Microsoft.Geolocation.RWhois.Console
             //// var organizationsWithoutRefRanges = organizationsWithRefServers.Except(organizationsWithRefRanges);
 
             Console.WriteLine("RWhoisMultiCrawler");
-            var multiCrawler = new RWhoisMultiCrawler("./");
+            var multiCrawler = new RWhoisMultiCrawler("./", attemptCrawlOrganizations: true);
             multiCrawler.Crawl(organizationsToRefServers, organizationsToRefRanges);
             */
 
@@ -261,6 +258,7 @@ namespace Microsoft.Geolocation.RWhois.Console
             Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "total = {0}", total));
             */
 
+            /*
             var parser = new WhoisParser(new RWhoisXferSectionTokenizer(), new RWhoisSectionParser());
 
             var completeInputPath = @"C:\Users\zmarty\lacnic.db";
@@ -268,6 +266,52 @@ namespace Microsoft.Geolocation.RWhois.Console
 
             var tsvWriter = new LacnicTsvWriter();
             tsvWriter.ExportIpv4RangesToTsv(completeInputPath, completeOutputPath);
+            */
+
+            /*
+            var settings = new ReferralServerFinderSettings()
+            {
+                Parser = new WhoisParser(new SectionTokenizer(), new SectionParser()),
+                OrganizationIdField = "OrgID",
+                NetworkIdField = "NetHandle",
+                ReferralServerField = "ReferralServer",
+                NetworkRangeField = "NetRange"
+            };
+
+            var organizationsToRefServers = new Dictionary<string, string>()
+            {
+                {
+                    "19EET",
+                    "rwhois://rwhois.netelligent.ca:4321"
+                }
+            };
+
+            var organizationsToRefRanges = new Dictionary<string, HashSet<IPAddressRange>>()
+            {
+                {
+                    "19EET",
+                    new HashSet<IPAddressRange>
+                    {
+                        IPAddressRange.Parse("199.193.52.0-199.193.55.255"),
+                        IPAddressRange.Parse("208.82.120.0-208.82.123.255"),
+                        IPAddressRange.Parse("204.147.76.0-204.147.79.255"),
+                        IPAddressRange.Parse("209.44.104.144-209.44.104.159"),
+                        IPAddressRange.Parse("209.44.97.0-209.44.97.15"),
+                        IPAddressRange.Parse("64.15.74.0-64.15.74.15"),
+                        IPAddressRange.Parse("64.15.78.0-64.15.78.15")
+                    }
+                }
+            };
+
+            Console.WriteLine("RWhoisMultiCrawler");
+            var multiCrawler = new RWhoisMultiCrawler("./CrawlResults", attemptCrawlOrganizations: true);
+            multiCrawler.CrawlInParallel(organizationsToRefServers, organizationsToRefRanges).Wait();
+            */
+
+            /*
+            var rwhoisTsvWriter = new RWhoisTsvWriter();
+            rwhoisTsvWriter.ColumnsPerTypeToTsv(@"M:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"M:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\rWhoisColumnsPerType.tsv");
+            */
 
             Console.WriteLine("Done!");
             Console.ReadKey();

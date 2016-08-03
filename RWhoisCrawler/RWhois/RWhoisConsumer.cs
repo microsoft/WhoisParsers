@@ -53,17 +53,26 @@ namespace Microsoft.Geolocation.RWhois.Crawler
             {
                 StringBuilder rawNetwork;
 
+                this.outFile.Write(section);
+                this.outFile.WriteLine();
+                this.outFile.Flush();
+
                 if (section.Records.TryGetValue("IP-Network", out rawNetwork))
                 {
-                    this.outFile.Write(section);
-                    this.outFile.WriteLine();
-                    this.outFile.Flush();
+                    IPAddressRange parsedRange;
 
-                    logger.Debug(string.Format(CultureInfo.InvariantCulture, "Received records for: {0}", IPAddressRange.Parse(rawNetwork.ToString())));
+                    if (IPAddressRange.TryParse(rawNetwork.ToString(), out parsedRange))
+                    {
+                        logger.Debug(string.Format(CultureInfo.InvariantCulture, "Received records for: {0}", parsedRange));
+                    }
+                    else
+                    {
+                        logger.Debug(string.Format(CultureInfo.InvariantCulture, "Received records for: {0} (error parsing range!)", rawNetwork));
+                    }
                 }
                 else
                 {
-                    logger.Debug("Received records but could not find IP-Network record");
+                    logger.Debug(string.Format(CultureInfo.InvariantCulture, "Received non IP range section type: {0}", section.Type));
                 }
             }
             else

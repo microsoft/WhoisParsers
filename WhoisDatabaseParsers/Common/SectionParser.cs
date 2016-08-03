@@ -72,55 +72,67 @@ namespace Microsoft.Geolocation.Whois.Parsers
                         {
                             skipPartsOverrideType = parts[0];
                         }
+                        else if (skipPartsOverrideType!= parts[0])
+                        {
+                            Console.WriteLine("XXX");
+                        }
 
                         var newParts = new string[parts.Length - this.skipParts];
                         Array.Copy(parts, this.skipParts, newParts, 0, newParts.Length);
                         parts = newParts;
                     }
 
-                    var key = string.Empty;
-                    var value = string.Empty;
-
-                    if (key.Length < line.Length)
+                    if (parts.Length > 0)
                     {
-                        key = parts[0];
-                    }
 
-                    if (parts.Length > 1)
-                    {
-                        value = string.Join(keyValueDelimitator, parts, 1, parts.Length - 1).Trim();
-                    }
+                        var key = string.Empty;
+                        var value = string.Empty;
 
-                    if (key != string.Empty)
-                    {
-                        validLineCounter++;
-                        currentFieldName = key;
-                        this.AddToRecord(records: records, fieldName: currentFieldName, newValueLine: value);
-
-                        if (validLineCounter == 1 && this.skipParts == 0)
+                        if (key.Length < line.Length)
                         {
-                            sectionType = key;
-                            sectionId = value;
+                            key = parts[0];
                         }
 
-                        if (string.Compare(key, "ID", ignoreCase: true) == 0)
+                        if (parts.Length > 1)
                         {
-                            sectionId = value;
+                            value = string.Join(keyValueDelimitator, parts, 1, parts.Length - 1).Trim();
                         }
 
-                        if (!localFieldNamesSet.Contains(key))
+                        if (key != string.Empty)
                         {
-                            localFieldNamesSet.Add(key);
-                            localFieldNamesList.Add(key);
+                            validLineCounter++;
+                            currentFieldName = key;
+                            this.AddToRecord(records: records, fieldName: currentFieldName, newValueLine: value);
+
+                            if (validLineCounter == 1 && this.skipParts == 0)
+                            {
+                                sectionType = key;
+                                sectionId = value;
+                            }
+
+                            if (string.Compare(key, "ID", ignoreCase: true) == 0)
+                            {
+                                sectionId = value;
+                            }
+
+                            if (!localFieldNamesSet.Contains(key))
+                            {
+                                localFieldNamesSet.Add(key);
+                                localFieldNamesList.Add(key);
+                            }
                         }
-                    }
-                    else if (currentFieldName != null)
-                    {
-                        this.AddToRecord(records: records, fieldName: currentFieldName, newValueLine: line);
+                        else if (currentFieldName != null)
+                        {
+                            this.AddToRecord(records: records, fieldName: currentFieldName, newValueLine: line);
+                        }
+                        else
+                        {
+                            throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "We tried to parse a partial record value when there was not current record, so we don't know where to append the partial record: {0}", line));
+                        }
                     }
                     else
                     {
-                        throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "We tried to parse a partial record value when there was not current record, so we don't know where to append the partial record: {0}", line));
+                        // TODO: Log
                     }
                 }
             }
@@ -132,31 +144,35 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
             if (validLineCounter > 0 && !string.IsNullOrWhiteSpace(sectionType) && !string.IsNullOrWhiteSpace(sectionId) && records.Count > 0)
             {
-                if (sectionType != null)
+                HashSet<string> globalFieldNamesSet;
+                List<string> globalFieldNamesList;
+
+                if (!this.TypeToFieldNamesSet.TryGetValue(sectionType, out globalFieldNamesSet))
                 {
-                    HashSet<string> globalFieldNamesSet;
-                    List<string> globalFieldNamesList;
+                    globalFieldNamesSet = new HashSet<string>();
+                    this.TypeToFieldNamesSet.Add(sectionType, globalFieldNamesSet);
+                }
 
-                    if (!this.TypeToFieldNamesSet.TryGetValue(sectionType, out globalFieldNamesSet))
-                    {
-                        globalFieldNamesSet = new HashSet<string>();
-                        this.TypeToFieldNamesSet.Add(sectionType, globalFieldNamesSet);
-                    }
+                if (!this.TypeToFieldNamesList.TryGetValue(sectionType, out globalFieldNamesList))
+                {
+                    globalFieldNamesList = new List<string>();
+                    this.TypeToFieldNamesList.Add(sectionType, globalFieldNamesList);
+                }
 
-                    if (!this.TypeToFieldNamesList.TryGetValue(sectionType, out globalFieldNamesList))
+                foreach (var fieldName in localFieldNamesSet)
+                {
+                    if (!globalFieldNamesSet.Contains(fieldName))
                     {
-                        globalFieldNamesList = new List<string>();
-                        this.TypeToFieldNamesList.Add(sectionType, globalFieldNamesList);
+                        globalFieldNamesSet.Add(fieldName);
+                        globalFieldNamesList.Add(fieldName);
                     }
+                }
 
-                    foreach (var fieldName in localFieldNamesSet)
-                    {
-                        if (!globalFieldNamesSet.Contains(fieldName))
-                        {
-                            globalFieldNamesSet.Add(fieldName);
-                            globalFieldNamesList.Add(fieldName);
-                        }
-                    }
+                StringBuilder recordsClassName;
+
+                if (!records.TryGetValue("Class-Name", out recordsClassName) && skipPartsOverrideType != null)
+                {
+                    records["Class-Name"] = new StringBuilder(skipPartsOverrideType);
                 }
 
                 return new RawWhoisSection(sectionType, sectionId, records);

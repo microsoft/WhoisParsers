@@ -70,11 +70,14 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
             while ((record = this.SectionTokenizer.RetrieveRecord(reader)) != null)
             {
-                var section = this.SectionParser.Parse(record);
-
-                if (section != null && desiredTypes.Contains(section.Type))
+                if (record.Trim().Length > 0)
                 {
-                    yield return section;
+                    var section = this.SectionParser.Parse(record);
+
+                    if (section != null && desiredTypes.Contains(section.Type))
+                    {
+                        yield return section;
+                    }
                 }
             }
         }
