@@ -6,9 +6,10 @@
 
 namespace Microsoft.Geolocation.Whois.TsvExport
 {
-    using Parsers;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using Parsers;
 
     public class RWhoisTsvWriter
     {
@@ -25,20 +26,52 @@ namespace Microsoft.Geolocation.Whois.TsvExport
 
         public void ColumnsPerTypeToTsv(string inputFolder, string outputFilePath)
         {
+            var globalColumnsPerType = new Dictionary<string, List<string>>();
+
+            foreach (var file in Directory.GetFiles(inputFolder))
+            {
+                var localColumnsPerTypes = this.Parser.ColumnsPerType(file);
+                this.MergeIntoGlobalColumnsPerType(globalColumnsPerType, localColumnsPerTypes);
+            }
+
             using (var outputFile = new StreamWriter(outputFilePath))
             {
-                foreach (var file in Directory.GetFiles(inputFolder))
+                foreach (var entry in globalColumnsPerType)
                 {
-                    var columnsPerTypes = this.Parser.ColumnsPerType(file);
+                    var recordType = entry.Key;
+                    var recordColumns = entry.Value;
 
-                    foreach (var columnsPerType in columnsPerTypes)
+                    foreach (var recordColumn in recordColumns)
                     {
-                        foreach (var column in columnsPerType.Value)
-                        {
-                            outputFile.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}\t{1}", columnsPerType.Key, column));
-                        }
+                        outputFile.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}\t{1}", recordType, recordColumn));
                     }
                 }
+            }
+        }
+
+        private void MergeIntoGlobalColumnsPerType(Dictionary<string, List<string>> globalColumnsPerType, Dictionary<string, List<string>> localColumnsPerTypes)
+        {
+            foreach (var localEntry in localColumnsPerTypes)
+            {
+                var localRecordType = localEntry.Key;
+                var localRecordColumns = localEntry.Value;
+
+                List<string> globalRecordColumns;
+
+                if (!globalColumnsPerType.TryGetValue(localRecordType, out globalRecordColumns))
+                {
+                    globalRecordColumns = new List<string>();
+                }
+
+                foreach (var localRecordColumn in localRecordColumns)
+                {
+                    if (!globalRecordColumns.Contains(localRecordColumn))
+                    {
+                        globalRecordColumns.Add(localRecordColumn);
+                    }
+                }
+
+                globalColumnsPerType[localRecordType] = globalRecordColumns;
             }
         }
     }

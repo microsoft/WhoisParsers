@@ -7,12 +7,8 @@
 namespace Microsoft.Geolocation.RWhois.Console
 {
     using System;
-    using System.IO;
-    using Crawler;
-    using NetTools;
-    using Whois.Parsers;
     using Whois.TsvExport;
-    using System.Collections.Generic;
+
     public static class Program
     {
         public static void Main(string[] args)
@@ -88,6 +84,7 @@ namespace Microsoft.Geolocation.RWhois.Console
             crawler.CrawlRangeAsync(IPAddressRange.Parse("184.8.0.0/13")).Wait();
             */
 
+            /*
             var settings = new ReferralServerFinderSettings()
             {
                 Parser = new WhoisParser(new SectionTokenizer(), new SectionParser()),
@@ -102,13 +99,14 @@ namespace Microsoft.Geolocation.RWhois.Console
 
             Console.WriteLine("FindOrganizationsToRefRanges");
             var organizationsToRefRanges = ReferralServerFinder.FindOrganizationsToRefRanges(settings: settings, organizationsToRefServers: organizationsToRefServers, networksFilePath: @"C:\Users\zmarty\Downloads\arin\networks.txt");
+            */
 
             //// Diff:
             //// var organizationsWithRefServers = organizationsToRefServers.Keys;
             //// var organizationsWithRefRanges = organizationsToRefRanges.Keys;
             //// var organizationsWithoutRefRanges = organizationsWithRefServers.Except(organizationsWithRefRanges);
 
-            //var frtr = organizationsToRefRanges["FRTR"];
+            ////var frtr = organizationsToRefRanges["FRTR"];
 
             /*
             var organizationsToRefServers = new Dictionary<string, string>()
@@ -133,9 +131,11 @@ namespace Microsoft.Geolocation.RWhois.Console
             };
             */
 
+            /*
             Console.WriteLine("RWhoisMultiCrawler");
             var multiCrawler = new RWhoisMultiCrawler("./CrawlResults", attemptCrawlOrganizations: true);
             multiCrawler.CrawlInParallel(organizationsToRefServers, organizationsToRefRanges).Wait();
+            */
 
             /*
             var settings = new ReferralServerFinderSettings()
@@ -308,15 +308,18 @@ namespace Microsoft.Geolocation.RWhois.Console
             multiCrawler.CrawlInParallel(organizationsToRefServers, organizationsToRefRanges).Wait();
             */
 
-            /*
-            var rwhoisTsvWriter = new RWhoisTsvWriter();
-            rwhoisTsvWriter.ColumnsPerTypeToTsv(@"M:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"M:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\rWhoisColumnsPerType.tsv");
-            */
+            RWhoisTSV();
 
             Console.WriteLine("Done!");
             Console.ReadKey();
             Console.ReadKey();
             Console.ReadKey();
+        }
+
+        private static void RWhoisTSV()
+        {
+            var rwhoisTsvWriter = new RWhoisTsvWriter();
+            rwhoisTsvWriter.ColumnsPerTypeToTsv(@"M:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"M:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\rWhoisColumnsPerType.tsv");
         }
     }
 }

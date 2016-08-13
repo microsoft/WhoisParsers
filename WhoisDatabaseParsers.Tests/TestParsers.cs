@@ -8,8 +8,6 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
     using Utils;
 
     #if !NUNIT
@@ -269,6 +267,16 @@ namespace Microsoft.Geolocation.Whois.Parsers.Tests
                     Assert.AreEqual("20140813", records["Updated"].ToString(), "The Updated record had an incorrect value");
                     Assert.AreEqual("ipeng@frontiernet.net", records["Updated-By"].ToString(), "The Updated-By record had an incorrect value");
                     Assert.AreEqual("network", records["Class-Name"].ToString(), "The Class-Name record had an incorrect value");
+                }
+                else if (i == 2)
+                {
+                    // network: NET-104-169-0-0-16
+                    Assert.AreEqual("network", section.Type);
+                    Assert.AreEqual("NET-1851.169.244.0.0/16", section.Id);
+
+                    var records = section.Records;
+
+                    CollectionAssert.AreEquivalent(TextUtils.SplitTextToLines(text: "221 Old County Rd\r\nPembroke, ME 04666", removeEmptyEntries: true), TextUtils.SplitTextToLines(text: records["Address"].ToString(), removeEmptyEntries: true), "The Address record had an incorrect value");
                 }
             }
         }

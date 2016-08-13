@@ -31,4 +31,17 @@ network:Updated:20140813
 network:Updated-By:ipeng@frontiernet.net
 network:Class-Name:network
 
+network:Auth-Area:169.244.0.0/16
+network:Class-Name:network
+network:ID:NET-1851.169.244.0.0/16
+network:Network-Name:NET-169.244.71.0
+network:IP-Network:169.244.71.0/26
+network:Organization:Pembroke Library (Pembroke)
+network:Contact-Name:Frederick Gralenski
+network:Contact-Email:gralf1@wildblue.net
+network:Phone:726-4745
+network:Address:221 Old County Rd
+network:Pembroke, ME 04666
+network:Updated:20110510161638000
+
 %ok

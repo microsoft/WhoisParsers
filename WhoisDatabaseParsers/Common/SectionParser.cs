@@ -50,31 +50,48 @@ namespace Microsoft.Geolocation.Whois.Parsers
             }
 
             var records = new Dictionary<string, StringBuilder>();
-            var validLineCounter = 0;
-            string sectionType = null;
-            string sectionId = null;
             HashSet<string> localFieldNamesSet = new HashSet<string>();
             List<string> localFieldNamesList = new List<string>();
 
             string currentFieldName = null;
+
             string skipPartsOverrideType = null;
+
+            // Will store the first key found in the record
+            string firstKey = null;
+
+            // Will store the first value of the first key found in the record
+            // If the value of the first key actually spans multiple lines, 
+            // this variable will only contain the first line of the value
+            string firstKeyValue = null;
 
             foreach (var line in lines)
             {
                 // Afrinic contains an invalid line like: DUMMY for 5490
+                // TODO: Remove this if
                 if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("dummy for ", StringComparison.OrdinalIgnoreCase) && !line.StartsWith("#") && !line.StartsWith("%"))
                 {
-                    var parts = line.Split(new string[] { keyValueDelimitator }, StringSplitOptions.RemoveEmptyEntries);
+                    // StringSplitOptions.None means leep empty records
+                    var parts = line.Split(new string[] { keyValueDelimitator }, StringSplitOptions.None);
 
+                    /*
+                    If skipParts > 0 we need to remove one or more fields before we continue.
+                    We do this for RWhois records. For these types of records we set skipParts to 1
+                    to ignore the first field (network field below). Example:
+
+                    network:Class-Name:network
+                    network:ID:NET-207-115-64-0-19
+                    network:Auth-Area:207.115.64.0/19
+                    */
                     if (this.skipParts > 0 && parts.Length >= this.skipParts)
                     {
                         if (skipPartsOverrideType == null)
                         {
                             skipPartsOverrideType = parts[0];
                         }
-                        else if (skipPartsOverrideType!= parts[0])
+                        else if (skipPartsOverrideType != parts[0])
                         {
-                            Console.WriteLine("XXX");
+                            // TODO: Log when the record type suddenly changes
                         }
 
                         var newParts = new string[parts.Length - this.skipParts];
@@ -82,37 +99,21 @@ namespace Microsoft.Geolocation.Whois.Parsers
                         parts = newParts;
                     }
 
-                    if (parts.Length > 0)
+                    if (parts.Length >= 2)
                     {
+                        // If there are at least two parts it means we can parse both a key and a value
+                        var key = parts[0].Trim();
+                        var value = string.Join(keyValueDelimitator, parts, 1, parts.Length - 1).Trim();
 
-                        var key = string.Empty;
-                        var value = string.Empty;
-
-                        if (key.Length < line.Length)
+                        if (key.Length > 0)
                         {
-                            key = parts[0];
-                        }
-
-                        if (parts.Length > 1)
-                        {
-                            value = string.Join(keyValueDelimitator, parts, 1, parts.Length - 1).Trim();
-                        }
-
-                        if (key != string.Empty)
-                        {
-                            validLineCounter++;
                             currentFieldName = key;
                             this.AddToRecord(records: records, fieldName: currentFieldName, newValueLine: value);
 
-                            if (validLineCounter == 1 && this.skipParts == 0)
+                            if (firstKey == null)
                             {
-                                sectionType = key;
-                                sectionId = value;
-                            }
-
-                            if (string.Compare(key, "ID", ignoreCase: true) == 0)
-                            {
-                                sectionId = value;
+                                firstKey = key;
+                                firstKeyValue = value;
                             }
 
                             if (!localFieldNamesSet.Contains(key))
@@ -121,28 +122,70 @@ namespace Microsoft.Geolocation.Whois.Parsers
                                 localFieldNamesList.Add(key);
                             }
                         }
-                        else if (currentFieldName != null)
-                        {
-                            this.AddToRecord(records: records, fieldName: currentFieldName, newValueLine: line);
-                        }
-                        else
-                        {
-                            throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "We tried to parse a partial record value when there was not current record, so we don't know where to append the partial record: {0}", line));
-                        }
+                        //// TODO: else log
                     }
-                    else
+                    else if (parts.Length == 1)
                     {
-                        // TODO: Log
+                        if (currentFieldName != null)
+                        {
+                            // If there is at least one part 
+                            var value = parts[0];
+                            this.AddToRecord(records: records, fieldName: currentFieldName, newValueLine: value);
+                        }
+                        //// TODO: else log
                     }
+                    //// TODO: else log
                 }
+                //// TODO: else log
             }
+
+            string sectionType = null;
+            string sectionId = null;
 
             if (skipPartsOverrideType != null)
             {
                 sectionType = skipPartsOverrideType;
+
+                // If the records do not contain a Class-Name but this is a RWhois record
+                // where the type is the first column, then create a Class-Name record
+                if (!records.ContainsKey("Class-Name"))
+                {
+                    // TODO: Log
+                    records["Class-Name"] = new StringBuilder(skipPartsOverrideType);
+                }
             }
 
-            if (validLineCounter > 0 && !string.IsNullOrWhiteSpace(sectionType) && !string.IsNullOrWhiteSpace(sectionId) && records.Count > 0)
+            // Try to locate the Class-Name and ID, wherever they are in the records
+            var extractedClassName = this.FindRecordValueStr(records, "Class-Name");
+            var extractedId = this.FindRecordValueStr(records, "ID");
+
+            if (sectionType == null && extractedClassName != null)
+            {
+                sectionType = extractedClassName;
+            }
+
+            if (sectionId == null && extractedId != null)
+            {
+                sectionId = extractedId;
+            }
+
+            // We could not extract the type yet, so we will go looking for the value in the first 
+            // record of the section
+            if (sectionType == null && firstKey != null)
+            {
+                sectionType = firstKey;
+            }
+            //// TODO: else log
+
+            // We could not extract the ID yet, so we will go looking for the key in the first 
+            // record of the section
+            if (sectionId == null && firstKeyValue != null)
+            {
+                sectionId = firstKeyValue;
+            }
+            //// TODO: else log
+
+            if (!string.IsNullOrWhiteSpace(sectionType) && !string.IsNullOrWhiteSpace(sectionId) && records.Count > 0)
             {
                 HashSet<string> globalFieldNamesSet;
                 List<string> globalFieldNamesList;
@@ -168,40 +211,45 @@ namespace Microsoft.Geolocation.Whois.Parsers
                     }
                 }
 
-                StringBuilder recordsClassName;
-
-                if (!records.TryGetValue("Class-Name", out recordsClassName) && skipPartsOverrideType != null)
-                {
-                    records["Class-Name"] = new StringBuilder(skipPartsOverrideType);
-                }
-
                 return new RawWhoisSection(sectionType, sectionId, records);
             }
+            //// TODO: else log
 
             return null;
+        }
+
+        private string FindRecordValueStr(Dictionary<string, StringBuilder> records, string key)
+        {
+            StringBuilder value;
+
+            if (records.TryGetValue(key, out value))
+            {
+                return value.ToString();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private void AddToRecord(Dictionary<string, StringBuilder> records, string fieldName, string newValueLine)
         {
             newValueLine = newValueLine.Trim();
 
-            if (newValueLine.Length > 0)
+            StringBuilder currentValue;
+
+            if (!records.TryGetValue(fieldName, out currentValue))
             {
-                StringBuilder currentValue;
-
-                if (!records.TryGetValue(fieldName, out currentValue))
-                {
-                    currentValue = new StringBuilder();
-                    records.Add(fieldName, currentValue);
-                }
-
-                if (currentValue.Length > 0)
-                {
-                    currentValue.AppendLine();
-                }
-
-                currentValue.Append(newValueLine);
+                currentValue = new StringBuilder();
+                records.Add(fieldName, currentValue);
             }
+
+            if (currentValue.Length > 0)
+            {
+                currentValue.AppendLine();
+            }
+
+            currentValue.Append(newValueLine);
         }
     }
 }
