@@ -156,8 +156,8 @@ namespace Microsoft.Geolocation.Whois.Parsers
             }
 
             // Try to locate the Class-Name and ID, wherever they are in the records
-            var extractedClassName = this.FindRecordValueStr(records, "Class-Name");
-            var extractedId = this.FindRecordValueStr(records, "ID");
+            var extractedClassName = RecordUtils.FindRecordValueStr(records, "Class-Name");
+            var extractedId = RecordUtils.FindRecordValueStr(records, "ID");
 
             if (sectionType == null && extractedClassName != null)
             {
@@ -216,20 +216,6 @@ namespace Microsoft.Geolocation.Whois.Parsers
             //// TODO: else log
 
             return null;
-        }
-
-        private string FindRecordValueStr(Dictionary<string, StringBuilder> records, string key)
-        {
-            StringBuilder value;
-
-            if (records.TryGetValue(key, out value))
-            {
-                return value.ToString();
-            }
-            else
-            {
-                return null;
-            }
         }
 
         private void AddToRecord(Dictionary<string, StringBuilder> records, string fieldName, string newValueLine)

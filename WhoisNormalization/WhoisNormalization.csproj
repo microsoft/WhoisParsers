@@ -1,14 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug-Net45</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C3C377FB-71D2-4900-A27C-49319FBFD8DD}</ProjectGuid>
+    <ProjectGuid>{634063C0-16A6-471E-B617-6F36042F7D1F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.Geolocation.Whois.Utils</RootNamespace>
-    <AssemblyName>Microsoft.Geolocation.Whois.Utils</AssemblyName>
+    <RootNamespace>Microsoft.Geolocation.Whois.Normalization</RootNamespace>
+    <AssemblyName>Microsoft.Geolocation.Whois.Normalization</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-Net45|AnyCPU' ">
@@ -53,13 +54,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IPAddressRange, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\IPAddressRange.1.6.0.0\lib\net40\IPAddressRange.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -68,16 +64,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IPAddressRangeEqualityComparer.cs" />
-    <Compile Include="IPUtils.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="RecordUtils.cs" />
-    <Compile Include="TextUtils.cs" />
+    <Compile Include="NetworkLocationExtraction.cs" />
+    <Compile Include="NormalizedOrganization.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\WhoisDatabaseParsers\WhoisDatabaseParsers.csproj">
+      <Project>{e94f9e4f-f386-4063-aa89-c13c846ba76c}</Project>
+      <Name>WhoisDatabaseParsers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WhoisUtils\WhoisUtils.csproj">
+      <Project>{c3c377fb-71d2-4900-a27c-49319fbfd8dd}</Project>
+      <Name>WhoisUtils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
