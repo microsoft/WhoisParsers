@@ -37,7 +37,9 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 
         private int crawlIterationDelayMilli;
 
-        public RWhoisCrawler(string hostname, int port, int? ipv4Increment = null, BigInteger? ipv6Increment = null, int crawlIterationDelayMilli = 100, IWhoisParser rwhoisParser = null, IWhoisParser xferParser = null)
+        private bool attemptCrawlOrganizations;
+
+        public RWhoisCrawler(string hostname, int port, int? ipv4Increment = null, BigInteger? ipv6Increment = null, int crawlIterationDelayMilli = 100, IWhoisParser rwhoisParser = null, IWhoisParser xferParser = null, bool attemptCrawlOrganizations = false)
         {
             this.client = new RWhoisClient(hostname, port);
             this.rwhoisParser = rwhoisParser;
@@ -77,6 +79,8 @@ namespace Microsoft.Geolocation.RWhois.Crawler
             }
 
             this.crawlIterationDelayMilli = crawlIterationDelayMilli;
+
+            this.attemptCrawlOrganizations = attemptCrawlOrganizations;
         }
 
         public async Task ConnectAsync()
@@ -190,6 +194,8 @@ namespace Microsoft.Geolocation.RWhois.Crawler
             var startIPCrawlerQueue = new Queue<IPAddress>();
             startIPCrawlerQueue.Enqueue(parentRange.Begin);
 
+            var organizationIdsSet = new HashSet<string>();
+
             while (startIPCrawlerQueue.Count > 0)
             {
                 var currentStartIP = startIPCrawlerQueue.Dequeue();
@@ -216,7 +222,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 
                                 this.rangesPreviouslySeenByObservers.Add(sectionIPRange);
 
-                                logger.Info(string.Format(CultureInfo.InvariantCulture, "Sending to observers range: {0}", sectionIPRange));
+                                logger.Info(string.Format(CultureInfo.InvariantCulture, "Sending range to observers: {0}", sectionIPRange));
 
                                 foreach (var observer in this.observers)
                                 {
@@ -224,6 +230,11 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                                 }
 
                                 this.TryEnqueueNewStartIP(previouslySeenStartIPs, startIPCrawlerQueue, parentRange, sectionIPRange);
+
+                                if (this.attemptCrawlOrganizations)
+                                {
+                                    this.FindOrganizationAddToSet(organizationIdsSet, section);
+                                }
                             }
                             else
                             {
@@ -247,6 +258,36 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                 }
 
                 await Task.Delay(this.crawlIterationDelayMilli);
+            }
+
+            if (this.attemptCrawlOrganizations)
+            {
+                var organizationIdsQueue = new Queue<string>(organizationIdsSet);
+
+                while (organizationIdsQueue.Count > 0)
+                {
+                    var currentOrganizationId = organizationIdsQueue.Dequeue();
+
+                    foreach (var section in await this.client.RetrieveSectionsForQueryAsync(this.rwhoisParser, currentOrganizationId))
+                    {
+                        logger.Info(string.Format(CultureInfo.InvariantCulture, "Sending non IP range section to observers: {0}", section.Type));
+
+                        foreach (var observer in this.observers)
+                        {
+                            observer.OnNext(section);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void FindOrganizationAddToSet(HashSet<string> organizationIdsSet, RawWhoisSection section)
+        {
+            StringBuilder rawOrganizationId;
+
+            if (section.Records != null && section.Records.TryGetValue("Organization", out rawOrganizationId) && rawOrganizationId.Length > 0)
+            {
+                organizationIdsSet.Add(rawOrganizationId.ToString());
             }
         }
 
@@ -306,7 +347,12 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                 }
                 else
                 {
-                    logger.Debug(string.Format(CultureInfo.InvariantCulture, "Could not extract IP range from section: {0}", section));
+                    logger.Debug(string.Format(CultureInfo.InvariantCulture, "Received non IP range section type: {0}", section.Type));
+
+                    foreach (var observer in this.observers)
+                    {
+                        observer.OnNext(section);
+                    }
                 }
             }
 

@@ -107,6 +107,10 @@
       <Project>{e94f9e4f-f386-4063-aa89-c13c846ba76c}</Project>
       <Name>WhoisDatabaseParsers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WhoisNormalization\WhoisNormalization.csproj">
+      <Project>{634063c0-16a6-471e-b617-6f36042f7d1f}</Project>
+      <Name>WhoisNormalization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WhoisTsvExport\WhoisTsvExport.csproj">
       <Project>{aa0fc077-5096-45d3-a99b-d6d70c633d0a}</Project>
       <Name>WhoisTsvExport</Name>

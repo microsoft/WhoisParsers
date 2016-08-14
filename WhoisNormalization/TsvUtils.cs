@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace Microsoft.Geolocation.Whois.TsvExport
+namespace Microsoft.Geolocation.Whois.Normalization
 {
     using System.Collections.Generic;
     using System.Text;

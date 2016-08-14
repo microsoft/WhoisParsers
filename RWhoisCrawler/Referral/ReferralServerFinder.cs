@@ -37,7 +37,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                 throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "File {0} does not exist", organizationsFilePath));
             }
 
-            var organizationsToRefServers = new Dictionary<string, string>();
+            var organizationsToRefServers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var organization in settings.Parser.RetrieveSections(organizationsFilePath, settings.OrganizationIdField))
             {
@@ -82,7 +82,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                 throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "File {0} does not exist", networksFilePath));
             }
 
-            var organizationsToRefRanges = new Dictionary<string, HashSet<IPAddressRange>>();
+            var organizationsToRefRanges = new Dictionary<string, HashSet<IPAddressRange>>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var network in settings.Parser.RetrieveSections(networksFilePath, settings.NetworkIdField))
             {

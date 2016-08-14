@@ -20,6 +20,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 
         public RWhoisCrawlerUnsubscriber(List<IObserver<RawWhoisSection>> observers, IObserver<RawWhoisSection> observer)
         {
+            logger.Info("Creating Unsubscriber");
             this.observers = observers;
             this.currentObserver = observer;
         }
