@@ -8,8 +8,8 @@ namespace Microsoft.Geolocation.Whois.Normalization
 {
     using System;
     using System.Collections.Generic;
-    using Parsers;
     using System.Text;
+    using Parsers;
 
     public class NormalizedLocation
     {

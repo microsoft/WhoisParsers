@@ -7,9 +7,9 @@
 namespace Microsoft.Geolocation.Whois.TsvExport
 {
     using System.Collections.Generic;
-    using Parsers;
     using System.IO;
     using Normalization;
+    using Parsers;
 
     public class ArinTsvWriter : TsvWriter
     {

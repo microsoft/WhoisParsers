@@ -9,9 +9,9 @@ namespace Microsoft.Geolocation.Whois.Normalization
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.Geolocation.Whois.Parsers;
-    using NetTools;
     using System.Text;
+    using NetTools;
+    using Parsers;
 
     public class NormalizedNetwork : ICommonRecordMetadata
     {

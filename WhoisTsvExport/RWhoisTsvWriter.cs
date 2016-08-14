@@ -9,9 +9,8 @@ namespace Microsoft.Geolocation.Whois.TsvExport
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
-    using Parsers;
     using Normalization;
-    using System.Text;
+    using Parsers;
 
     public class RWhoisTsvWriter
     {

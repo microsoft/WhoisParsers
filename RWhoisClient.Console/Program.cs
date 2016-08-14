@@ -322,7 +322,7 @@ namespace Microsoft.Geolocation.RWhois.Console
         private static void RWhoisTSV()
         {
             var rwhoisTsvWriter = new RWhoisTsvWriter();
-            //rwhoisTsvWriter.ColumnsPerTypeToTsv(@"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\rWhoisColumnsPerType.tsv");
+            ////rwhoisTsvWriter.ColumnsPerTypeToTsv(@"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\rWhoisColumnsPerType.tsv");
             rwhoisTsvWriter.NetworksWithLocationsToTsv(@"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResultsLocationTsv\");
         }
     }
