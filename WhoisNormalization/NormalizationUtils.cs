@@ -43,12 +43,6 @@ namespace Microsoft.Geolocation.Whois.Normalization
             "remarks"
         };
 
-        private static HashSet<string> maintainerFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "Maintainer",
-            "mnt-by"
-        };
-
         public static string FindFirstMatchingFieldValueInRecords(RawWhoisSection section, HashSet<string> fields)
         {
             if (section != null && fields != null)

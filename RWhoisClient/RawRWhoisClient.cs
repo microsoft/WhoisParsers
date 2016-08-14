@@ -26,6 +26,7 @@ namespace Microsoft.Geolocation.RWhois.Client
         // Implements a subset of RFC 2167: http://projects.arin.net/rwhois/docs/rfc2167.txt
         public RawRWhoisClient(string hostname, int port, int receiveTimeout = 5000, int sendTimeout = 5000) : base(hostname, port, receiveTimeout, sendTimeout)
         {
+            logger.Info("Creating RawRWhoisClient");
             this.ConnectForEachQuery = false; // This is the default, we will set it to the right value in ConnectAsync
         }
 

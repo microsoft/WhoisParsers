@@ -82,6 +82,8 @@ namespace Microsoft.Geolocation.Whois.Normalization
 
         public string Country { get; set; }
 
+        public string Geolocation { get; set; }
+
         public static NormalizedLocation TryParseFromSection(RawWhoisSection section)
         {
             var location = new NormalizedLocation()
@@ -91,7 +93,8 @@ namespace Microsoft.Geolocation.Whois.Normalization
                 City = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, cityFields),
                 StateProvince = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, stateProvinceFields),
                 PostalCode = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, postalCodeFields),
-                Country = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, countryFields)
+                Country = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, countryFields),
+                Geolocation = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, geolocationFields)
             };
 
             return location;
