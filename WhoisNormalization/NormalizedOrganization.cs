@@ -6,47 +6,77 @@
 
 namespace Microsoft.Geolocation.Whois.Normalization
 {
-    public class NormalizedOrganization
+    using System;
+    using System.Collections.Generic;
+    using Parsers;
+
+    public class NormalizedOrganization : ICommonRecordMetadata
     {
+        private static HashSet<string> organizationTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "org",
+            "organization",
+            "OrgID",
+            "organisation"
+        };
+
+        private static HashSet<string> nameFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "Org-Name",
+            "Organization-Name",
+            "Customer Organization",
+            "Org-Name;I",
+            "OrgName"
+        };
+
+        private static HashSet<string> phoneFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "phone"
+        };
+
+        public NormalizedOrganization()
+        {
+            this.Location = new NormalizedLocation();
+        }
+
+        ////// Common Records Metadata (ICommonRecordMetadata):
+
         public string Id { get; set; }
 
         public string Name { get; set; }
 
-        public string Address { get; set; }
+        public string Created { get; set; }
 
-        public string Street { get; set; }
+        public string Updated { get; set; }
 
-        public string City { get; set; }
+        public string UpdatedBy { get; set; }
 
-        public string State { get; set; }
+        public string Description { get; set; }
 
-        public string PostalCode { get; set; }
+        public string Comment { get; set; }
 
-        public string Country { get; set; }
+        //////
+
+        public NormalizedLocation Location { get; set; }
 
         public string Phone { get; set; }
 
-        public bool AddressSeemsValid()
+        public static NormalizedOrganization TryParseFromSection(RawWhoisSection section)
         {
-            if (!string.IsNullOrWhiteSpace(this.Address))
+            if (organizationTypes.Contains(section.Type))
             {
-                return true;
+                var organization = new NormalizedOrganization()
+                {
+                    Location = NormalizedLocation.TryParseFromSection(section),
+                    Phone = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, phoneFields)
+                };
+
+                NormalizationUtils.ExtractCommonRecordMetadata(section, section.Id, nameFields, organization);
+
+                return organization;
             }
 
-            if (!string.IsNullOrWhiteSpace(this.Country))
-            {
-                if (!string.IsNullOrWhiteSpace(this.City))
-                {
-                    return true;
-                }
-
-                if (!string.IsNullOrWhiteSpace(this.PostalCode))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return null;
         }
     }
 }

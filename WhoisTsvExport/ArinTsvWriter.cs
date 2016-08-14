@@ -8,6 +8,8 @@ namespace Microsoft.Geolocation.Whois.TsvExport
 {
     using System.Collections.Generic;
     using Parsers;
+    using System.IO;
+    using Normalization;
 
     public class ArinTsvWriter : TsvWriter
     {
@@ -35,6 +37,34 @@ namespace Microsoft.Geolocation.Whois.TsvExport
         {
             var outputColumns = new List<string> { "V6NetHandle", "OrgID", "Parent", "NetName", "NetRange", "NetType", "RegDate", "Updated", "Source", "TechHandle", "AbuseHandle", "OriginAS", "NOCHandle", "Comment" };
             this.ExportFieldsToTsv(inputFilePath: inputFilePath, outputFilePath: outputFilePath, recordType: "V6NetHandle", outputColumns: outputColumns);
+        }
+
+        public void NetworksWithLocationsToTsv(string inputFolderPath, string outputFolderPath)
+        {
+            if (!Directory.Exists(outputFolderPath))
+            {
+                Directory.CreateDirectory(outputFolderPath);
+            }
+
+            var parser = new WhoisParser(new SectionTokenizer(), new SectionParser());
+
+            foreach (var inputFilePath in Directory.GetFiles(inputFolderPath))
+            {
+                var locationExtraction = new NetworkLocationExtraction(parser);
+                var outputFilePath = Path.Combine(outputFolderPath, Path.GetFileName(inputFilePath));
+
+                using (var outputFile = new StreamWriter(outputFilePath))
+                {
+                    foreach (var network in locationExtraction.ExtractNetworksWithLocations(inputFilePath, inputFilePath))
+                    {
+                        if (network.Id != null && network.Location.AddressSeemsValid())
+                        {
+                            var networkTsv = network.ToTsv();
+                            outputFile.WriteLine(networkTsv);
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -7,6 +7,9 @@
 namespace Microsoft.Geolocation.RWhois.Console
 {
     using System;
+    using System.IO;
+    using Whois.Normalization;
+    using Whois.Parsers;
     using Whois.TsvExport;
 
     public static class Program
@@ -109,7 +112,7 @@ namespace Microsoft.Geolocation.RWhois.Console
             ////var frtr = organizationsToRefRanges["FRTR"];
 
             /*
-            var organizationsToRefServers = new Dictionary<string, string>()
+            var organizationsToRefServers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 {
                     "FRTR",
@@ -117,7 +120,7 @@ namespace Microsoft.Geolocation.RWhois.Console
                 }
             };
 
-            var organizationsToRefRanges = new Dictionary<string, HashSet<IPAddressRange>>()
+            var organizationsToRefRanges = new Dictionary<string, HashSet<IPAddressRange>>(StringComparer.OrdinalIgnoreCase)
             {
                 {
                     "FRTR",
@@ -278,7 +281,7 @@ namespace Microsoft.Geolocation.RWhois.Console
                 NetworkRangeField = "NetRange"
             };
 
-            var organizationsToRefServers = new Dictionary<string, string>()
+            var organizationsToRefServers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 {
                     "19EET",
@@ -286,7 +289,7 @@ namespace Microsoft.Geolocation.RWhois.Console
                 }
             };
 
-            var organizationsToRefRanges = new Dictionary<string, HashSet<IPAddressRange>>()
+            var organizationsToRefRanges = new Dictionary<string, HashSet<IPAddressRange>>(StringComparer.OrdinalIgnoreCase)
             {
                 {
                     "19EET",
@@ -319,7 +322,8 @@ namespace Microsoft.Geolocation.RWhois.Console
         private static void RWhoisTSV()
         {
             var rwhoisTsvWriter = new RWhoisTsvWriter();
-            rwhoisTsvWriter.ColumnsPerTypeToTsv(@"M:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"M:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\rWhoisColumnsPerType.tsv");
+            //rwhoisTsvWriter.ColumnsPerTypeToTsv(@"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\rWhoisColumnsPerType.tsv");
+            rwhoisTsvWriter.NetworksWithLocationsToTsv(@"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResultsLocationTsv\");
         }
     }
 }

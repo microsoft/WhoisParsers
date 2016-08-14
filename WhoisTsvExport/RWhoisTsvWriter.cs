@@ -10,6 +10,8 @@ namespace Microsoft.Geolocation.Whois.TsvExport
     using System.Globalization;
     using System.IO;
     using Parsers;
+    using Normalization;
+    using System.Text;
 
     public class RWhoisTsvWriter
     {
@@ -24,11 +26,11 @@ namespace Microsoft.Geolocation.Whois.TsvExport
 
         public IWhoisParser Parser { get; set; }
 
-        public void ColumnsPerTypeToTsv(string inputFolder, string outputFilePath)
+        public void ColumnsPerTypeToTsv(string inputFolderPath, string outputFilePath)
         {
             var globalColumnsPerType = new Dictionary<string, List<string>>();
 
-            foreach (var file in Directory.GetFiles(inputFolder))
+            foreach (var file in Directory.GetFiles(inputFolderPath))
             {
                 var localColumnsPerTypes = this.Parser.ColumnsPerType(file);
                 this.MergeIntoGlobalColumnsPerType(globalColumnsPerType, localColumnsPerTypes);
@@ -44,6 +46,34 @@ namespace Microsoft.Geolocation.Whois.TsvExport
                     foreach (var recordColumn in recordColumns)
                     {
                         outputFile.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}\t{1}", recordType, recordColumn));
+                    }
+                }
+            }
+        }
+
+        public void NetworksWithLocationsToTsv(string inputFolderPath, string outputFolderPath)
+        {
+            if (!Directory.Exists(outputFolderPath))
+            {
+                Directory.CreateDirectory(outputFolderPath);
+            }
+
+            var parser = new WhoisParser(new SectionTokenizer(), new SectionParser());
+
+            foreach (var inputFilePath in Directory.GetFiles(inputFolderPath))
+            {
+                var locationExtraction = new NetworkLocationExtraction(parser);
+                var outputFilePath = Path.Combine(outputFolderPath, Path.GetFileName(inputFilePath));
+
+                using (var outputFile = new StreamWriter(outputFilePath))
+                {
+                    foreach (var network in locationExtraction.ExtractNetworksWithLocations(inputFilePath, inputFilePath))
+                    {
+                        if (network.Id != null && network.Location.AddressSeemsValid())
+                        {
+                            var networkTsv = network.ToTsv();
+                            outputFile.WriteLine(networkTsv);
+                        }
                     }
                 }
             }

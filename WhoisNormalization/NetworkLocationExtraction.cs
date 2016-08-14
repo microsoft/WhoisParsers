@@ -6,126 +6,147 @@
 
 namespace Microsoft.Geolocation.Whois.Normalization
 {
+    using System;
     using System.Collections.Generic;
     using Parsers;
-    using Utils;
-    using System.Text;
+
     public class NetworkLocationExtraction
     {
-        private static HashSet<string> OrganizationTypes = new HashSet<string>()
-        {
-            "org",
-            "organization"
-        };
-
-        private static HashSet<string> OrganizationNameFields = new HashSet<string>()
-        {
-            "Org-Name"
-        };
-
-        private static HashSet<string> AddressFields = new HashSet<string>()
-        {
-            "Address"
-        };
-
-        private static HashSet<string> StreetFields = new HashSet<string>()
-        {
-            "Street",
-            "Street-Address"
-        };
-
-        private static HashSet<string> CityFields = new HashSet<string>()
-        {
-            "City"
-        };
-
-        private static HashSet<string> StateFields = new HashSet<string>()
-        {
-            "State"
-        };
-
-        private static HashSet<string> PostalCodeFields = new HashSet<string>()
-        {
-            "Postal-Code"
-        };
-
-        private static HashSet<string> CountryFields = new HashSet<string>()
-        {
-            "Country",
-            "Country-Code"
-        };
-
-        private static HashSet<string> PhoneFields = new HashSet<string>()
-        {
-            "Phone"
-        };
-
-        public IWhoisParser Parser { get; set; }
-
-        private Dictionary<>
-
         public NetworkLocationExtraction(IWhoisParser parser)
         {
             this.Parser = parser;
+            this.OrganizationIdsToOrganizations = new Dictionary<string, List<NormalizedOrganization>>();
+            this.OrganizationNamesToOrganizations = new Dictionary<string, List<NormalizedOrganization>>();
         }
 
-        public void ExtractLocations(string filePath)
-        {
-            foreach (var section in this.Parser.RetrieveSections(filePath))
-            {
-                if (OrganizationTypes.Contains(section.Type))
-                {
+        public IWhoisParser Parser { get; set; }
 
+        private Dictionary<string, List<NormalizedOrganization>> OrganizationIdsToOrganizations { get; set; }
+
+        private Dictionary<string, List<NormalizedOrganization>> OrganizationNamesToOrganizations { get; set; }
+
+        public void LoadOrganizations(IEnumerable<string> filePaths)
+        {
+            if (filePaths == null)
+            {
+                throw new ArgumentNullException("filePaths");
+            }
+
+            foreach (var filePath in filePaths)
+            {
+                foreach (var section in this.Parser.RetrieveSections(filePath))
+                {
+                    var organization = NormalizedOrganization.TryParseFromSection(section);
+
+                    if (organization != null && organization.Location.AddressSeemsValid())
+                    {
+                        this.CreateIdNameMappingForOrganization(organization);
+                    }
                 }
             }
         }
 
-        public NormalizedOrganization ExtractNormalizedOrganization(RawWhoisSection section)
+        public void LoadOrganizations(string filePath)
         {
-            var organization = new NormalizedOrganization()
+            if (filePath == null)
             {
-                Id = section.Id,
-                Name = this.FindRecordType(section, OrganizationNameFields),
-                Address = this.FindRecordType(section, AddressFields),
-                Street = this.FindRecordType(section, StreetFields),
-                City = this.FindRecordType(section, CityFields),
-                State = this.FindRecordType(section, StateFields),
-                PostalCode = this.FindRecordType(section, PostalCodeFields),
-                Country = this.FindRecordType(section, CountryFields),
-                Phone = this.FindRecordType(section, PhoneFields)
-            };
-
-            if (organization.Id == null)
-            {
-                return null;
+                throw new ArgumentNullException("filePath");
             }
 
-            if (organization.Name == null)
-            {
-                return null;
-            }
-
-            if (!organization.AddressSeemsValid())
-            {
-                return null;
-            }
-
-            return organization;
+            this.LoadOrganizations(new List<string>() { filePath });
         }
 
-        private string FindRecordType(RawWhoisSection section, HashSet<string> fields)
+        public IEnumerable<NormalizedNetwork> ExtractNetworksWithLocations(IEnumerable<string> organizationFilePaths, IEnumerable<string> networkFilePaths)
         {
-            foreach (var field in fields)
-            {
-                StringBuilder nameBuilder;
+            this.LoadOrganizations(organizationFilePaths);
+            return this.ExtractNetworksWithLocations(networkFilePaths);
+        }
 
-                if (section.Records.TryGetValue(field, out nameBuilder))
+        public IEnumerable<NormalizedNetwork> ExtractNetworksWithLocations(string organizationFilePath, string networkFilePath)
+        {
+            this.LoadOrganizations(organizationFilePath);
+            return this.ExtractNetworksWithLocations(new List<string>() { networkFilePath });
+        }
+
+        public IEnumerable<NormalizedNetwork> ExtractNetworks(IEnumerable<string> networkFilePaths)
+        {
+            foreach (var networkFilePath in networkFilePaths)
+            {
+                foreach (var section in this.Parser.RetrieveSections(networkFilePath))
                 {
-                    return nameBuilder.ToString();
+                    var network = NormalizedNetwork.TryParseFromSection(section);
+
+                    if (network != null)
+                    {
+                        if (this.OrganizationIdsToOrganizations.Count > 0)
+                        {
+                            network.FindExternalOrganization(section, this.OrganizationIdsToOrganizations);
+                        }
+                        else if (network.ExternalOrganization == null && this.OrganizationNamesToOrganizations.Count > 0)
+                        {
+                            network.FindExternalOrganization(section, this.OrganizationNamesToOrganizations);
+                        }
+
+                        var networkLocation = network.Location;
+                        var organizationLocation = network.ExternalOrganization?.Location;
+
+                        if (networkLocation == null || networkLocation.AddressSeemsValid())
+                        {
+                            if (organizationLocation != null && organizationLocation.AddressSeemsValid())
+                            {
+                                network.Location = organizationLocation;
+                            }
+                        }
+
+                        yield return network;
+                    }
                 }
             }
+        }
 
-            return null;
+        public IEnumerable<NormalizedNetwork> ExtractNetworksWithLocations(IEnumerable<string> networkFilePaths)
+        {
+            foreach (var network in this.ExtractNetworks(networkFilePaths))
+            {
+                if (network.Location != null && network.Location.AddressSeemsValid())
+                {
+                    yield return network;
+                }
+            }
+        }
+
+        private void CreateIdNameMappingForOrganization(NormalizedOrganization organization)
+        {
+            if (organization != null)
+            {
+                if (organization.Id != null)
+                {
+                    List<NormalizedOrganization> organizationIdsOrganizations;
+
+                    if (!this.OrganizationIdsToOrganizations.TryGetValue(organization.Id, out organizationIdsOrganizations))
+                    {
+                        organizationIdsOrganizations = new List<NormalizedOrganization>();
+                    }
+
+                    organizationIdsOrganizations.Add(organization);
+
+                    this.OrganizationIdsToOrganizations[organization.Id] = organizationIdsOrganizations;
+                }
+
+                if (organization.Name != null)
+                {
+                    List<NormalizedOrganization> organizationNamesOrganizations;
+
+                    if (!this.OrganizationIdsToOrganizations.TryGetValue(organization.Name, out organizationNamesOrganizations))
+                    {
+                        organizationNamesOrganizations = new List<NormalizedOrganization>();
+                    }
+
+                    organizationNamesOrganizations.Add(organization);
+
+                    this.OrganizationIdsToOrganizations[organization.Name] = organizationNamesOrganizations;
+                }
+            }
         }
     }
 }

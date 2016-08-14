@@ -49,7 +49,7 @@ namespace Microsoft.Geolocation.Whois.Parsers
                 throw new ArgumentException("lines should not be null");
             }
 
-            var records = new Dictionary<string, StringBuilder>();
+            var records = new Dictionary<string, StringBuilder>(StringComparer.OrdinalIgnoreCase);
             HashSet<string> localFieldNamesSet = new HashSet<string>();
             List<string> localFieldNamesList = new List<string>();
 
@@ -156,8 +156,8 @@ namespace Microsoft.Geolocation.Whois.Parsers
             }
 
             // Try to locate the Class-Name and ID, wherever they are in the records
-            var extractedClassName = RecordUtils.FindRecordValueStr(records, "Class-Name");
-            var extractedId = RecordUtils.FindRecordValueStr(records, "ID");
+            var extractedClassName = RecordUtils.FindValueForKey(records, "Class-Name");
+            var extractedId = RecordUtils.FindFirstValueForKeys(records, new List<string>() { "ID" });
 
             if (sectionType == null && extractedClassName != null)
             {
