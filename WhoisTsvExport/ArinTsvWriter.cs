@@ -39,7 +39,7 @@ namespace Microsoft.Geolocation.Whois.TsvExport
             this.ExportFieldsToTsv(inputFilePath: inputFilePath, outputFilePath: outputFilePath, recordType: "V6NetHandle", outputColumns: outputColumns);
         }
 
-        public void NetworksWithLocationsToTsv(string inputFolderPath, string outputFolderPath)
+        public void NetworksWithLocationsToTsv(string inputFilePath, string outputFolderPath, string outputFilename)
         {
             if (!Directory.Exists(outputFolderPath))
             {
@@ -48,20 +48,17 @@ namespace Microsoft.Geolocation.Whois.TsvExport
 
             var parser = new WhoisParser(new SectionTokenizer(), new SectionParser());
 
-            foreach (var inputFilePath in Directory.GetFiles(inputFolderPath))
-            {
-                var locationExtraction = new NetworkLocationExtraction(parser);
-                var outputFilePath = Path.Combine(outputFolderPath, Path.GetFileName(inputFilePath));
+            var locationExtraction = new NetworkLocationExtraction(parser);
+            var outputFilePath = Path.Combine(outputFolderPath, Path.GetFileName(outputFilename));
 
-                using (var outputFile = new StreamWriter(outputFilePath))
+            using (var outputFile = new StreamWriter(outputFilePath))
+            {
+                foreach (var network in locationExtraction.ExtractNetworksWithLocations(inputFilePath, inputFilePath))
                 {
-                    foreach (var network in locationExtraction.ExtractNetworksWithLocations(inputFilePath, inputFilePath))
+                    if (network.Id != null && network.Location.AddressSeemsValid())
                     {
-                        if (network.Id != null && network.Location.AddressSeemsValid())
-                        {
-                            var networkTsv = network.ToTsv();
-                            outputFile.WriteLine(networkTsv);
-                        }
+                        var networkTsv = network.ToTsv();
+                        outputFile.WriteLine(networkTsv);
                     }
                 }
             }

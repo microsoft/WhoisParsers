@@ -90,7 +90,7 @@ namespace Microsoft.Geolocation.Whois.Normalization
                         var networkLocation = network.Location;
                         var organizationLocation = network.ExternalOrganization?.Location;
 
-                        if (networkLocation == null || networkLocation.AddressSeemsValid())
+                        if (networkLocation == null || !networkLocation.AddressSeemsValid())
                         {
                             if (organizationLocation != null && organizationLocation.AddressSeemsValid())
                             {

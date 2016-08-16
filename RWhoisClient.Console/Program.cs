@@ -311,7 +311,8 @@ namespace Microsoft.Geolocation.RWhois.Console
             multiCrawler.CrawlInParallel(organizationsToRefServers, organizationsToRefRanges).Wait();
             */
 
-            RWhoisTSV();
+            //RWhoisTSV();
+            ArinTSV();
 
             Console.WriteLine("Done!");
             Console.ReadKey();
@@ -324,6 +325,13 @@ namespace Microsoft.Geolocation.RWhois.Console
             var rwhoisTsvWriter = new RWhoisTsvWriter();
             ////rwhoisTsvWriter.ColumnsPerTypeToTsv(@"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\rWhoisColumnsPerType.tsv");
             rwhoisTsvWriter.NetworksWithLocationsToTsv(@"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResultsLocationTsv\");
+        }
+
+        private static void ArinTSV()
+        {
+            var arinTsvWriter = new ArinTsvWriter();
+            ////rwhoisTsvWriter.ColumnsPerTypeToTsv(@"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\rWhoisColumnsPerType.tsv");
+            arinTsvWriter.NetworksWithLocationsToTsv(@"M:\Projects\Whois\ARIN\Raw\2016\07\17\arin_db.txt", @"M:\Projects\Whois\ARIN\Processed\2016\07\17", "2016-07-17-ARIN-NetworkLocations.tsv");
         }
     }
 }
