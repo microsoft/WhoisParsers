@@ -79,8 +79,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AFRINIC\AfrinicSectionTokenizer.cs" />
-    <Compile Include="ARIN\ArinNetRangeRecord.cs" />
-    <Compile Include="ARIN\ArinOrganizationRecord.cs" />
     <Compile Include="Common\ISectionParser.cs" />
     <Compile Include="Common\ISectionTokenizer.cs" />
     <Compile Include="Common\SectionParser.cs" />
