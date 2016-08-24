@@ -43,7 +43,12 @@ namespace Microsoft.Geolocation.Whois.Normalization
             "remarks"
         };
 
-        public static string FindFirstMatchingFieldValueInRecords(RawWhoisSection section, HashSet<string> fields)
+        private static HashSet<string> sourceFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "source"
+        };
+
+        public static string FindFirstMatchingFieldValueInRecords(RawWhoisSection section, HashSet<string> fields, HashSet<string> blacklistedValues = null)
         {
             if (section != null && fields != null)
             {
@@ -53,7 +58,12 @@ namespace Microsoft.Geolocation.Whois.Normalization
 
                     if (section.Records.TryGetValue(field, out nameBuilder))
                     {
-                        return nameBuilder.ToString();
+                        var value = nameBuilder.ToString();
+
+                        if (blacklistedValues == null || !blacklistedValues.Contains(value))
+                        {
+                            return value;
+                        }
                     }
                 }
             }
@@ -97,6 +107,7 @@ namespace Microsoft.Geolocation.Whois.Normalization
             target.UpdatedBy = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, updatedByFields);
             target.Description = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, descriptionFields);
             target.Comment = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, commentFields);
+            target.Source = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, sourceFields);
         }
 
         public static void AddToBuilderWithComma(StringBuilder builder, string text)

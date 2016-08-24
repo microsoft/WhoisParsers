@@ -45,7 +45,9 @@ namespace Microsoft.Geolocation.Whois.Normalization
             "Netblock",
             "IP-Range",
             "Network-Block",
-            "NetRange"
+            "NetRange",
+            "inetnum",
+            "inet6num"
         };
 
         private static HashSet<string> organizationFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
@@ -59,6 +61,12 @@ namespace Microsoft.Geolocation.Whois.Normalization
         private static HashSet<string> originASFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "OriginAS"
+        };
+
+        private static HashSet<string> statusFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "status",
+            "NetType"
         };
 
         public NormalizedNetwork()
@@ -82,6 +90,8 @@ namespace Microsoft.Geolocation.Whois.Normalization
 
         public string Comment { get; set; }
 
+        public string Source { get; set; }
+
         //////
 
         public string AuthArea { get; set; }
@@ -96,6 +106,8 @@ namespace Microsoft.Geolocation.Whois.Normalization
 
         public string Phone { get; set; }
 
+        public string Status { get; set; }
+
         public static NormalizedNetwork TryParseFromSection(RawWhoisSection section)
         {
             if (networkTypes.Contains(section.Type))
@@ -105,6 +117,7 @@ namespace Microsoft.Geolocation.Whois.Normalization
                     Location = NormalizedLocation.TryParseFromSection(section),
                     AuthArea = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, authAreaFields),
                     OriginAS = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, originASFields),
+                    Status = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, statusFields)
                 };
 
                 var candidateRanges = NormalizationUtils.FindAllMatchingFieldValuesInRecords(section, ipRangeFields);
@@ -163,6 +176,9 @@ namespace Microsoft.Geolocation.Whois.Normalization
             TsvUtils.AddToBuilderWithTab(ret, this.Name, firstColumn: false);
             TsvUtils.AddToBuilderWithTab(ret, this.IPRange?.ToString(), firstColumn: false);
             TsvUtils.AddToBuilderWithTab(ret, this.Location.ToString(), firstColumn: false);
+            TsvUtils.AddToBuilderWithTab(ret, this.AuthArea, firstColumn: false);
+            TsvUtils.AddToBuilderWithTab(ret, this.OriginAS, firstColumn: false);
+            TsvUtils.AddToBuilderWithTab(ret, this.Status, firstColumn: false);
 
             return ret.ToString();
         }

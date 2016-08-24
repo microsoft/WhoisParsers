@@ -11,7 +11,7 @@ namespace Microsoft.Geolocation.Whois.Normalization
 
     public static class TsvUtils
     {
-        public static string GenerateTsvLine(Dictionary<string, StringBuilder> records, List<string> outputColumns)
+        public static string GenerateTsvLine(Dictionary<string, StringBuilder> records, List<string> outputColumns, bool removeDoubleQuotes = false)
         {
             var ret = new StringBuilder();
             var firstColumn = true;
@@ -27,7 +27,7 @@ namespace Microsoft.Geolocation.Whois.Normalization
 
                 if (records.TryGetValue(outputColumn, out val) && val != null)
                 {
-                    ret.Append(ReplaceAndTrimIllegalCharacters(val.ToString()));
+                    ret.Append(ReplaceAndTrimIllegalCharacters(val.ToString(), removeDoubleQuotes));
                 }
 
                 firstColumn = false;
@@ -36,11 +36,16 @@ namespace Microsoft.Geolocation.Whois.Normalization
             return ret.ToString();
         }
 
-        public static string ReplaceAndTrimIllegalCharacters(string text)
+        public static string ReplaceAndTrimIllegalCharacters(string text, bool removeDoubleQuotes = false)
         {
             if (text == null)
             {
                 return null;
+            }
+
+            if (removeDoubleQuotes)
+            {
+                text = text.Replace("\"", string.Empty);
             }
 
             return text.Replace("\t", " ").Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ").Trim();
@@ -48,14 +53,17 @@ namespace Microsoft.Geolocation.Whois.Normalization
 
         public static void AddToBuilderWithTab(StringBuilder builder, string text, bool firstColumn)
         {
-            if (builder != null && text != null)
+            if (builder != null)
             {
                 if (!firstColumn)
                 {
                     builder.Append("\t");
                 }
 
-                builder.Append(ReplaceAndTrimIllegalCharacters(text));
+                if (text != null)
+                {
+                    builder.Append(ReplaceAndTrimIllegalCharacters(text, removeDoubleQuotes: true));
+                }
             }
         }
     }

@@ -39,29 +39,16 @@ namespace Microsoft.Geolocation.Whois.TsvExport
             this.ExportFieldsToTsv(inputFilePath: inputFilePath, outputFilePath: outputFilePath, recordType: "V6NetHandle", outputColumns: outputColumns);
         }
 
-        public void NetworksWithLocationsToTsv(string inputFilePath, string outputFolderPath, string outputFilename)
+        public void NetworksWithLocationsToTsv(string inputFilePath, string outputFilePath)
         {
-            if (!Directory.Exists(outputFolderPath))
-            {
-                Directory.CreateDirectory(outputFolderPath);
-            }
-
             var parser = new WhoisParser(new SectionTokenizer(), new SectionParser());
+            this.NetworksWithLocationsToTsv(parser, inputFilePath, outputFilePath);
+        }
 
-            var locationExtraction = new NetworkLocationExtraction(parser);
-            var outputFilePath = Path.Combine(outputFolderPath, Path.GetFileName(outputFilename));
-
-            using (var outputFile = new StreamWriter(outputFilePath))
-            {
-                foreach (var network in locationExtraction.ExtractNetworksWithLocations(inputFilePath, inputFilePath))
-                {
-                    if (network.Id != null && network.Location.AddressSeemsValid())
-                    {
-                        var networkTsv = network.ToTsv();
-                        outputFile.WriteLine(networkTsv);
-                    }
-                }
-            }
+        public void NetworksLocationPropertyCountsToTsv(string inputFilePath, string propertyName, string outputFilePath)
+        {
+            var parser = new WhoisParser(new SectionTokenizer(), new SectionParser());
+            this.NetworksLocationPropertyCountsToTsv(parser, inputFilePath, propertyName, outputFilePath);
         }
     }
 }

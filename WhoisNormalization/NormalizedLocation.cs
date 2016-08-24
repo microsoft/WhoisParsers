@@ -13,6 +13,91 @@ namespace Microsoft.Geolocation.Whois.Normalization
 
     public class NormalizedLocation
     {
+        static NormalizedLocation()
+        {
+            allBlacklistedValues = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            allBlacklistedValues.UnionWith(blacklistedValuesSimilarToCountries);
+            allBlacklistedValues.UnionWith(blacklistedValuesExceptSimilarToCountries);
+        }
+
+        private static HashSet<string> allBlacklistedValues;
+
+        private static HashSet<string> blacklistedValuesExceptSimilarToCountries = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ".",
+            "0",
+            "00000",
+            "99999",
+            "private",
+            "private residence",
+            "P.R.",
+            "Private Address",
+            "Private Addr",
+            "Private Addr.",
+            "Private Resident",
+            "Private Res.",
+            "PRIVATE CUSTOMER",
+            "private-address",
+            "Unavailable Street",
+            "1 Unavailable Street",
+            "Unavailable St",
+            "Unavailable Str",
+            "Unavailable St.",
+            "Unavailable Str.",
+            "Unavailable Address",
+            "Unavailable",
+            "Street Not Available",
+            "Address Not Available",
+            "Street N/A",
+            "Address N/A",
+            "N/A Street",
+            "N/A Addr",
+            "N/A Addr.",
+            "N/A Address",
+            "N/A St",
+            "N/A St.",
+            "N/A Str",
+            "N/A Str.",
+            "N/A",
+            "n.a.",
+            "n.a",
+            "1 na",
+            "Unknown",
+            "Postal Address",
+            "No info",
+            "Not Defined",
+            "Undefined",
+            "null",
+            "_None",
+            "None",
+            "Address",
+            "Country",
+            "City",
+            "Postal Code",
+            "Street",
+            "PostalCode",
+            "Private Data",
+            "SERVER",
+            "fake st",
+            "fake st.",
+            "FakePostalCode",
+            "Fake",
+            "FakeTown",
+            "Fakeville",
+            "FakeSuburb",
+            "Fake_State",
+            "Fake City",
+            "Fakeplace"
+        };
+
+        private static HashSet<string> blacklistedValuesSimilarToCountries = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "NA",
+            "NA NA",
+            "n",
+            "no_no"
+        };
+
         private static HashSet<string> addressFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "Address",
@@ -30,7 +115,8 @@ namespace Microsoft.Geolocation.Whois.Normalization
 
         private static HashSet<string> geolocationFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            "GeoLocation"
+            "GeoLocation",
+            "geoloc"
         };
 
         private static HashSet<string> cityFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
@@ -88,12 +174,12 @@ namespace Microsoft.Geolocation.Whois.Normalization
         {
             var location = new NormalizedLocation()
             {
-                Address = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, addressFields),
-                Street = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, streetFields),
-                City = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, cityFields),
-                StateProvince = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, stateProvinceFields),
-                PostalCode = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, postalCodeFields),
-                Country = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, countryFields),
+                Address = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, addressFields, allBlacklistedValues),
+                Street = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, streetFields, allBlacklistedValues),
+                City = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, cityFields, allBlacklistedValues),
+                StateProvince = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, stateProvinceFields, allBlacklistedValues),
+                PostalCode = RemoveExtraPrefix(NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, postalCodeFields, allBlacklistedValues)),
+                Country = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, countryFields, blacklistedValuesExceptSimilarToCountries), // Not using blacklisted values because NA is a valid country
                 Geolocation = NormalizationUtils.FindFirstMatchingFieldValueInRecords(section, geolocationFields)
             };
 
@@ -103,6 +189,12 @@ namespace Microsoft.Geolocation.Whois.Normalization
         public bool AddressSeemsValid()
         {
             if (!string.IsNullOrWhiteSpace(this.Address))
+            {
+                return true;
+            }
+
+            // Note the Geolocation field is most likely longitude, latitude in this order
+            if (!string.IsNullOrWhiteSpace(this.Geolocation))
             {
                 return true;
             }
@@ -135,6 +227,23 @@ namespace Microsoft.Geolocation.Whois.Normalization
             NormalizationUtils.AddToBuilderWithComma(ret, this.Country);
 
             return ret.ToString();
+        }
+
+        // Some postal codes look like this: Postal-Code: Code: W1J 6HL
+        // We want to remove the extra Code: prefix
+        private static string RemoveExtraPrefix(string text)
+        {
+            if (text != null)
+            {
+                var parts = text.Split(new char[] { ':' });
+
+                if (parts.Length == 2)
+                {
+                    return parts[1].Trim();
+                }
+            }
+
+            return text;
         }
     }
 }

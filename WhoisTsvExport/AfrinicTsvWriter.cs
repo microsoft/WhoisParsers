@@ -7,6 +7,8 @@
 namespace Microsoft.Geolocation.Whois.TsvExport
 {
     using System.Collections.Generic;
+    using System.IO;
+    using Normalization;
     using Parsers;
 
     public class AfrinicTsvWriter : TsvWriter
@@ -41,6 +43,18 @@ namespace Microsoft.Geolocation.Whois.TsvExport
         {
             var outputColumns = new List<string> { "inet6num", "netname", "descr", "country", "org", "admin-c", "tech-c", "mnt-by", "mnt-lower", "status", "remarks", "changed", "source", "notify", "mnt-routes", "parent", "mnt-domains", "mnt-irt" };
             this.ExportFieldsToTsv(inputFilePath: inputFilePath, outputFilePath: outputFilePath, recordType: "inet6num", outputColumns: outputColumns);
+        }
+
+        public void NetworksWithLocationsToTsv(string inputFilePath, string outputFilePath)
+        {
+            var parser = new WhoisParser(new AfrinicSectionTokenizer(), new SectionParser());
+            this.NetworksWithLocationsToTsv(parser, inputFilePath, outputFilePath);
+        }
+
+        public void NetworksLocationPropertyCountsToTsv(string inputFilePath, string propertyName, string outputFilePath)
+        {
+            var parser = new WhoisParser(new AfrinicSectionTokenizer(), new SectionParser());
+            this.NetworksLocationPropertyCountsToTsv(parser, inputFilePath, propertyName, outputFilePath);
         }
     }
 }

@@ -7,6 +7,7 @@
 namespace Microsoft.Geolocation.RWhois.Console
 {
     using System;
+    using System.Globalization;
     using System.IO;
     using Whois.Normalization;
     using Whois.Parsers;
@@ -311,8 +312,20 @@ namespace Microsoft.Geolocation.RWhois.Console
             multiCrawler.CrawlInParallel(organizationsToRefServers, organizationsToRefRanges).Wait();
             */
 
-            //RWhoisTSV();
-            //ArinTSV();
+            Console.WriteLine("RWhoisTSV");
+            RWhoisTSV();
+
+            Console.WriteLine("ArinTSV");
+            ArinTSV();
+
+            Console.WriteLine("AfrinicTSV");
+            AfrinicTSV();
+
+            Console.WriteLine("ApnicTSV");
+            ApnicTSV();
+
+            Console.WriteLine("LacnicTSV");
+            LacnicTSV();
 
             Console.WriteLine("Done!");
             Console.ReadKey();
@@ -323,22 +336,56 @@ namespace Microsoft.Geolocation.RWhois.Console
         private static void RWhoisTSV()
         {
             var rwhoisTsvWriter = new RWhoisTsvWriter();
-            ////rwhoisTsvWriter.ColumnsPerTypeToTsv(@"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\rWhoisColumnsPerType.tsv");
-            rwhoisTsvWriter.NetworksWithLocationsToTsv(@"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResultsLocationTsv\");
+            rwhoisTsvWriter.NetworksWithLocationsToTsv(@"C:\Projects\Whois\ARIN-RWhois\Raw\2016\08\13\", @"C:\Projects\Whois\ARIN-RWhois\Processed\2016\08\13\2016-08-13-ARINRWhois-NetworkLocations.tsv");
+            rwhoisTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\ARIN-RWhois\Raw\2016\08\13\", "Address", @"C:\Projects\Whois\ARIN-RWhois\Processed\2016\08\13\2016-08-13-ARINRWhois-TopAddresses.tsv");
+            rwhoisTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\ARIN-RWhois\Raw\2016\08\13\", "Street", @"C:\Projects\Whois\ARIN-RWhois\Processed\2016\08\13\2016-08-13-ARINRWhois-TopStreets.tsv");
+            rwhoisTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\ARIN-RWhois\Raw\2016\08\13\", "City", @"C:\Projects\Whois\ARIN-RWhois\Processed\2016\08\13\2016-08-13-ARINRWhois-TopCities.tsv");
+            rwhoisTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\ARIN-RWhois\Raw\2016\08\13\", "Country", @"C:\Projects\Whois\ARIN-RWhois\Processed\2016\08\13\2016-08-13-ARINRWhois-TopCountries.tsv");
+            rwhoisTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\ARIN-RWhois\Raw\2016\08\13\", "PostalCode", @"C:\Projects\Whois\ARIN-RWhois\Processed\2016\08\13\2016-08-13-ARINRWhois-TopPostalCodes.tsv");
         }
 
         private static void ArinTSV()
         {
             var arinTsvWriter = new ArinTsvWriter();
-            ////rwhoisTsvWriter.ColumnsPerTypeToTsv(@"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\rWhoisColumnsPerType.tsv");
-            arinTsvWriter.NetworksWithLocationsToTsv(@"M:\Projects\Whois\ARIN\Raw\2016\07\17\arin_db.txt", @"M:\Projects\Whois\ARIN\Processed\2016\07\17", "2016-07-17-ARIN-NetworkLocations.tsv");
+            arinTsvWriter.NetworksWithLocationsToTsv(@"C:\Projects\Whois\ARIN\Raw\2016\08\18\arin_db.txt", @"C:\Projects\Whois\ARIN\Processed\2016\08\18\2016-08-18-ARIN-NetworkLocations.tsv");
+            arinTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\ARIN\Raw\2016\08\18\arin_db.txt", "Address", @"C:\Projects\Whois\ARIN\Processed\2016\08\18\2016-08-18-ARIN-TopAddresses.tsv");
+            arinTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\ARIN\Raw\2016\08\18\arin_db.txt", "Street", @"C:\Projects\Whois\ARIN\Processed\2016\08\18\2016-08-18-ARIN-TopStreets.tsv");
+            arinTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\ARIN\Raw\2016\08\18\arin_db.txt", "City", @"C:\Projects\Whois\ARIN\Processed\2016\08\18\2016-08-18-ARIN-TopCities.tsv");
+            arinTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\ARIN\Raw\2016\08\18\arin_db.txt", "Country", @"C:\Projects\Whois\ARIN\Processed\2016\08\18\2016-08-18-ARIN-TopCountries.tsv");
+            arinTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\ARIN\Raw\2016\08\18\arin_db.txt", "PostalCode", @"C:\Projects\Whois\ARIN\Processed\2016\08\18\2016-08-18-ARIN-TopPostalCodes.tsv");
         }
 
         private static void AfrinicTSV()
         {
-            var arinTsvWriter = new ArinTsvWriter();
-            ////rwhoisTsvWriter.ColumnsPerTypeToTsv(@"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\CrawlResults\", @"C:\git\WhoisParsers\RWhoisClient.Console\bin\Debug-Net45\rWhoisColumnsPerType.tsv");
-            arinTsvWriter.NetworksWithLocationsToTsv(@"M:\Projects\Whois\ARIN\Raw\2016\07\17\arin_db.txt", @"M:\Projects\Whois\ARIN\Processed\2016\07\17", "2016-07-17-ARIN-NetworkLocations.tsv");
+            var afrinicTsvWriter = new AfrinicTsvWriter();
+            afrinicTsvWriter.NetworksWithLocationsToTsv(@"C:\Projects\Whois\AFRINIC\Raw\2016\08\18\whois_dump", @"C:\Projects\Whois\AFRINIC\Processed\2016\08\18\2016-08-18-AFRINIC-NetworkLocations.tsv");
+            afrinicTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\AFRINIC\Raw\2016\08\18\whois_dump", "Address", @"C:\Projects\Whois\AFRINIC\Processed\2016\08\18\2016-08-18-AFRINIC-TopAddresses.tsv");
+            afrinicTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\AFRINIC\Raw\2016\08\18\whois_dump", "Street", @"C:\Projects\Whois\AFRINIC\Processed\2016\08\18\2016-08-18-AFRINIC-TopStreets.tsv");
+            afrinicTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\AFRINIC\Raw\2016\08\18\whois_dump", "City", @"C:\Projects\Whois\AFRINIC\Processed\2016\08\18\2016-08-18-AFRINIC-TopCities.tsv");
+            afrinicTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\AFRINIC\Raw\2016\08\18\whois_dump", "Country", @"C:\Projects\Whois\AFRINIC\Processed\2016\08\18\2016-08-18-AFRINIC-TopCountries.tsv");
+            afrinicTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\AFRINIC\Raw\2016\08\18\whois_dump", "PostalCode", @"C:\Projects\Whois\AFRINIC\Processed\2016\08\18\2016-08-18-AFRINIC-TopPostalCodes.tsv");
+        }
+
+        private static void ApnicTSV()
+        {
+            var apnicTsvWriter = new ApnicTsvWriter();
+            apnicTsvWriter.NetworksWithLocationsToTsv(@"C:\Projects\Whois\APNIC\Raw\2016\08\18\apnic.RPSL.db", @"C:\Projects\Whois\APNIC\Processed\2016\08\18\2016-08-18-APNIC-NetworkLocations.tsv");
+            apnicTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\APNIC\Raw\2016\08\18\apnic.RPSL.db", "Address", @"C:\Projects\Whois\APNIC\Processed\2016\08\18\2016-08-18-APNIC-TopAddresses.tsv");
+            apnicTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\APNIC\Raw\2016\08\18\apnic.RPSL.db", "Street", @"C:\Projects\Whois\APNIC\Processed\2016\08\18\2016-08-18-APNIC-TopStreets.tsv");
+            apnicTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\APNIC\Raw\2016\08\18\apnic.RPSL.db", "City", @"C:\Projects\Whois\APNIC\Processed\2016\08\18\2016-08-18-APNIC-TopCities.tsv");
+            apnicTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\APNIC\Raw\2016\08\18\apnic.RPSL.db", "Country", @"C:\Projects\Whois\APNIC\Processed\2016\08\18\2016-08-18-APNIC-TopCountries.tsv");
+            apnicTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\APNIC\Raw\2016\08\18\apnic.RPSL.db", "PostalCode", @"C:\Projects\Whois\APNIC\Processed\2016\08\18\2016-08-18-APNIC-TopPostalCodes.tsv");
+        }
+
+        private static void LacnicTSV()
+        {
+            var lacnicTsvWriter = new LacnicTsvWriter();
+            lacnicTsvWriter.NetworksWithLocationsToTsv(@"C:\Projects\Whois\LACNIC\Raw\2016\08\18\lacnic.db", @"C:\Projects\Whois\LACNIC\Processed\2016\08\18\2016-08-18-LACNIC-NetworkLocations.tsv");
+            lacnicTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\LACNIC\Raw\2016\08\18\lacnic.db", "Address", @"C:\Projects\Whois\LACNIC\Processed\2016\08\18\2016-08-18-LACNIC-TopAddresses.tsv");
+            lacnicTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\LACNIC\Raw\2016\08\18\lacnic.db", "Street", @"C:\Projects\Whois\LACNIC\Processed\2016\08\18\2016-08-18-LACNIC-TopStreets.tsv");
+            lacnicTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\LACNIC\Raw\2016\08\18\lacnic.db", "City", @"C:\Projects\Whois\LACNIC\Processed\2016\08\18\2016-08-18-LACNIC-TopCities.tsv");
+            lacnicTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\LACNIC\Raw\2016\08\18\lacnic.db", "Country", @"C:\Projects\Whois\LACNIC\Processed\2016\08\18\2016-08-18-LACNIC-TopCountries.tsv");
+            lacnicTsvWriter.NetworksLocationPropertyCountsToTsv(@"C:\Projects\Whois\LACNIC\Raw\2016\08\18\lacnic.db", "PostalCode", @"C:\Projects\Whois\LACNIC\Processed\2016\08\18\2016-08-18-LACNIC-TopPostalCodes.tsv");
         }
     }
 }

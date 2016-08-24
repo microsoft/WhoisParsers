@@ -55,6 +55,8 @@ namespace Microsoft.Geolocation.Whois.Normalization
 
         public string Comment { get; set; }
 
+        public string Source { get; set; }
+
         //////
 
         public NormalizedLocation Location { get; set; }

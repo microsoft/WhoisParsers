@@ -21,5 +21,7 @@ namespace Microsoft.Geolocation.Whois.Normalization
         string Description { get; set; }
 
         string Comment { get; set; }
+
+        string Source { get; set; }
     }
 }
