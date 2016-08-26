@@ -44,5 +44,38 @@ namespace Microsoft.Geolocation.Whois.TsvExport
             var parser = new WhoisParser(new SectionTokenizer(), new SectionParser());
             this.NetworksLocationPropertyCountsToTsv(parser, inputFilePath, propertyName, outputFilePath);
         }
+
+        protected new void NetworksWithLocationsToTsv(WhoisParser parser, string inputFilePath, string outputFilePath)
+        {
+            var outputFolderPath = Path.GetDirectoryName(outputFilePath);
+
+            if (!Directory.Exists(outputFolderPath))
+            {
+                Directory.CreateDirectory(outputFolderPath);
+            }
+
+            var locationExtraction = new NetworkLocationExtraction(parser);
+
+            using (var outputFile = new StreamWriter(outputFilePath))
+            {
+                foreach (var network in locationExtraction.ExtractNetworks(new List<string>() { inputFilePath }))
+                {
+                    if (network.Id != null)
+                    {
+                        if (network.Location != null && network.Location.AddressSeemsValid())
+                        {
+                            var networkTsv = network.ToLocationTsv();
+                            outputFile.WriteLine(networkTsv);
+                        }
+                        else if (network.Description != null)
+                        {
+                            var networkTsv = network.ToDescriptionTsv();
+                            outputFile.WriteLine(networkTsv);
+                        }
+                    }
+                    // TODO: Else log
+                }
+            }
+        }
     }
 }

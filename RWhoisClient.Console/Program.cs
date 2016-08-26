@@ -312,6 +312,7 @@ namespace Microsoft.Geolocation.RWhois.Console
             multiCrawler.CrawlInParallel(organizationsToRefServers, organizationsToRefRanges).Wait();
             */
 
+            /*
             Console.WriteLine("RWhoisTSV");
             RWhoisTSV();
 
@@ -320,12 +321,15 @@ namespace Microsoft.Geolocation.RWhois.Console
 
             Console.WriteLine("AfrinicTSV");
             AfrinicTSV();
+            */
 
             Console.WriteLine("ApnicTSV");
             ApnicTSV();
 
+            /*
             Console.WriteLine("LacnicTSV");
             LacnicTSV();
+            */
 
             Console.WriteLine("Done!");
             Console.ReadKey();

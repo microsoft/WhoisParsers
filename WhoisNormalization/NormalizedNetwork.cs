@@ -168,7 +168,7 @@ namespace Microsoft.Geolocation.Whois.Normalization
             }
         }
 
-        public string ToTsv()
+        public string ToLocationTsv()
         {
             var ret = new StringBuilder();
 
@@ -176,6 +176,21 @@ namespace Microsoft.Geolocation.Whois.Normalization
             TsvUtils.AddToBuilderWithTab(ret, this.Name, firstColumn: false);
             TsvUtils.AddToBuilderWithTab(ret, this.IPRange?.ToString(), firstColumn: false);
             TsvUtils.AddToBuilderWithTab(ret, this.Location.ToString(), firstColumn: false);
+            TsvUtils.AddToBuilderWithTab(ret, this.AuthArea, firstColumn: false);
+            TsvUtils.AddToBuilderWithTab(ret, this.OriginAS, firstColumn: false);
+            TsvUtils.AddToBuilderWithTab(ret, this.Status, firstColumn: false);
+
+            return ret.ToString();
+        }
+
+        public string ToDescriptionTsv()
+        {
+            var ret = new StringBuilder();
+
+            TsvUtils.AddToBuilderWithTab(ret, this.Id, firstColumn: true);
+            TsvUtils.AddToBuilderWithTab(ret, this.Name, firstColumn: false);
+            TsvUtils.AddToBuilderWithTab(ret, this.IPRange?.ToString(), firstColumn: false);
+            TsvUtils.AddToBuilderWithTab(ret, this.Description, firstColumn: false);
             TsvUtils.AddToBuilderWithTab(ret, this.AuthArea, firstColumn: false);
             TsvUtils.AddToBuilderWithTab(ret, this.OriginAS, firstColumn: false);
             TsvUtils.AddToBuilderWithTab(ret, this.Status, firstColumn: false);

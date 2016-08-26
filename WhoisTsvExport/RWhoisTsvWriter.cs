@@ -72,9 +72,10 @@ namespace Microsoft.Geolocation.Whois.TsvExport
                     {
                         if (network.Id != null && network.Location.AddressSeemsValid())
                         {
-                            var networkTsv = network.ToTsv();
+                            var networkTsv = network.ToLocationTsv();
                             outputFile.WriteLine(networkTsv);
                         }
+                        // TODO: else log
                     }
                 }
             }
@@ -98,11 +99,12 @@ namespace Microsoft.Geolocation.Whois.TsvExport
                 {
                     foreach (var network in locationExtraction.ExtractNetworksWithLocations(inputFilePath, inputFilePath))
                     {
-                        if (network.Id != null && network.Location.AddressSeemsValid())
+                        if (network.Id != null)
                         {
-                            var networkTsv = network.ToTsv();
+                            var networkTsv = network.ToLocationTsv();
                             outputFile.WriteLine(networkTsv);
                         }
+                        // TODO: else log
                     }
                 }
             }
@@ -144,7 +146,7 @@ namespace Microsoft.Geolocation.Whois.TsvExport
             {
                 foreach (var network in locationExtraction.ExtractNetworksWithLocations(inputFilePath, inputFilePath))
                 {
-                    if (network.Id != null && network.Location.AddressSeemsValid())
+                    if (network.Id != null)
                     {
                         var rawPropertyValue = targetProperty.GetValue(network.Location);
 
@@ -163,6 +165,7 @@ namespace Microsoft.Geolocation.Whois.TsvExport
                             stringsCount[value] = currentCount;
                         }
                     }
+                    // TODO: else log
                 }
             }
 
