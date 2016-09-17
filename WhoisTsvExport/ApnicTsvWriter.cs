@@ -73,7 +73,7 @@ namespace Microsoft.Geolocation.Whois.TsvExport
                             outputFile.WriteLine(networkTsv);
                         }
                     }
-                    // TODO: Else log
+                    //// TODO: Else log
                 }
             }
         }

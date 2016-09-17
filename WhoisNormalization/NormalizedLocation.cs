@@ -13,13 +13,6 @@ namespace Microsoft.Geolocation.Whois.Normalization
 
     public class NormalizedLocation
     {
-        static NormalizedLocation()
-        {
-            allBlacklistedValues = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            allBlacklistedValues.UnionWith(blacklistedValuesSimilarToCountries);
-            allBlacklistedValues.UnionWith(blacklistedValuesExceptSimilarToCountries);
-        }
-
         private static HashSet<string> allBlacklistedValues;
 
         private static HashSet<string> blacklistedValuesExceptSimilarToCountries = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
@@ -155,6 +148,13 @@ namespace Microsoft.Geolocation.Whois.Normalization
             "Organization-Country",
             "Customer Country Code"
         };
+
+        static NormalizedLocation()
+        {
+            allBlacklistedValues = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            allBlacklistedValues.UnionWith(blacklistedValuesSimilarToCountries);
+            allBlacklistedValues.UnionWith(blacklistedValuesExceptSimilarToCountries);
+        }
 
         public string Address { get; set; }
 

@@ -7,14 +7,19 @@
 namespace Microsoft.Geolocation.Whois.Normalization
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
     using System.Text;
     using Parsers;
-    using System.Globalization;
 
     public static class NormalizationUtils
     {
+        private static string[] dateFormats = { "yyyy-MM-dd", "yyyyMMdd" };
+        private static string dateOutputFormat = "yyyy-MM-dd";
+        private static char[] dateWordsSplitChars = new char[] { ' ', '\t', '\r', '\n' };
+        private static CultureInfo dateCultureInfo = new CultureInfo("en-US");
+
         private static HashSet<string> updatedFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "Updated",
@@ -104,8 +109,8 @@ namespace Microsoft.Geolocation.Whois.Normalization
         {
             target.Id = id;
             target.Name = FindFirstMatchingFieldValueInRecords(section, nameFieldNames);
-            target.Created = FindOldestDate(FindFirstMatchingFieldValueInRecords(section, createdFields));
-            target.Updated = FindOldestDate(FindFirstMatchingFieldValueInRecords(section, updatedFields));
+            target.Created = FindOldestDateOptimized(FindFirstMatchingFieldValueInRecords(section, createdFields));
+            target.Updated = FindOldestDateOptimized(FindFirstMatchingFieldValueInRecords(section, updatedFields));
             target.UpdatedBy = FindFirstMatchingFieldValueInRecords(section, updatedByFields);
             target.Description = FindFirstMatchingFieldValueInRecords(section, descriptionFields);
             target.Comment = FindFirstMatchingFieldValueInRecords(section, commentFields);
@@ -130,26 +135,47 @@ namespace Microsoft.Geolocation.Whois.Normalization
             }
         }
 
-        public static string FindOldestDate(string text)
+        public static DateTime? ExtractDateExact(string text)
         {
             if (text == null)
             {
                 return null;
             }
 
-            var words = new List<string>(text.Split(new char[] { ' ' }));
+            var dateNoDash = ExtractDateExactNoDash(text);
+            var dateDash = ExtractDateExactDash(text);
+
+            if (dateNoDash != null)
+            {
+                return dateNoDash;
+            }
+
+            if (dateDash != null)
+            {
+                return dateDash;
+            }
+
+            return null;
+        }
+
+        public static string FindOldestDateOptimized(string text)
+        {
+            if (text == null)
+            {
+                return null;
+            }
+
+            var words = new List<string>(text.Split(dateWordsSplitChars));
             words = words.Select(word => word.Trim()).ToList<string>();
             words = words.Where(word => word.Length > 0).ToList<string>();
 
             DateTime? oldestParsedDate = null;
 
-            string[] dateFormats = { "yyyy-dd-MM", "yyyyddMM" };
-
             foreach (var word in words)
             {
-                DateTime currentParsedDate;
+                DateTime? currentParsedDate = ExtractDateExact(word);
 
-                if (DateTime.TryParseExact(s: word, formats: dateFormats, provider: new CultureInfo("en-US"), style: DateTimeStyles.None, result: out currentParsedDate))
+                if (currentParsedDate != null)
                 {
                     if (oldestParsedDate == null)
                     {
@@ -164,12 +190,163 @@ namespace Microsoft.Geolocation.Whois.Normalization
 
             if (oldestParsedDate.HasValue)
             {
-                return oldestParsedDate.Value.ToString("yyyy-dd-MM");
+                return oldestParsedDate.Value.ToString(dateOutputFormat);
             }
             else
             {
                 return null;
             }
+        }
+
+        public static string FindOldestDateSlow(string text)
+        {
+            if (text == null)
+            {
+                return null;
+            }
+
+            var words = new List<string>(text.Split(dateWordsSplitChars));
+            words = words.Select(word => word.Trim()).ToList<string>();
+            words = words.Where(word => word.Length > 0).ToList<string>();
+
+            DateTime? oldestParsedDate = null;
+
+            foreach (var word in words)
+            {
+                DateTime currentParsedDate;
+
+                if (DateTime.TryParseExact(s: word, formats: dateFormats, provider: dateCultureInfo, style: DateTimeStyles.None, result: out currentParsedDate))
+                {
+                    if (oldestParsedDate == null)
+                    {
+                        oldestParsedDate = currentParsedDate;
+                    }
+                    else if (oldestParsedDate < currentParsedDate)
+                    {
+                        oldestParsedDate = currentParsedDate;
+                    }
+                }
+            }
+
+            if (oldestParsedDate.HasValue)
+            {
+                return oldestParsedDate.Value.ToString(dateOutputFormat);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private static DateTime? ExtractDateExactNoDash(string text)
+        {
+            // Example: 20101112
+            if (text.Length != 8)
+            {
+                return null;
+            }
+
+            foreach (var c in text)
+            {
+                if (!char.IsNumber(c))
+                {
+                    return null;
+                }
+            }
+
+            if (text[0] == '0')
+            {
+                return null;
+            }
+
+            var rawYear = text.Substring(0, 4);
+            var rawMonth = text.Substring(4, 2);
+            var rawDay = text.Substring(6, 2);
+
+            int year;
+            int month;
+            int day;
+
+            if (!int.TryParse(rawYear, out year))
+            {
+                return null;
+            }
+
+            if (!int.TryParse(rawMonth, out month))
+            {
+                return null;
+            }
+
+            if (!int.TryParse(rawDay, out day))
+            {
+                return null;
+            }
+
+            return new DateTime(year, month, day);
+        }
+
+        private static DateTime? ExtractDateExactDash(string text)
+        {
+            // Example: 2010-11-12
+            if (text.Length != 10)
+            {
+                return null;
+            }
+
+            for (var i = 0; i < text.Length; i++)
+            {
+                var c = text[i];
+
+                switch (i)
+                {
+                    case 4: // First dash
+                    case 7: // Second dash
+                        if (c != '-')
+                        {
+                            return null;
+                        }
+
+                        break;
+                    default:
+
+                        if (!char.IsNumber(c))
+                        {
+                            return null;
+                        }
+
+                        break;
+                }
+            }
+
+            if (text[0] == '0')
+            {
+                return null;
+            }
+
+            var rawYear = text.Substring(0, 4);
+            var rawMonth = text.Substring(5, 2);
+            var rawDay = text.Substring(8, 2);
+
+            int year;
+            int month;
+            int day;
+
+            if (!int.TryParse(rawYear, out year))
+            {
+                return null;
+            }
+
+            if (!int.TryParse(rawMonth, out month))
+            {
+                return null;
+            }
+
+            if (!int.TryParse(rawDay, out day))
+            {
+                return null;
+            }
+
+            return new DateTime(year, month, day);
         }
     }
 }

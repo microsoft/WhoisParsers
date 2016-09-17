@@ -75,7 +75,7 @@ namespace Microsoft.Geolocation.Whois.TsvExport
                             var networkTsv = network.ToLocationTsv();
                             outputFile.WriteLine(networkTsv);
                         }
-                        // TODO: else log
+                        //// TODO: else log
                     }
                 }
             }
@@ -104,7 +104,7 @@ namespace Microsoft.Geolocation.Whois.TsvExport
                             var networkTsv = network.ToLocationTsv();
                             outputFile.WriteLine(networkTsv);
                         }
-                        // TODO: else log
+                        //// TODO: else log
                     }
                 }
             }
@@ -165,7 +165,7 @@ namespace Microsoft.Geolocation.Whois.TsvExport
                             stringsCount[value] = currentCount;
                         }
                     }
-                    // TODO: else log
+                    //// TODO: else log
                 }
             }
 

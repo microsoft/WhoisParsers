@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>WhoisParsers</id>
-    <version>0.1.7</version>
+    <version>0.1.8</version>
     <title>Whois and RWhois Parsers and Crawlers</title>
     <authors>Ovidiu Dan</authors>
     <owners>Ovidiu Dan</owners>
@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
 	<summary>Download and parse Whois records from bulk whois database dumps of IANA organizations (ARIN, AFRINIC, APNIC, LACNIC, RIPE ). Crawl and parse RWhois records from RFC 2167 ARIN Referral Whois Servers.</summary>
     <description>This allows you to: 1) Download and parse Whois records from bulk whois database dumps of IANA organizations (ARIN, AFRINIC, APNIC, LACNIC, RIPE ) and 2) Crawl and parse RWhois records from RFC 2167 ARIN Referral Whois Servers. It also provides utilities to increment IP addresses and to output Whois databases in TSV format.</description>
-    <releaseNotes>Added date parsing for Updated and Created fields</releaseNotes>
+    <releaseNotes>Created an optimized version of FindOldestDate</releaseNotes>
     <copyright>Copyright Microsoft</copyright>
     <tags>whois rwhois parser parsers crawling arin afrinic apnic lacnic ripe iana bulk database databases rfc 2167 referral servers download unpack decompress tsv</tags>
     <dependencies> 
