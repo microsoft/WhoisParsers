@@ -10,5 +10,6 @@ script:
   - cd ..
   - cd WhoisDatabaseParsers.Tests
   - mono ../testrunner/NUnit.ConsoleRunner.3.2.1/tools/nunit3-console.exe ./bin/Nunit/Microsoft.Geolocation.Whois.Parsers.Tests.dll
+  - cd ..
   - cd WhoisNormalization.Tests
   - mono ../testrunner/NUnit.ConsoleRunner.3.2.1/tools/nunit3-console.exe ./bin/Nunit/Microsoft.Geolocation.Whois.Normalization.Tests.dll
