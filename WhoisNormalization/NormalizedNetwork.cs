@@ -180,6 +180,9 @@ namespace Microsoft.Geolocation.Whois.Normalization
             TsvUtils.AddToBuilderWithTab(ret, this.OriginAS, firstColumn: false);
             TsvUtils.AddToBuilderWithTab(ret, this.Status, firstColumn: false);
 
+            TsvUtils.AddToBuilderWithTab(ret, this.Created, firstColumn: false);
+            TsvUtils.AddToBuilderWithTab(ret, this.Updated, firstColumn: false);
+
             return ret.ToString();
         }
 
@@ -194,6 +197,9 @@ namespace Microsoft.Geolocation.Whois.Normalization
             TsvUtils.AddToBuilderWithTab(ret, this.AuthArea, firstColumn: false);
             TsvUtils.AddToBuilderWithTab(ret, this.OriginAS, firstColumn: false);
             TsvUtils.AddToBuilderWithTab(ret, this.Status, firstColumn: false);
+
+            TsvUtils.AddToBuilderWithTab(ret, this.Created, firstColumn: false);
+            TsvUtils.AddToBuilderWithTab(ret, this.Updated, firstColumn: false);
 
             return ret.ToString();
         }
