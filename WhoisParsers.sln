@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhoisDatabaseParsers", "WhoisDatabaseParsers\WhoisDatabaseParsers.csproj", "{E94F9E4F-F386-4063-AA89-C13C846BA76C}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhoisDownload", "WhoisDownload\WhoisDownload.csproj", "{9FE9520D-E188-48FF-BD13-CFC0DCB92B92}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhoisNormalization", "WhoisNormalization\WhoisNormalization.csproj", "{634063C0-16A6-471E-B617-6F36042F7D1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhoisNormalization.Tests", "WhoisNormalization.Tests\WhoisNormalization.Tests.csproj", "{880A8BBC-A858-44C6-A7A5-530BC11DC1D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,14 @@ Global
 		{634063C0-16A6-471E-B617-6F36042F7D1F}.Release-Net40|Any CPU.Build.0 = Release-Net40|Any CPU
 		{634063C0-16A6-471E-B617-6F36042F7D1F}.Release-Net45|Any CPU.ActiveCfg = Release-Net45|Any CPU
 		{634063C0-16A6-471E-B617-6F36042F7D1F}.Release-Net45|Any CPU.Build.0 = Release-Net45|Any CPU
+		{880A8BBC-A858-44C6-A7A5-530BC11DC1D6}.Debug-Net45|Any CPU.ActiveCfg = Debug-Net45|Any CPU
+		{880A8BBC-A858-44C6-A7A5-530BC11DC1D6}.Debug-Net45|Any CPU.Build.0 = Debug-Net45|Any CPU
+		{880A8BBC-A858-44C6-A7A5-530BC11DC1D6}.Nunit-Net45|Any CPU.ActiveCfg = Nunit-Net45|Any CPU
+		{880A8BBC-A858-44C6-A7A5-530BC11DC1D6}.Nunit-Net45|Any CPU.Build.0 = Nunit-Net45|Any CPU
+		{880A8BBC-A858-44C6-A7A5-530BC11DC1D6}.Release-Net40|Any CPU.ActiveCfg = Release-Net40|Any CPU
+		{880A8BBC-A858-44C6-A7A5-530BC11DC1D6}.Release-Net40|Any CPU.Build.0 = Release-Net40|Any CPU
+		{880A8BBC-A858-44C6-A7A5-530BC11DC1D6}.Release-Net45|Any CPU.ActiveCfg = Release-Net45|Any CPU
+		{880A8BBC-A858-44C6-A7A5-530BC11DC1D6}.Release-Net45|Any CPU.Build.0 = Release-Net45|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
