@@ -282,7 +282,14 @@ namespace Microsoft.Geolocation.Whois.Normalization
                 return null;
             }
 
-            return new DateTime(year, month, day);
+            try
+            {
+                return new DateTime(year, month, day);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         private static DateTime? ExtractDateExactDash(string text)
@@ -346,7 +353,14 @@ namespace Microsoft.Geolocation.Whois.Normalization
                 return null;
             }
 
-            return new DateTime(year, month, day);
+            try
+            {
+                return new DateTime(year, month, day);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }
