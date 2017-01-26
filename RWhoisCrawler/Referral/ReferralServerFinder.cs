@@ -12,6 +12,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
     using System.IO;
     using System.Text;
     using NetTools;
+    using System.Text.RegularExpressions;
 
     public static class ReferralServerFinder
     {
@@ -129,6 +130,47 @@ namespace Microsoft.Geolocation.RWhois.Crawler
             }
 
             return organizationsToRefRanges;
+        }
+
+        public static Dictionary<IPAddressRange, string> FindRangesToRefServers(string rangesFilePath)
+        {
+            if (rangesFilePath == null)
+            {
+                throw new ArgumentNullException("rangesFilePath");
+            }
+
+            if (!File.Exists(rangesFilePath))
+            {
+                throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "File {0} does not exist", rangesFilePath));
+            }
+            Dictionary<IPAddressRange, string> rangesToRefServers = new Dictionary<IPAddressRange, string>();
+            using (var reader = new StreamReader(rangesFilePath))
+            {
+                string line;
+                
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (line.Contains("rwhois."))
+                    {
+                        var items = line.Split('\t');
+                        var range = items[4];
+                        var comment = items[13];
+
+                        Regex r = new Regex("rwhois\\.[a-z0-9-\\.]*", RegexOptions.IgnoreCase);
+                        Match rwhoIsServerNameMatch = r.Match(comment);
+                        if (rwhoIsServerNameMatch.Success)
+                        {
+                            IPAddressRange ipAddressRange;
+                            if (IPAddressRange.TryParse(range, out ipAddressRange))
+                            {
+                                rangesToRefServers.Add(ipAddressRange, rwhoIsServerNameMatch.Value);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return rangesToRefServers;
         }
     }
 }
