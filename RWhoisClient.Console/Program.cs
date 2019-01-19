@@ -6,6 +6,7 @@
 
 namespace Microsoft.Geolocation.RWhois.Console
 {
+    using Microsoft.Geolocation.RWhois.Crawler;
     using System;
     using System.Globalization;
     using System.IO;
@@ -99,10 +100,14 @@ namespace Microsoft.Geolocation.RWhois.Console
             };
 
             Console.WriteLine("FindOrganizationsToRefServers");
-            var organizationsToRefServers = ReferralServerFinder.FindOrganizationsToRefServers(settings: settings, organizationsFilePath: @"C:\Users\zmarty\Downloads\arin\organizations.txt");
+            var organizationsToRefServers = ReferralServerFinder.FindOrganizationsToRefServers(settings: settings, organizationsFilePath: @"E:\Projects\Whois\ARIN\Raw\2019\01\17\arin_db.txt");
 
             Console.WriteLine("FindOrganizationsToRefRanges");
-            var organizationsToRefRanges = ReferralServerFinder.FindOrganizationsToRefRanges(settings: settings, organizationsToRefServers: organizationsToRefServers, networksFilePath: @"C:\Users\zmarty\Downloads\arin\networks.txt");
+            var organizationsToRefRanges = ReferralServerFinder.FindOrganizationsToRefRanges(settings: settings, organizationsToRefServers: organizationsToRefServers, networksFilePath: @"E:\Projects\Whois\ARIN\Raw\2019\01\17\arin_db.txt");
+
+            Console.WriteLine("RWhoisMultiCrawler");
+            var multiCrawler = new RWhoisMultiCrawler(@"E:\Projects\Whois\ARIN-RWhois\Raw\2019\01\16\", attemptCrawlOrganizations: true);
+            multiCrawler.CrawlInParallel(organizationsToRefServers, organizationsToRefRanges).Wait();
             */
 
             //// Diff:
@@ -133,12 +138,6 @@ namespace Microsoft.Geolocation.RWhois.Console
                     }
                 }
             };
-            */
-
-            /*
-            Console.WriteLine("RWhoisMultiCrawler");
-            var multiCrawler = new RWhoisMultiCrawler("./CrawlResults", attemptCrawlOrganizations: true);
-            multiCrawler.CrawlInParallel(organizationsToRefServers, organizationsToRefRanges).Wait();
             */
 
             /*
@@ -323,8 +322,10 @@ namespace Microsoft.Geolocation.RWhois.Console
             AfrinicTSV();
             */
 
+            /*
             Console.WriteLine("ApnicTSV");
             ApnicTSV();
+            */
 
             /*
             Console.WriteLine("LacnicTSV");

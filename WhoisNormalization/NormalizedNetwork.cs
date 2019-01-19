@@ -40,6 +40,7 @@ namespace Microsoft.Geolocation.Whois.Normalization
 
         private static HashSet<string> ipRangeFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
+            "CIDR",
             "IP-Network",
             "IP-Network-Block",
             "Netblock",
