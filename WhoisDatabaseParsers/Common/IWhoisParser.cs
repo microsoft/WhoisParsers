@@ -12,6 +12,16 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
     public interface IWhoisParser
     {
+        void ResetFieldStats();
+
+        Dictionary<string, int> TypeCounts(StreamReader reader);
+
+        Dictionary<string, int> TypeCounts(string filePath);
+
+        Dictionary<string, Dictionary<string, int>> TypeToFieldDistinctOcc(StreamReader reader);
+
+        Dictionary<string, Dictionary<string, int>> TypeToFieldDistinctOcc(string filePath);
+
         Dictionary<string, List<string>> ColumnsPerType(StreamReader reader);
 
         Dictionary<string, List<string>> ColumnsPerType(string filePath);

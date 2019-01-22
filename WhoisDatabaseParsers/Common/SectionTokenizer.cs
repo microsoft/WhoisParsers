@@ -52,6 +52,7 @@ namespace Microsoft.Geolocation.Whois.Parsers
                     }
 
                     throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "A section cannot contain more than 30,000 lines. Maybe the section delimitator is incorrect? First characters of buffer: {0}", sample));
+                    //return ret.ToString();
                 }
 
                 if (line != null)

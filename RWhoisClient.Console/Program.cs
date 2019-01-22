@@ -332,10 +332,83 @@ namespace Microsoft.Geolocation.RWhois.Console
             LacnicTSV();
             */
 
+            TypeCountsToTsv();
+
+            //RipeTSV();
+
             Console.WriteLine("Done!");
             Console.ReadKey();
             Console.ReadKey();
             Console.ReadKey();
+        }
+
+        private static void RipeTSV()
+        {
+            var ripeTsvWriter = new RipeTsvWriter();
+            ripeTsvWriter.NetworksWithLocationsToTsv(@"E:\Projects\Whois\RIPE\Raw\2019\01\17\ripe.db", @"E:\Projects\Whois\RIPE\Processed\2019\01\17\2019-01-17-RIPE-NetworkLocations.tsv");
+        }
+
+        private static void TypeCountsToTsv()
+        {
+            var rwhoisTsvWriter = new RWhoisTsvWriter();
+
+            rwhoisTsvWriter.TypeCountsToTsv(
+                inputFolderPath: @"E:\Projects\Whois\ARIN-RWhois\Raw\2019\01\17\",
+                outputFilePath: @"E:\Projects\Whois\ARIN-RWhois\Processed\2019\01\17\2019-01-17-ARINRWhois-TypeCounts.tsv");
+
+            rwhoisTsvWriter.TypeToFieldDistinctOcc(
+                inputFolderPath: @"E:\Projects\Whois\ARIN-RWhois\Raw\2019\01\17\",
+                outputFilePath: @"E:\Projects\Whois\ARIN-RWhois\Processed\2019\01\17\2019-01-17-ARINRWhois-TypeCountsFieldDistinctOcc.tsv");
+
+            var arinTsvWriter = new ArinTsvWriter();
+
+            arinTsvWriter.TypeCountsToTsv(
+                inputFilePath: @"E:\Projects\Whois\ARIN\Raw\2019\01\17\arin_db.txt",
+                outputFilePath: @"E:\Projects\Whois\ARIN\Processed\2019\01\17\2019-01-17-ARIN-TypeCounts.tsv");
+
+            arinTsvWriter.TypeToFieldDistinctOcc(
+                inputFilePath: @"E:\Projects\Whois\ARIN\Raw\2019\01\17\arin_db.txt",
+                outputFilePath: @"E:\Projects\Whois\ARIN\Processed\2019\01\17\2019-01-17-ARIN-TypeCountsFieldDistinctOcc.tsv");
+
+            var afrinicTsvWriter = new AfrinicTsvWriter();
+
+            afrinicTsvWriter.TypeCountsToTsv(
+                inputFilePath: @"E:\Projects\Whois\AFRINIC\Raw\2019\01\17\whois_dump",
+                outputFilePath: @"E:\Projects\Whois\AFRINIC\Processed\2019\01\17\2019-01-17-AFRINIC-TypeCounts.tsv");
+
+            afrinicTsvWriter.TypeToFieldDistinctOcc(
+                inputFilePath: @"E:\Projects\Whois\AFRINIC\Raw\2019\01\17\whois_dump",
+                outputFilePath: @"E:\Projects\Whois\AFRINIC\Processed\2019\01\17\2019-01-17-AFRINIC-TypeCountsFieldDistinctOcc.tsv");
+
+            var apnicTsvWriter = new ApnicTsvWriter();
+
+            apnicTsvWriter.TypeCountsToTsv(
+                inputFilePath: @"E:\Projects\Whois\APNIC\Raw\2019\01\17\apnic.RPSL.db",
+                outputFilePath: @"E:\Projects\Whois\APNIC\Processed\2019\01\17\2019-01-17-APNIC-TypeCounts.tsv");
+
+            apnicTsvWriter.TypeToFieldDistinctOcc(
+                inputFilePath: @"E:\Projects\Whois\APNIC\Raw\2019\01\17\apnic.RPSL.db",
+                outputFilePath: @"E:\Projects\Whois\APNIC\Processed\2019\01\17\2019-01-17-APNIC-TypeCountsFieldDistinctOcc.tsv");
+
+            var lacnicTsvWriter = new LacnicTsvWriter();
+
+            lacnicTsvWriter.TypeCountsToTsv(
+                inputFilePath: @"E:\Projects\Whois\LACNIC\Raw\2019\01\17\lacnic.db",
+                outputFilePath: @"E:\Projects\Whois\LACNIC\Processed\2019\01\17\2019-01-17-LACNIC-TypeCounts.tsv");
+
+            lacnicTsvWriter.TypeToFieldDistinctOcc(
+                inputFilePath: @"E:\Projects\Whois\LACNIC\Raw\2019\01\17\lacnic.db",
+                outputFilePath: @"E:\Projects\Whois\LACNIC\Processed\2019\01\17\2019-01-17-LACNIC-TypeCountsFieldDistinctOcc.tsv");
+
+            var ripeTsvWriter = new RipeTsvWriter();
+
+           ripeTsvWriter.TypeCountsToTsv(
+                inputFilePath: @"E:\Projects\Whois\RIPE\Raw\2019\01\17\ripe.db",
+                outputFilePath: @"E:\Projects\Whois\RIPE\Processed\2019\01\17\2019-01-17-RIPE-TypeCounts.tsv");
+
+            ripeTsvWriter.TypeToFieldDistinctOcc(
+                inputFilePath: @"E:\Projects\Whois\RIPE\Raw\2019\01\17\ripe.db",
+                outputFilePath: @"E:\Projects\Whois\RIPE\Processed\2019\01\17\2019-01-17-RIPE-TypeCountsFieldDistinctOcc.tsv");
         }
 
         private static void RWhoisTSV()

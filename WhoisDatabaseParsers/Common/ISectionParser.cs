@@ -11,9 +11,15 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
     public interface ISectionParser
     {
+        void ResetFieldStats();
+
+        Dictionary<string, int> TypeCounts { get; }
+
         Dictionary<string, HashSet<string>> TypeToFieldNamesSet { get; }
 
         Dictionary<string, List<string>> TypeToFieldNamesList { get; }
+
+        Dictionary<string, Dictionary<string, int>> TypeToFieldDistinctOcc { get; }
 
         RawWhoisSection Parse(string lines, string keyValueDelimitator = ":");
 

@@ -24,6 +24,51 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
         public ISectionParser SectionParser { get; set; }
 
+        public void ResetFieldStats()
+        {
+            this.SectionParser.ResetFieldStats();
+        }
+
+        public Dictionary<string, int> TypeCounts(StreamReader reader)
+        {
+            string record;
+
+            while ((record = this.SectionTokenizer.RetrieveRecord(reader)) != null)
+            {
+                this.SectionParser.Parse(record);
+            }
+
+            return this.SectionParser.TypeCounts;
+        }
+
+        public Dictionary<string, int> TypeCounts(string filePath)
+        {
+            using (var reader = new StreamReader(filePath))
+            {
+                return this.TypeCounts(reader);
+            }
+        }
+
+        public Dictionary<string, Dictionary<string, int>> TypeToFieldDistinctOcc(StreamReader reader)
+        {
+            string record;
+
+            while ((record = this.SectionTokenizer.RetrieveRecord(reader)) != null)
+            {
+                this.SectionParser.Parse(record);
+            }
+
+            return this.SectionParser.TypeToFieldDistinctOcc;
+        }
+
+        public Dictionary<string, Dictionary<string, int>> TypeToFieldDistinctOcc(string filePath)
+        {
+            using (var reader = new StreamReader(filePath))
+            {
+                return this.TypeToFieldDistinctOcc(reader);
+            }
+        }
+
         public Dictionary<string, List<string>> ColumnsPerType(StreamReader reader)
         {
             string record;

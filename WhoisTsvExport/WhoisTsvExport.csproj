@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="AfrinicTsvWriter.cs" />
     <Compile Include="ApnicTsvWriter.cs" />
+    <Compile Include="RipeTsvWriter.cs" />
     <Compile Include="ArinTsvWriter.cs" />
     <Compile Include="LacnicTsvWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

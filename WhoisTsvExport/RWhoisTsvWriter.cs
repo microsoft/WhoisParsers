@@ -33,6 +33,7 @@ namespace Microsoft.Geolocation.Whois.TsvExport
 
             foreach (var file in Directory.GetFiles(inputFolderPath))
             {
+                this.Parser.ResetFieldStats();
                 var localColumnsPerTypes = this.Parser.ColumnsPerType(file);
                 this.MergeIntoGlobalColumnsPerType(globalColumnsPerType, localColumnsPerTypes);
             }
@@ -47,6 +48,55 @@ namespace Microsoft.Geolocation.Whois.TsvExport
                     foreach (var recordColumn in recordColumns)
                     {
                         outputFile.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}\t{1}", TsvUtils.ReplaceAndTrimIllegalCharacters(recordType, removeDoubleQuotes: true), TsvUtils.ReplaceAndTrimIllegalCharacters(recordColumn, removeDoubleQuotes: true)));
+                    }
+                }
+            }
+        }
+
+        public void TypeCountsToTsv(string inputFolderPath, string outputFilePath)
+        {
+            var globalTypeCounts = new Dictionary<string, int>();
+
+            foreach (var file in Directory.GetFiles(inputFolderPath))
+            {
+                this.Parser.ResetFieldStats();
+                var localTypeCounts = this.Parser.TypeCounts(file);
+                this.MergeIntoGlobalTypeCounts(globalTypeCounts, localTypeCounts);
+            }
+
+            using (var outputFile = new StreamWriter(outputFilePath))
+            {
+                foreach (var entry in globalTypeCounts)
+                {
+                    var type = entry.Key;
+                    var count = entry.Value;
+
+                    outputFile.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}\t{1}", TsvUtils.ReplaceAndTrimIllegalCharacters(type, removeDoubleQuotes: true), count.ToString()));
+                }
+            }
+        }
+
+        public void TypeToFieldDistinctOcc(string inputFolderPath, string outputFilePath)
+        {
+            var globalTypeToFieldDistinctOcc = new Dictionary<string, Dictionary<string, int>>();
+
+            foreach (var file in Directory.GetFiles(inputFolderPath))
+            {
+                this.Parser.ResetFieldStats();
+                var localTypeToFieldDistinctOcc = this.Parser.TypeToFieldDistinctOcc(file);
+                this.MergeIntoGlobalTypeCounts(globalTypeToFieldDistinctOcc, localTypeToFieldDistinctOcc);
+            }
+
+            using (var outputFile = new StreamWriter(outputFilePath))
+            {
+                foreach (var entry in globalTypeToFieldDistinctOcc)
+                {
+                    var type = entry.Key;
+                    var fieldOcc = entry.Value;
+
+                    foreach (var occEntry in fieldOcc)
+                    {
+                        outputFile.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}\t{1}\t{2}", TsvUtils.ReplaceAndTrimIllegalCharacters(type, removeDoubleQuotes: true), occEntry.Key, occEntry.Value.ToString()));
                     }
                 }
             }
@@ -202,6 +252,60 @@ namespace Microsoft.Geolocation.Whois.TsvExport
                 }
 
                 globalColumnsPerType[localRecordType] = globalRecordColumns;
+            }
+        }
+
+        private void MergeIntoGlobalTypeCounts(
+            Dictionary<string, int> globalTypeCounts,
+            Dictionary<string, int> localTypeCounts)
+        {
+            foreach (var entry in localTypeCounts)
+            {
+                var localType = entry.Key;
+                var localCount = entry.Value;
+
+                int globalCount;
+
+                if (!globalTypeCounts.TryGetValue(localType, out globalCount))
+                {
+                    globalCount = 0;
+                }
+
+                globalTypeCounts[localType] = globalCount + localCount;
+            }
+        }
+
+        private void MergeIntoGlobalTypeCounts(
+            Dictionary<string, Dictionary<string, int>> globalTypeToFieldDistinctOcc,
+            Dictionary<string, Dictionary<string, int>> localTypeToFieldDistinctOcc)
+        {
+            foreach (var localEntry in localTypeToFieldDistinctOcc)
+            {
+                var localType = localEntry.Key;
+                var localFieldDistinctOcc = localEntry.Value;
+
+                Dictionary<string, int> globalFieldDistinctOcc;
+
+                if (!globalTypeToFieldDistinctOcc.TryGetValue(localType, out globalFieldDistinctOcc))
+                {
+                    globalFieldDistinctOcc = new Dictionary<string, int>();
+                    globalTypeToFieldDistinctOcc[localType] = globalFieldDistinctOcc;
+                }
+
+                foreach (var localOccEntry in localFieldDistinctOcc)
+                {
+                    var localFieldType = localOccEntry.Key;
+                    var localOcc = localOccEntry.Value;
+
+                    int globalOcc;
+
+                    if (!globalFieldDistinctOcc.TryGetValue(localFieldType, out globalOcc))
+                    {
+                        globalOcc = 0;
+                    }
+
+                    globalFieldDistinctOcc[localFieldType] = globalOcc + localOcc;
+                }
             }
         }
     }

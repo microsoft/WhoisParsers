@@ -22,14 +22,20 @@ namespace Microsoft.Geolocation.Whois.Parsers
             this.ResetFieldStats();
         }
 
+        public Dictionary<string, int> TypeCounts { get; protected set; }
+
         public Dictionary<string, HashSet<string>> TypeToFieldNamesSet { get; protected set; }
 
         public Dictionary<string, List<string>> TypeToFieldNamesList { get; protected set; }
 
+        public Dictionary<string, Dictionary<string, int>> TypeToFieldDistinctOcc { get; protected set; }
+
         public void ResetFieldStats()
         {
+            this.TypeCounts = new Dictionary<string, int>();
             this.TypeToFieldNamesSet = new Dictionary<string, HashSet<string>>();
             this.TypeToFieldNamesList = new Dictionary<string, List<string>>();
+            this.TypeToFieldDistinctOcc = new Dictionary<string, Dictionary<string, int>>();
         }
 
         public RawWhoisSection Parse(string lines, string keyValueDelimitator = ":")
@@ -187,8 +193,17 @@ namespace Microsoft.Geolocation.Whois.Parsers
 
             if (!string.IsNullOrWhiteSpace(sectionType) && !string.IsNullOrWhiteSpace(sectionId) && records.Count > 0)
             {
+                int globalSectionTypeCount;
                 HashSet<string> globalFieldNamesSet;
                 List<string> globalFieldNamesList;
+                Dictionary<string, int> globalFieldOcc;
+
+                if (!this.TypeCounts.TryGetValue(sectionType, out globalSectionTypeCount))
+                {
+                    globalSectionTypeCount = 0;
+                }
+
+                this.TypeCounts[sectionType] = globalSectionTypeCount + 1;
 
                 if (!this.TypeToFieldNamesSet.TryGetValue(sectionType, out globalFieldNamesSet))
                 {
@@ -202,8 +217,23 @@ namespace Microsoft.Geolocation.Whois.Parsers
                     this.TypeToFieldNamesList.Add(sectionType, globalFieldNamesList);
                 }
 
+                if (!this.TypeToFieldDistinctOcc.TryGetValue(sectionType, out globalFieldOcc))
+                {
+                    globalFieldOcc = new Dictionary<string, int>();
+                    TypeToFieldDistinctOcc[sectionType] = globalFieldOcc;
+                }
+
                 foreach (var fieldName in localFieldNamesSet)
                 {
+                    int occForField;
+
+                    if (!globalFieldOcc.TryGetValue(fieldName, out occForField))
+                    {
+                        occForField = 0;
+                    }
+
+                    globalFieldOcc[fieldName] = occForField + 1;
+
                     if (!globalFieldNamesSet.Contains(fieldName))
                     {
                         globalFieldNamesSet.Add(fieldName);

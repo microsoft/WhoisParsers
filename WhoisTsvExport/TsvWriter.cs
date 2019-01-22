@@ -38,6 +38,38 @@ namespace Microsoft.Geolocation.Whois.TsvExport
             }
         }
         
+        public void TypeCountsToTsv(string inputFilePath, string outputFilePath)
+        {
+            var typeCounts = this.Parser.TypeCounts(inputFilePath);
+
+            using (var outputFile = new StreamWriter(outputFilePath))
+            {
+                foreach (var entry in typeCounts)
+                {
+                    outputFile.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}\t{1}", TsvUtils.ReplaceAndTrimIllegalCharacters(entry.Key, removeDoubleQuotes: true), TsvUtils.ReplaceAndTrimIllegalCharacters(entry.Value.ToString(), removeDoubleQuotes: true)));
+                }
+            }
+        }
+
+        public void TypeToFieldDistinctOcc(string inputFilePath, string outputFilePath)
+        {
+            var typeToFieldDistinctOcc = this.Parser.TypeToFieldDistinctOcc(inputFilePath);
+
+            using (var outputFile = new StreamWriter(outputFilePath))
+            {
+                foreach (var entry in typeToFieldDistinctOcc)
+                {
+                    var key = entry.Key;
+                    var fieldOcc = entry.Value;
+
+                    foreach (var fieldOccEntry in fieldOcc)
+                    {
+                        outputFile.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}\t{1}\t{2}", TsvUtils.ReplaceAndTrimIllegalCharacters(key, removeDoubleQuotes: true), TsvUtils.ReplaceAndTrimIllegalCharacters(fieldOccEntry.Value.ToString(), removeDoubleQuotes: true), fieldOccEntry.Value.ToString()));
+                    }
+                }
+            }
+        }
+
         public void ColumnsPerTypeToTsv(string inputFilePath, string outputFilePath)
         {
             var columnsPerTypes = this.Parser.ColumnsPerType(inputFilePath);

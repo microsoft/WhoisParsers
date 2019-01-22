@@ -56,7 +56,8 @@ namespace Microsoft.Geolocation.Whois.Normalization
             "Organization",
             "Organization;I",
             "OrgID",
-            "org"
+            "org",
+            "aut-num"
         };
 
         private static HashSet<string> originASFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
