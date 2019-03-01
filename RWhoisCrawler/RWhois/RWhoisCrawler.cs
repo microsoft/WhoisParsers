@@ -298,7 +298,16 @@ namespace Microsoft.Geolocation.RWhois.Crawler
                 throw new ArgumentNullException("parentRange");
             }
 
-            var maxIP = await this.AttemptRawBulkCrawl(parentRange.ToCidrString());
+            IPAddress maxIP = null;
+            try
+            {
+                maxIP = await this.AttemptRawBulkCrawl(parentRange.ToCidrString());
+            }
+            catch (System.FormatException ex)
+            {
+                // Couldn't convert the range to cidr string. The range doesn't match a cidr subnet
+                maxIP = null;
+            }
 
             return maxIP != null;
         }
