@@ -83,7 +83,10 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 
         public virtual void Unsubscribe()
         {
-            this.unsubscriber.Dispose();
+            if (this.unsubscriber != null)
+            {
+                this.unsubscriber.Dispose();
+            }
         }
     }
 }
