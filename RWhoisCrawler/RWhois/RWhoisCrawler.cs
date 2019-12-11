@@ -88,7 +88,7 @@ namespace Microsoft.Geolocation.RWhois.Crawler
             await this.client.ConnectAsync();
         }
 
-        public async Task CrawlRangesAsync(IEnumerable<IPAddressRange> parentRanges)
+        public async Task CrawlRangesAsync(IEnumerable<IPAddressRange> parentRanges, CancellationToken token)
         {
             if (parentRanges == null)
             {
@@ -97,6 +97,11 @@ namespace Microsoft.Geolocation.RWhois.Crawler
 
             foreach (var parentRange in parentRanges)
             {
+                if (token.IsCancellationRequested)
+                {
+                    token.ThrowIfCancellationRequested();
+                }
+
                 await this.CrawlRangeAsync(parentRange);
             }
         }
