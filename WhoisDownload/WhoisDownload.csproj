@@ -10,9 +10,10 @@
     <RootNamespace>Microsoft.Geolocation.Whois.Download</RootNamespace>
     <AssemblyName>Microsoft.Geolocation.Whois.Download</AssemblyName>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-Net45|AnyCPU' ">
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
