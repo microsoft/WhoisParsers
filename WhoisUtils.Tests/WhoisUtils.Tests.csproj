@@ -87,16 +87,16 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WhoisUtils\WhoisUtils.csproj">
-      <Project>{f51815f6-b22b-452e-9776-bd7638697625}</Project>
-      <Name>WhoisUtils</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WhoisUtils\WhoisUtils.csproj">
+      <Project>{d99403f7-7f26-491e-8ded-c4fb6389fb2f}</Project>
+      <Name>WhoisUtils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -89,16 +89,6 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WhoisDatabaseParsers\WhoisDatabaseParsers.csproj">
-      <Project>{e94f9e4f-f386-4063-aa89-c13c846ba76c}</Project>
-      <Name>WhoisDatabaseParsers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WhoisUtils\WhoisUtils.csproj">
-      <Project>{c3c377fb-71d2-4900-a27c-49319fbfd8dd}</Project>
-      <Name>WhoisUtils</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="afrinic.sample.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -114,6 +104,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WhoisDatabaseParsers\WhoisDatabaseParsers.csproj">
+      <Project>{E8A91E7F-4939-4737-97DA-C7E02FC11352}</Project>
+      <Name>WhoisDatabaseParsers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WhoisUtils\WhoisUtils.csproj">
+      <Project>{d99403f7-7f26-491e-8ded-c4fb6389fb2f}</Project>
+      <Name>WhoisUtils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

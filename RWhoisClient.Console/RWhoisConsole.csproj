@@ -92,24 +92,20 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RWhoisClient\RWhoisClient.csproj">
-      <Project>{d04a518a-99c4-4e7d-abed-6641d4280252}</Project>
-      <Name>RWhoisClient</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RWhoisCrawler\RWhoisCrawler.csproj">
-      <Project>{7d634a61-c576-4d74-9f47-1a6ba88f1c2e}</Project>
+      <Project>{a473d2ce-f60e-412c-a783-f2ed54ff33f8}</Project>
       <Name>RWhoisCrawler</Name>
     </ProjectReference>
     <ProjectReference Include="..\WhoisDatabaseParsers\WhoisDatabaseParsers.csproj">
-      <Project>{e94f9e4f-f386-4063-aa89-c13c846ba76c}</Project>
+      <Project>{bb3f56ff-0825-40a7-b6b2-6e894aeb0f84}</Project>
       <Name>WhoisDatabaseParsers</Name>
     </ProjectReference>
     <ProjectReference Include="..\WhoisNormalization\WhoisNormalization.csproj">
-      <Project>{634063c0-16a6-471e-b617-6f36042f7d1f}</Project>
+      <Project>{5b842e6f-0730-4bda-9ded-a8285f62db14}</Project>
       <Name>WhoisNormalization</Name>
     </ProjectReference>
     <ProjectReference Include="..\WhoisTsvExport\WhoisTsvExport.csproj">
-      <Project>{aa0fc077-5096-45d3-a99b-d6d70c633d0a}</Project>
+      <Project>{cbcc9215-14a2-4a76-9e3e-192555660f18}</Project>
       <Name>WhoisTsvExport</Name>
     </ProjectReference>
   </ItemGroup>

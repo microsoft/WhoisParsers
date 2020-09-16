@@ -94,13 +94,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WhoisNormalization\WhoisNormalization.csproj">
-      <Project>{634063c0-16a6-471e-b617-6f36042f7d1f}</Project>
-      <Name>WhoisNormalization</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\WhoisNormalization\WhoisNormalization.csproj">
+      <Project>{5b842e6f-0730-4bda-9ded-a8285f62db14}</Project>
+      <Name>WhoisNormalization</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
