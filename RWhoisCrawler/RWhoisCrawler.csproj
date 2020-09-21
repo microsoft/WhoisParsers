@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <ProjectGuid>{AEE17B72-20A3-48AE-9303-0CD7739DECA0}</ProjectGuid>
+    <ProjectGuid>{E64568F2-44D6-49D0-963D-951F7A7FD856}</ProjectGuid>
     <PackageId>Microsoft.Geolocation.RWhois.Crawler</PackageId>
     <Description>Parsers to read Whois and RWhois records from bulk whois database dumps of IANA organizations (ARIN, AFRINIC, APNIC, LACNIC, RIPE )</Description>
     <Company>Microsoft</Company>

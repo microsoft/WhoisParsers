@@ -50,26 +50,26 @@
       
       <!-- .NET 4.5 -->
       
-      <file src="..\RWhoisClient\bin\Release-Net45\Microsoft.Geolocation.RWhois.Client.dll" target="lib\net45" />
-      <file src="..\RWhoisClient\bin\Release-Net45\Microsoft.Geolocation.RWhois.Client.pdb" target="lib\net45" />
+      <file src="..\RWhoisClient\bin\Release\netstandard2.0\Microsoft.Geolocation.RWhois.Client.dll" target="lib\netstandard2.0" />
+      <file src="..\RWhoisClient\bin\Release\netstandard2.0\Microsoft.Geolocation.RWhois.Client.pdb" target="lib\netstandard2.0" />
       
-      <file src="..\RWhoisCrawler\bin\Release-Net45\Microsoft.Geolocation.RWhois.Crawler.dll" target="lib\net45" />
-      <file src="..\RWhoisCrawler\bin\Release-Net45\Microsoft.Geolocation.RWhois.Crawler.pdb" target="lib\net45" />
+      <file src="..\RWhoisCrawler\bin\Release\netstandard2.0\Microsoft.Geolocation.RWhois.Crawler.dll" target="lib\netstandard2.0" />
+      <file src="..\RWhoisCrawler\bin\Release\netstandard2.0\Microsoft.Geolocation.RWhois.Crawler.pdb" target="lib\netstandard2.0" />
       
-      <file src="..\WhoisDatabaseParsers\bin\Release-Net45\Microsoft.Geolocation.Whois.Parsers.dll" target="lib\net45" />
-      <file src="..\WhoisDatabaseParsers\bin\Release-Net45\Microsoft.Geolocation.Whois.Parsers.pdb" target="lib\net45" />
+      <file src="..\WhoisDatabaseParsers\bin\Release\netstandard2.0\Microsoft.Geolocation.Whois.Parsers.dll" target="lib\netstandard2.0" />
+      <file src="..\WhoisDatabaseParsers\bin\Release\netstandard2.0\Microsoft.Geolocation.Whois.Parsers.pdb" target="lib\netstandard2.0" />
       
-      <file src="..\WhoisUtils\bin\Release-Net45\Microsoft.Geolocation.Whois.Utils.dll" target="lib\net45" />
-      <file src="..\WhoisUtils\bin\Release-Net45\Microsoft.Geolocation.Whois.Utils.pdb" target="lib\net45" />
+      <file src="..\WhoisUtils\bin\Release\netstandard2.0\Microsoft.Geolocation.Whois.Utils.dll" target="lib\netstandard2.0" />
+      <file src="..\WhoisUtils\bin\Release\netstandard2.0\Microsoft.Geolocation.Whois.Utils.pdb" target="lib\netstandard2.0" />
 
-      <file src="..\WhoisTsvExport\bin\Release-Net45\Microsoft.Geolocation.Whois.TsvExport.dll" target="lib\net45" />
-      <file src="..\WhoisTsvExport\bin\Release-Net45\Microsoft.Geolocation.Whois.TsvExport.pdb" target="lib\net45" />
+      <file src="..\WhoisTsvExport\bin\Release\netstandard2.0\Microsoft.Geolocation.Whois.TsvExport.dll" target="lib\netstandard2.0" />
+      <file src="..\WhoisTsvExport\bin\Release\netstandard2.0\Microsoft.Geolocation.Whois.TsvExport.pdb" target="lib\netstandard2.0" />
 
-      <file src="..\WhoisDownload\bin\Release-Net45\Microsoft.Geolocation.Whois.Download.dll" target="lib\net45" />
-      <file src="..\WhoisDownload\bin\Release-Net45\Microsoft.Geolocation.Whois.Download.pdb" target="lib\net45" />
+      <file src="..\WhoisDownload\bin\Release\netstandard2.0\Microsoft.Geolocation.Whois.Download.dll" target="lib\netstandard2.0" />
+      <file src="..\WhoisDownload\bin\Release\netstandard2.0\Microsoft.Geolocation.Whois.Download.pdb" target="lib\netstandard2.0" />
 
-      <file src="..\WhoisNormalization\bin\Release-Net45\Microsoft.Geolocation.Whois.Normalization.dll" target="lib\net45" />
-      <file src="..\WhoisNormalization\bin\Release-Net45\Microsoft.Geolocation.Whois.Normalization.pdb" target="lib\net45" />
+      <file src="..\WhoisNormalization\bin\Release\netstandard2.0\Microsoft.Geolocation.Whois.Normalization.dll" target="lib\netstandard2.0" />
+      <file src="..\WhoisNormalization\bin\Release\netstandard2.0\Microsoft.Geolocation.Whois.Normalization.pdb" target="lib\netstandard2.0" />
       
       <!-- Source -->
       
