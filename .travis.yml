@@ -4,7 +4,7 @@ install:
   - nuget restore WhoisParsers.sln
   - nuget install NUnit.Runners -Version 3.2.1 -OutputDirectory testrunner
 script:
-  - xbuild /p:Configuration=Nunit-Net45 /p:TargetFrameworkVersion="v4.6.1" WhoisParsers.sln
+  - msbuild /p:Configuration=Nunit-Net45 /p:TargetFrameworkVersion="v4.6.1" WhoisParsers.sln
   - cd WhoisUtils.Tests
   - mono ../testrunner/NUnit.ConsoleRunner.3.2.1/tools/nunit3-console.exe ./bin/Nunit/Microsoft.Geolocation.Whois.Utils.Tests.dll
   - cd ..
