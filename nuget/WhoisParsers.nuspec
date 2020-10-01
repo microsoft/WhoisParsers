@@ -16,12 +16,12 @@
     <tags>whois rwhois parser parsers crawling arin afrinic apnic lacnic ripe iana bulk database databases rfc 2167 referral servers download unpack decompress tsv</tags>
     <dependencies> 
        <group>
-          <dependency id="NLog" version="4.3.8" />
-          <dependency id="NLog.Config" version="4.3.8" />
-          <dependency id="NLog.Schema" version="4.3.8" />
-          <dependency id="IPAddressRange" version="1.6.0.0" />
-          <dependency id="DotNetZip" version="1.13.0" />
-		  <dependency id="HtmlAgilityPack" version="1.4.9.5" />
+          <dependency id="NLog" version="4.7.4" />
+          <dependency id="NLog.Config" version="4.7.4" />
+          <dependency id="NLog.Schema" version="4.7.4" />
+          <dependency id="IPAddressRange" version="4.1.2" />
+          <dependency id="DotNetZip" version="1.13.8" />
+		  <dependency id="HtmlAgilityPack" version="1.11.24" />
        </group>
     </dependencies> 
   </metadata>
