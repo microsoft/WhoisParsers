@@ -3,6 +3,7 @@ solution: WhoisParsers.sln
 install:
   - nuget restore WhoisParsers.sln
   - nuget install NUnit.Runners -Version 3.2.1 -OutputDirectory testrunner
+  
 script:
   - xbuild /p:Configuration=Nunit-Net45 /p:TargetFrameworkVersion="v4.5" WhoisParsers.sln
   - cd WhoisUtils.Tests
