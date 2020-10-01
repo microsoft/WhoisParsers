@@ -6,8 +6,7 @@
 
 namespace Microsoft.Geolocation.Whois.Normalization.Tests
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Category = Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute;
+    using VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class NormalizationUtilsTests
