@@ -12,9 +12,10 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AssemblyClsCompliant>false</AssemblyClsCompliant>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-Net45|AnyCPU' ">
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,7 +26,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-Net45|AnyCPU' ">
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release-Net45\</OutputPath>
@@ -35,7 +36,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Nunit-Net45|AnyCPU' ">
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <OutputPath>bin\Nunit-Net45\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
@@ -54,26 +55,22 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-Net45|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Release-Net45|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Nunit-Net45|AnyCPU' ">
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.3.8\lib\net45\NLog.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-Net40|AnyCPU' ">
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.3.8\lib\net40\NLog.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-  </ItemGroup>
   <ItemGroup>
     <Reference Include="IPAddressRange, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\IPAddressRange.1.6.0.0\lib\net40\IPAddressRange.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.7.4\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -87,7 +84,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <Content Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
@@ -95,24 +92,20 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RWhoisClient\RWhoisClient.csproj">
-      <Project>{d04a518a-99c4-4e7d-abed-6641d4280252}</Project>
-      <Name>RWhoisClient</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RWhoisCrawler\RWhoisCrawler.csproj">
-      <Project>{7d634a61-c576-4d74-9f47-1a6ba88f1c2e}</Project>
+      <Project>{a473d2ce-f60e-412c-a783-f2ed54ff33f8}</Project>
       <Name>RWhoisCrawler</Name>
     </ProjectReference>
     <ProjectReference Include="..\WhoisDatabaseParsers\WhoisDatabaseParsers.csproj">
-      <Project>{e94f9e4f-f386-4063-aa89-c13c846ba76c}</Project>
+      <Project>{bb3f56ff-0825-40a7-b6b2-6e894aeb0f84}</Project>
       <Name>WhoisDatabaseParsers</Name>
     </ProjectReference>
     <ProjectReference Include="..\WhoisNormalization\WhoisNormalization.csproj">
-      <Project>{634063c0-16a6-471e-b617-6f36042f7d1f}</Project>
+      <Project>{5b842e6f-0730-4bda-9ded-a8285f62db14}</Project>
       <Name>WhoisNormalization</Name>
     </ProjectReference>
     <ProjectReference Include="..\WhoisTsvExport\WhoisTsvExport.csproj">
-      <Project>{aa0fc077-5096-45d3-a99b-d6d70c633d0a}</Project>
+      <Project>{cbcc9215-14a2-4a76-9e3e-192555660f18}</Project>
       <Name>WhoisTsvExport</Name>
     </ProjectReference>
   </ItemGroup>

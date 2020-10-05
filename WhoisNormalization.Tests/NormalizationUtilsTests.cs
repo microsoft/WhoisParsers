@@ -4,15 +4,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+
 namespace Microsoft.Geolocation.Whois.Normalization.Tests
 {
-    using System;
-    using System.Collections.Generic;
-
-    #if !NUNIT
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Category = Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute;
-    #else
     using NUnit.Framework;
     using TestInitialize = NUnit.Framework.SetUpAttribute;
     using TestContext = System.Object;
@@ -20,7 +14,6 @@ namespace Microsoft.Geolocation.Whois.Normalization.Tests
     using TestClass = NUnit.Framework.TestFixtureAttribute;
     using TestMethod = NUnit.Framework.TestAttribute;
     using TestCleanup = NUnit.Framework.TearDownAttribute;
-    #endif
 
     [TestClass]
     public class NormalizationUtilsTests
